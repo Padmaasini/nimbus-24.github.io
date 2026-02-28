@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Jarvis — Expert Heuristic Evaluation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, serif; background: #f4f4f4; color: #2c2c2c; padding: 30px 20px; }
+  .container { max-width: 760px; margin: 0 auto; background: white; border-radius: 8px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+  h1 { font-size: 22px; color: #1a1a2e; margin-bottom: 6px; }
+  .subtitle { font-size: 14px; color: #666; font-style: italic; margin-bottom: 24px; }
+  h2 { font-size: 16px; color: #1a1a2e; margin: 28px 0 12px; border-bottom: 2px solid #e0e0e0; padding-bottom: 6px; }
+  p, li { font-size: 14px; line-height: 1.7; color: #444; margin-bottom: 8px; }
+  ul { padding-left: 20px; margin-bottom: 12px; }
+  .heuristic { background: #f8f9ff; border: 1px solid #dde; border-radius: 6px; padding: 18px 20px; margin: 14px 0; }
+  .h-title { font-weight: bold; font-size: 14px; color: #1a1a2e; margin-bottom: 4px; }
+  .h-desc { font-size: 13px; color: #666; font-style: italic; margin-bottom: 12px; }
+  .rating-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .rating-label { font-size: 13px; font-weight: bold; flex: 0 0 100px; }
+  .rating-opts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .rating-opts label { font-size: 13px; display: flex; align-items: center; gap: 4px; cursor: pointer; padding: 4px 10px; border: 1px solid #ccc; border-radius: 4px; transition: background 0.2s; }
+  .rating-opts label:hover { background: #eef; }
+  .rating-opts input[type="radio"]:checked + span { font-weight: bold; }
+  .sev-0 { border-color: #4caf50; }
+  .sev-1 { border-color: #8bc34a; }
+  .sev-2 { border-color: #ffc107; }
+  .sev-3 { border-color: #ff9800; }
+  .sev-4 { border-color: #f44336; }
+  textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: Georgia, serif; min-height: 70px; resize: vertical; margin-top: 6px; }
+  input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: Georgia, serif; }
+  .form-group { margin: 14px 0; }
+  label.field-label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+  .submit-btn { background: #1a1a2e; color: white; border: none; padding: 14px 32px; font-size: 15px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-family: Georgia, serif; }
+  .submit-btn:hover { background: #2d2d5e; }
+  .success { display: none; background: #e8f5e9; border: 1px solid #4caf50; padding: 20px; border-radius: 6px; margin-top: 20px; text-align: center; }
+  .link-box { background: #e8f4fd; border: 1px solid #2196f3; padding: 14px 16px; border-radius: 6px; margin: 16px 0; font-size: 14px; }
+  .link-box a { color: #1565c0; font-weight: bold; }
+  .severity-guide { background: #fffde7; border: 1px solid #ffc107; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; font-size: 13px; }
+  .severity-guide strong { display: block; margin-bottom: 6px; }
+  .sev-row { display: flex; gap: 8px; align-items: baseline; margin: 3px 0; }
+  .sev-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+  .bg0 { background: #e8f5e9; color: #2e7d32; }
+  .bg1 { background: #f1f8e9; color: #558b2f; }
+  .bg2 { background: #fff8e1; color: #f57f17; }
+  .bg3 { background: #fff3e0; color: #e65100; }
+  .bg4 { background: #ffebee; color: #c62828; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Jarvis — Expert Heuristic Evaluation</h1>
+  <p class="subtitle">Nielsen's 10 Usability Heuristics · Evaluator Review Sheet</p>
+
+  <div class="link-box">
+    🔗 <strong>Open Jarvis here before starting:</strong>
+    <a href="https://proche-aidant-jarvis.el.r.appspot.com" target="_blank">
+      https://proche-aidant-jarvis.el.r.appspot.com
+    </a><br/>
+    <span style="font-size:12px;color:#555">Spend 5–10 minutes exploring the system freely before completing this form. Try: greeting, weather, medications, movie/series, emergency contacts.</span>
+  </div>
+
+  <div class="severity-guide">
+    <strong>Severity Rating Guide (Nielsen 0–4 scale):</strong>
+    <div class="sev-row"><span class="sev-badge bg0">0</span> Not a usability problem at all</div>
+    <div class="sev-row"><span class="sev-badge bg1">1</span> Cosmetic problem — fix only if time allows</div>
+    <div class="sev-row"><span class="sev-badge bg2">2</span> Minor usability problem — low priority fix</div>
+    <div class="sev-row"><span class="sev-badge bg3">3</span> Major usability problem — important to fix</div>
+    <div class="sev-row"><span class="sev-badge bg4">4</span> Usability catastrophe — imperative to fix before release</div>
+  </div>
+
+  <form id="expert-form">
+
+    <h2>Evaluator Information</h2>
+    <div class="form-group">
+      <label class="field-label">Your background / expertise area</label>
+      <input type="text" name="background" placeholder="e.g. HCI researcher, software engineer, healthcare professional..." required/>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Years of experience in your field</label>
+      <input type="text" name="years" placeholder="e.g. 5 years"/>
+    </div>
+
+    <h2>Heuristic Evaluation</h2>
+    <p>For each heuristic, rate the severity of any violations you observe and describe specific issues found.</p>
+
+    <!-- H1 -->
+    <div class="heuristic">
+      <div class="h-title">H1 — Visibility of System Status</div>
+      <div class="h-desc">The system should always keep users informed about what is going on, through appropriate feedback within reasonable time.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h1_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h1_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h1_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h1_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h1_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h1_notes" placeholder="Describe any issues observed, or note what works well..."></textarea>
+    </div>
+
+    <!-- H2 -->
+    <div class="heuristic">
+      <div class="h-title">H2 — Match Between System and the Real World</div>
+      <div class="h-desc">The system should speak the users' language, with words, phrases and concepts familiar to the user, rather than system-oriented terms.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h2_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h2_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h2_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h2_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h2_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h2_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H3 -->
+    <div class="heuristic">
+      <div class="h-title">H3 — User Control and Freedom</div>
+      <div class="h-desc">Users often choose system functions by mistake and will need a clearly marked "emergency exit" to leave the unwanted state without having to go through an extended dialogue.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h3_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h3_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h3_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h3_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h3_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h3_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H4 -->
+    <div class="heuristic">
+      <div class="h-title">H4 — Consistency and Standards</div>
+      <div class="h-desc">Users should not have to wonder whether different words, situations, or actions mean the same thing. Follow platform conventions.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h4_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h4_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h4_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h4_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h4_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h4_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H5 -->
+    <div class="heuristic">
+      <div class="h-title">H5 — Error Prevention</div>
+      <div class="h-desc">Even better than good error messages is a careful design which prevents a problem from occurring in the first place.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h5_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h5_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h5_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h5_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h5_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h5_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H6 -->
+    <div class="heuristic">
+      <div class="h-title">H6 — Recognition Rather Than Recall</div>
+      <div class="h-desc">Minimise the user's memory load by making objects, actions, and options visible.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h6_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h6_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h6_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h6_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h6_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h6_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H7 -->
+    <div class="heuristic">
+      <div class="h-title">H7 — Flexibility and Efficiency of Use</div>
+      <div class="h-desc">Accelerators may speed up the interaction for the expert user such that the system can cater to both inexperienced and experienced users.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h7_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h7_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h7_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h7_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h7_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h7_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H8 -->
+    <div class="heuristic">
+      <div class="h-title">H8 — Aesthetic and Minimalist Design</div>
+      <div class="h-desc">Dialogues should not contain irrelevant or rarely needed information. Every extra unit of information competes with relevant information and diminishes its relative visibility.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h8_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h8_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h8_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h8_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h8_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h8_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H9 -->
+    <div class="heuristic">
+      <div class="h-title">H9 — Help Users Recognise, Diagnose, and Recover from Errors</div>
+      <div class="h-desc">Error messages should be expressed in plain language, precisely indicate the problem, and constructively suggest a solution.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h9_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h9_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h9_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h9_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h9_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h9_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <!-- H10 -->
+    <div class="heuristic">
+      <div class="h-title">H10 — Help and Documentation</div>
+      <div class="h-desc">Even though it is better if the system can be used without documentation, it may be necessary to provide help and documentation.</div>
+      <div class="rating-row">
+        <div class="rating-label">Severity:</div>
+        <div class="rating-opts">
+          <label class="sev-0"><input type="radio" name="h10_sev" value="0" required><span>0</span></label>
+          <label class="sev-1"><input type="radio" name="h10_sev" value="1"><span>1</span></label>
+          <label class="sev-2"><input type="radio" name="h10_sev" value="2"><span>2</span></label>
+          <label class="sev-3"><input type="radio" name="h10_sev" value="3"><span>3</span></label>
+          <label class="sev-4"><input type="radio" name="h10_sev" value="4"><span>4</span></label>
+        </div>
+      </div>
+      <textarea name="h10_notes" placeholder="Describe any issues observed..."></textarea>
+    </div>
+
+    <h2>Overall Assessment</h2>
+
+    <div class="form-group">
+      <label class="field-label">What are the three most critical usability issues to fix before clinical deployment?</label>
+      <textarea name="critical_issues" placeholder="1. ...\n2. ...\n3. ..." style="min-height:100px"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">What does the system do particularly well for the target user group (early-stage dementia patients)?</label>
+      <textarea name="strengths" placeholder="Describe strengths..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Overall readiness for clinical deployment (circle one):</label>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+        <label style="font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="readiness" value="not_ready" required> Not ready
+        </label>
+        <label style="font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="readiness" value="needs_work"> Needs significant work
+        </label>
+        <label style="font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="readiness" value="promising"> Promising prototype
+        </label>
+        <label style="font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="readiness" value="ready"> Ready with minor fixes
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Expert Review</button>
+  </form>
+
+  <div class="success" id="success-msg">
+    ✓ Thank you for your expert review. Your evaluation is greatly appreciated and will be cited in the research paper.
+  </div>
+
+</div>
+<script>
+  document.getElementById('expert-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    try {
+      const res = await fetch('https://formspree.io/f/mreavzjr', {
+        method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        document.getElementById('expert-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        alert('Submission failed. Please try again.');
+      }
+    } catch {
+      document.getElementById('expert-form').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

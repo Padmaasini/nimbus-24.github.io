@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Jarvis User Study — Participant Form</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, serif; background: #f8f6f2; color: #2c2c2c; padding: 30px 20px; }
+  .container { max-width: 720px; margin: 0 auto; background: white; border-radius: 8px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+  h1 { font-size: 22px; color: #1a1a2e; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: #666; margin-bottom: 28px; font-style: italic; }
+  h2 { font-size: 16px; color: #1a1a2e; margin: 28px 0 12px; border-bottom: 2px solid #e8e0d0; padding-bottom: 6px; }
+  p { font-size: 14px; line-height: 1.7; margin-bottom: 12px; color: #444; }
+  .task-box { background: #f0f4ff; border-left: 4px solid #4a6fa5; padding: 14px 16px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .task-num { font-weight: bold; color: #4a6fa5; font-size: 13px; }
+  .task-text { font-size: 14px; margin-top: 4px; }
+  .task-check { margin-top: 8px; font-size: 13px; color: #666; }
+  .form-group { margin: 16px 0; }
+  label { display: block; font-size: 14px; margin-bottom: 6px; font-weight: bold; }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;
+    font-size: 14px; font-family: Georgia, serif;
+  }
+  textarea { min-height: 80px; resize: vertical; }
+  .scale-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+  .scale-label { font-size: 13px; color: #555; flex: 0 0 220px; }
+  .scale-options { display: flex; gap: 8px; align-items: center; }
+  .scale-options label { font-weight: normal; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+  .scale-options input[type="radio"] { cursor: pointer; }
+  .scale-ends { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: -4px; margin-left: 220px; width: 200px; }
+  .sus-header { display: flex; margin-left: 220px; gap: 8px; margin-bottom: 6px; }
+  .sus-header span { font-size: 11px; color: #888; width: 36px; text-align: center; }
+  .submit-btn { background: #1a1a2e; color: white; border: none; padding: 14px 32px; font-size: 15px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-family: Georgia, serif; }
+  .submit-btn:hover { background: #2d2d5e; }
+  .success { display: none; background: #e8f5e9; border: 1px solid #4caf50; padding: 20px; border-radius: 6px; margin-top: 20px; text-align: center; font-size: 15px; }
+  .info-box { background: #fff8e1; border: 1px solid #ffc107; padding: 14px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; }
+  .link-box { background: #e8f4fd; border: 1px solid #2196f3; padding: 14px 16px; border-radius: 6px; margin: 16px 0; font-size: 14px; }
+  .link-box a { color: #1565c0; font-weight: bold; }
+  @media (max-width: 600px) {
+    .scale-label { flex: 0 0 100%; }
+    .sus-header, .scale-ends { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Jarvis — User Study</h1>
+  <p class="subtitle">Conversational AI Assistant for Daily Living Support · Research Study Form</p>
+
+  <div class="info-box">
+    <strong>Thank you for participating.</strong> This study takes approximately 20 minutes.
+    Your responses are anonymous and will be used solely for academic research.
+    There are no right or wrong answers — we want to know your honest experience.
+  </div>
+
+  <!-- JARVIS LINK -->
+  <div class="link-box">
+    🔗 <strong>Open Jarvis here:</strong>
+    <a href="https://proche-aidant-jarvis.el.r.appspot.com" target="_blank">
+      https://proche-aidant-jarvis.el.r.appspot.com
+    </a><br/>
+    <span style="font-size:12px;color:#555">Please keep this tab open while completing the tasks below.</span>
+  </div>
+
+  <form id="study-form">
+
+    <!-- SECTION 1: BACKGROUND -->
+    <h2>Section 1 — About You</h2>
+
+    <div class="form-group">
+      <label>Age group</label>
+      <select name="age" required>
+        <option value="">Select...</option>
+        <option>18–30</option>
+        <option>31–45</option>
+        <option>46–60</option>
+        <option>61–75</option>
+        <option>75+</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>How often do you use voice or chat assistants? (e.g. Siri, Google Assistant, ChatGPT)</label>
+      <select name="ai_experience" required>
+        <option value="">Select...</option>
+        <option>Daily</option>
+        <option>A few times a week</option>
+        <option>Occasionally</option>
+        <option>Rarely or never</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Do you have experience caring for or living with someone with dementia or memory difficulties?</label>
+      <select name="care_experience" required>
+        <option value="">Select...</option>
+        <option>Yes, as a family caregiver</option>
+        <option>Yes, as a professional caregiver or healthcare worker</option>
+        <option>No direct experience</option>
+        <option>Prefer not to say</option>
+      </select>
+    </div>
+
+    <!-- SECTION 2: TASKS -->
+    <h2>Section 2 — Tasks</h2>
+    <p>Please complete each of the following tasks using Jarvis. After each task, note whether you were able to complete it and how it felt.</p>
+
+    <div class="task-box">
+      <div class="task-num">Task 1</div>
+      <div class="task-text">Start a conversation with Jarvis. Tell it your name and say good morning (or whatever time of day it is).</div>
+      <div class="task-check">
+        <label><input type="radio" name="t1" value="yes" required> ✓ Completed</label>&nbsp;&nbsp;
+        <label><input type="radio" name="t1" value="no"> ✗ Could not complete</label>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="task-num">Task 2</div>
+      <div class="task-text">Ask Jarvis what the weather is like today. Then ask a follow-up question about the weather (e.g. "Will it rain?" or "Should I bring a jacket?").</div>
+      <div class="task-check">
+        <label><input type="radio" name="t2" value="yes" required> ✓ Completed</label>&nbsp;&nbsp;
+        <label><input type="radio" name="t2" value="no"> ✗ Could not complete</label>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="task-num">Task 3</div>
+      <div class="task-text">Tell Jarvis about a medication you take. For example: "I take Vitamin D every morning at 8am." Then ask Jarvis to list your medications.</div>
+      <div class="task-check">
+        <label><input type="radio" name="t3" value="yes" required> ✓ Completed</label>&nbsp;&nbsp;
+        <label><input type="radio" name="t3" value="no"> ✗ Could not complete</label>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="task-num">Task 4</div>
+      <div class="task-text">Ask Jarvis to suggest a movie or TV series for you to watch. Try to refine the recommendation — for example, ask for something from a specific year or something similar to a show you like.</div>
+      <div class="task-check">
+        <label><input type="radio" name="t4" value="yes" required> ✓ Completed</label>&nbsp;&nbsp;
+        <label><input type="radio" name="t4" value="no"> ✗ Could not complete</label>
+      </div>
+    </div>
+
+    <div class="task-box">
+      <div class="task-num">Task 5</div>
+      <div class="task-text">Ask Jarvis to save an emergency contact for you. For example: "My daughter Priya's number is 9876543210." Then ask Jarvis who you can contact in an emergency.</div>
+      <div class="task-check">
+        <label><input type="radio" name="t5" value="yes" required> ✓ Completed</label>&nbsp;&nbsp;
+        <label><input type="radio" name="t5" value="no"> ✗ Could not complete</label>
+      </div>
+    </div>
+
+    <!-- SECTION 3: SUS -->
+    <h2>Section 3 — System Usability Scale (SUS)</h2>
+    <p>For each statement, select a number from 1 (Strongly Disagree) to 5 (Strongly Agree) based on your experience with Jarvis.</p>
+
+    <div class="sus-header">
+      <span>1<br>SD</span><span>2</span><span>3</span><span>4</span><span>5<br>SA</span>
+    </div>
+
+    <!-- SUS Items -->
+    <script>
+      const susItems = [
+        "I think that I would like to use this system frequently.",
+        "I found the system unnecessarily complex.",
+        "I thought the system was easy to use.",
+        "I think that I would need the support of a technical person to be able to use this system.",
+        "I found the various functions in this system were well integrated.",
+        "I thought there was too much inconsistency in this system.",
+        "I would imagine that most people would learn to use this system very quickly.",
+        "I found the system very cumbersome to use.",
+        "I felt very confident using the system.",
+        "I needed to learn a lot of things before I could get going with this system."
+      ];
+    </script>
+
+    <div id="sus-container"></div>
+
+    <!-- SECTION 4: OPEN QUESTIONS -->
+    <h2>Section 4 — Open Questions</h2>
+
+    <div class="form-group">
+      <label>What did you find most useful or helpful about Jarvis?</label>
+      <textarea name="q_useful" placeholder="Type your answer here..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>What was confusing, frustrating, or missing?</label>
+      <textarea name="q_issues" placeholder="Type your answer here..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>If you were caring for a family member with memory difficulties, would you consider using an assistant like Jarvis to help them? Why or why not?</label>
+      <textarea name="q_care" placeholder="Type your answer here..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Any other comments or suggestions?</label>
+      <textarea name="q_other" placeholder="Type your answer here..."></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit My Responses</button>
+  </form>
+
+  <div class="success" id="success-msg">
+    ✓ Thank you — your responses have been recorded. Your input is genuinely valuable for this research.
+  </div>
+
+</div>
+
+<script>
+  // Build SUS items dynamically
+  const container = document.getElementById('sus-container');
+  susItems.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'scale-row';
+    row.innerHTML = `
+      <div class="scale-label">${i+1}. ${item}</div>
+      <div class="scale-options">
+        ${[1,2,3,4,5].map(v => `
+          <label>
+            <input type="radio" name="sus${i+1}" value="${v}" required>
+            ${v}
+          </label>`).join('')}
+      </div>`;
+    container.appendChild(row);
+  });
+
+  // Form submission → Formspree
+  document.getElementById('study-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    // Calculate SUS score
+    let sus = 0;
+    for (let i = 1; i <= 10; i++) {
+      const val = parseInt(formData.get('sus' + i));
+      sus += (i % 2 === 1) ? (val - 1) : (5 - val);
+    }
+    sus *= 2.5;
+    formData.append('sus_score', sus.toFixed(1));
+
+    try {
+      const res = await fetch('https://formspree.io/f/mreavzjr', {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        document.getElementById('study-form').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        alert('Submission failed. Please try again or email your responses directly.');
+      }
+    } catch {
+      // Fallback: show score locally
+      document.getElementById('study-form').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+      document.getElementById('success-msg').innerHTML += `<br><br><strong>Your SUS Score: ${sus.toFixed(1)}/100</strong>`;
+    }
+  });
+</script>
+</body>
+</html>
