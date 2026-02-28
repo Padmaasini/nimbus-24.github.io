@@ -515,6 +515,96 @@
       .product-card { max-width: 100%; }
       .countdown { gap: 12px; }
     }
+
+    /* ── Waitlist ── */
+    .waitlist-wrap {
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .waitlist-title {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      text-shadow: 0 0 12px rgba(201,168,76,0.6);
+    }
+
+    .waitlist-form {
+      display: flex;
+      gap: 0;
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 50px;
+      overflow: hidden;
+      background: rgba(10,10,26,0.7);
+      backdrop-filter: blur(10px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .waitlist-form:focus-within {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(201,168,76,0.2);
+    }
+
+    .waitlist-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 14px 22px;
+      font-family: 'EB Garamond', serif;
+      font-size: 16px;
+      color: var(--parchment);
+      min-width: 0;
+    }
+    .waitlist-input::placeholder {
+      color: var(--parchment-dim);
+      opacity: 0.6;
+    }
+
+    .waitlist-btn {
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+      border: none;
+      padding: 14px 26px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--midnight);
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.3s, transform 0.15s;
+      font-weight: 600;
+    }
+    .waitlist-btn:hover {
+      background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+      transform: scale(1.03);
+    }
+    .waitlist-btn:active { transform: scale(0.98); }
+
+    .waitlist-consent {
+      margin-top: 10px;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 12px;
+      color: var(--parchment-dim);
+      opacity: 0.6;
+    }
+
+    .waitlist-success {
+      display: none;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      padding: 16px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 50px;
+      background: rgba(10,10,26,0.7);
+      text-shadow: 0 0 10px rgba(201,168,76,0.5);
+    }
   </style>
 </head>
 <body>
@@ -661,6 +751,31 @@
           <div class="product-badge">HR Tech · Coming Soon</div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="ornate-divider ink-reveal">
+      <div class="divider-line"></div>
+      <span class="divider-gem">✦</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Waitlist -->
+    <div class="waitlist-wrap ink-reveal">
+      <div class="waitlist-title">✦ Be the first to know ✦</div>
+      <form class="waitlist-form" id="waitlist-form"
+            action="https://formspree.io/f/mreavzjr
+            method="POST">
+        <input class="waitlist-input" type="email" name="email"
+               placeholder="your@email.com" required />
+        <button class="waitlist-btn" type="submit">Notify Me ⚡</button>
+      </form>
+      <div class="waitlist-consent">
+        By joining you agree to receive one launch notification. No spam, ever.
+      </div>
+      <div class="waitlist-success" id="waitlist-success">
+        ⚡ You're on the list — mischief noted!
       </div>
     </div>
 
@@ -860,6 +975,35 @@
 
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  // ── Waitlist form ──
+  const wlForm = document.getElementById('waitlist-form');
+  if (wlForm) {
+    wlForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = wlForm.querySelector('.waitlist-btn');
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      try {
+        const res = await fetch(wlForm.action, {
+          method: 'POST',
+          body: new FormData(wlForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          wlForm.style.display = 'none';
+          wlForm.nextElementSibling.style.display = 'none';
+          document.getElementById('waitlist-success').style.display = 'block';
+        } else {
+          btn.textContent = 'Try again';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Try again';
+        btn.disabled = false;
+      }
+    });
+  }
 </script>
 </body>
 </html>
