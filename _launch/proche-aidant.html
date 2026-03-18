@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proche Aidant — Nimbus-24</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--forest:#1a2e1a;--emerald:#2d7a4f;--emerald-bright:#38a169;--cream:#faf7f2;--cream-2:#f3ede3;--sand:#c9a96e;--text-dark:#1c2b1c;--text-mid:#4a6355;--text-light:#8aaa95;--border:#ddd5c4;--strong-bg:#edf7f1;--strong-bd:#b8dfc8}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text-dark);-webkit-font-smoothing:antialiased}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,247,242,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.ni{max-width:1080px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nl{font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--forest);text-decoration:none;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
+.nl svg{flex-shrink:0}
+.nk{display:flex;gap:28px;align-items:center}
+.nk a{font-size:14px;font-weight:500;color:var(--text-mid);text-decoration:none;transition:color .2s}
+.nk a:hover{color:var(--emerald)}.nk a.ac{color:var(--emerald);font-weight:600}
+.nc{font-size:13px!important;font-weight:600!important;color:#fff!important;background:var(--forest);padding:9px 20px;border-radius:10px;transition:background .2s!important}
+.nc:hover{background:#2d4a2d!important}
+.page{max-width:860px;margin:0 auto;padding:0 28px}
+.hero{padding:130px 28px 64px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 50% 60% at 70% 30%,rgba(45,122,79,0.06) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 20% 80%,rgba(201,169,110,0.04) 0%,transparent 70%),var(--cream)}
+.hi{max-width:860px;margin:0 auto;position:relative;z-index:1}
+.eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--emerald);margin-bottom:16px}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(34px,5vw,50px);font-weight:700;color:var(--forest);line-height:1.12;letter-spacing:-1px;margin-bottom:20px}
+.hero h1 span{color:var(--emerald)}
+.hero-desc{font-size:17px;color:var(--text-mid);line-height:1.75;max-width:600px;margin-bottom:28px}
+.ha{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:13px 26px;border-radius:10px;text-decoration:none;transition:all .2s}
+.bp{background:var(--forest);color:#fff}.bp:hover{background:#2d4a2d}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--emerald);font-weight:500}
+.dot{width:7px;height:7px;background:var(--emerald);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.sl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-light);margin-bottom:20px;margin-top:48px}
+.sl:first-child{margin-top:0}
+.stats{display:flex;background:var(--forest);border-radius:14px;overflow:hidden;margin-bottom:48px}
+.st{flex:1;padding:24px 20px;text-align:center;border-right:1px solid rgba(255,255,255,0.07)}
+.st:last-child{border-right:none}
+.sv{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#68d391;line-height:1;margin-bottom:6px}
+.stl{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.4}
+.demo{background:var(--forest);border-radius:16px;padding:40px 36px;margin-bottom:48px;display:flex;gap:32px;align-items:center;flex-wrap:wrap}
+.demo-text{flex:1;min-width:260px}
+.demo h2{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:8px}
+.demo p{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.65}
+.demo-btn{display:inline-flex;align-items:center;gap:8px;background:var(--emerald);color:#fff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:10px;text-decoration:none;transition:background .2s;white-space:nowrap;flex-shrink:0}
+.demo-btn:hover{background:var(--emerald-bright)}
+.conf{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:48px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.conf-ico{width:56px;height:56px;border-radius:14px;background:var(--strong-bg);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.conf-body{flex:1;min-width:260px}
+.conf-body h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--forest);margin-bottom:8px}
+.conf-body>p{font-size:14px;color:var(--text-mid);line-height:1.7;margin-bottom:14px}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.ci{background:var(--cream);border-radius:10px;padding:12px 14px}
+.ci .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);margin-bottom:4px}
+.ci .v{font-size:13px;font-weight:600;color:var(--forest)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px}
+.step{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 20px}
+.sn{width:28px;height:28px;background:var(--strong-bg);border-radius:8px;font-size:13px;font-weight:800;color:var(--emerald);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.step h3{font-size:14px;font-weight:700;color:var(--forest);margin-bottom:6px}
+.step p{font-size:13px;color:var(--text-mid);line-height:1.55}
+.hg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px}
+.hc{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px 24px;display:flex;gap:16px;align-items:flex-start}
+.hi2{width:40px;height:40px;background:var(--strong-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hc h3{font-size:14px;font-weight:700;color:var(--forest);margin-bottom:5px}
+.hc p{font-size:13px;color:var(--text-mid);line-height:1.55}
+.cmp{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:48px}
+.cmp table{width:100%;border-collapse:collapse;font-size:13px}
+.cmp th{background:var(--cream-2);padding:12px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);text-align:left;border-bottom:1px solid var(--border)}
+.cmp td{padding:14px 18px;border-bottom:1px solid rgba(0,0,0,0.04);color:var(--text-mid);line-height:1.5;vertical-align:top}
+.cmp tr:last-child td{border-bottom:none}
+.cmp td:first-child{font-weight:600;color:var(--text-dark);width:140px}
+.cmp td:last-child{color:var(--emerald);font-weight:500}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px}
+.ac2{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px 20px;text-align:center}
+.ac2 .ico{font-size:28px;margin-bottom:12px}
+.ac2 h3{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--forest);margin-bottom:8px}
+.ac2 p{font-size:13px;color:var(--text-mid);line-height:1.55}
+.divider{border:none;border-top:1px solid var(--border);margin:48px 0}
+.th2{font-family:'Fraunces',serif;font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--forest);margin-bottom:8px}
+.ts2{font-size:15px;color:var(--text-mid);line-height:1.7;max-width:560px;margin-bottom:36px}
+.arch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+.arc{background:var(--forest);border-radius:10px;padding:18px 16px;text-align:center}
+.arc .al{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:8px}
+.arc .av{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:#68d391;line-height:1.3}
+.arc .ad{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px}
+.bw{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:40px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.bw .bl{font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:12px;font-weight:500;padding:5px 13px;border-radius:20px;background:var(--cream-2);border:1px solid var(--border);color:var(--text-dark)}
+.sus{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:40px}
+.sus table{width:100%;border-collapse:collapse;font-size:13px}
+.sus th{background:var(--cream-2);padding:12px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light);text-align:left;border-bottom:1px solid var(--border)}
+.sus td{padding:12px 18px;border-bottom:1px solid rgba(0,0,0,0.04);color:var(--text-mid)}
+.sus tr:last-child td{border-bottom:none}
+.sus .sc{font-family:'Fraunces',serif;font-weight:700;font-size:16px;color:var(--emerald)}
+.sus .mr td{background:var(--strong-bg);font-weight:700;color:var(--forest)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:48px}
+.fi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.fi h4{font-size:13px;font-weight:700;color:var(--forest);margin-bottom:4px}
+.fi p{font-size:12px;color:var(--text-mid);line-height:1.5}
+.cta{background:var(--forest);border-radius:16px;padding:48px 40px;text-align:center;margin-bottom:72px}
+.cta h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:10px}
+.cta p{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:28px}
+.cta a{display:inline-flex;align-items:center;gap:8px;background:var(--emerald);color:#fff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:10px;text-decoration:none;transition:background .2s}
+.cta a:hover{background:var(--emerald-bright)}
+footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center}
+footer p{font-size:13px;color:var(--text-light)}
+footer a{color:var(--emerald);text-decoration:none}
+@media(max-width:768px){.steps,.arch{grid-template-columns:1fr}.hg,.fg{grid-template-columns:1fr}.ag{grid-template-columns:1fr}.stats{flex-wrap:wrap}.st{min-width:50%;border-bottom:1px solid rgba(255,255,255,0.07)}.demo{flex-direction:column}.conf{flex-direction:column}.cmp{overflow-x:auto}.cta{padding:36px 24px}.bw{flex-direction:column;align-items:flex-start}}
+@media(max-width:520px){.nk a:not(.nc){display:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="ni">
+  <a href="index.html" class="nl"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#2d7a4f"/><path d="M16.5 4.5 L10.5 14 L14 14 L11.5 23.5 L19.5 12.5 L16 12.5 Z" fill="#c9a96e"/></svg> Nimbus-24</a>
+  <div class="nk"><a href="proche-aidant.html" class="ac">Proche Aidant</a><a href="lektes.html">Lektes</a><a href="index.html#contact" class="nc">Contact Us</a></div>
+</div></nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hi">
+    <div class="eyebrow">⬡ Healthcare AI · Nimbus-24</div>
+    <h1>A companion that<br><span>remembers.</span></h1>
+    <p class="hero-desc">Proche Aidant is a conversational AI assistant purpose-built for people in the early stages of dementia and their caregivers. Unlike general-purpose assistants, it remembers who you are, tracks your medications, and responds when you're in distress.</p>
+    <div class="ha">
+      <a href="https://proche-aidant-jarvis.el.r.appspot.com" target="_blank" class="btn bp">Try it live →</a>
+      <span class="live"><span class="dot"></span> Deployed &amp; live</span>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+
+  <div class="stats">
+    <div class="st"><div class="sv">87.0</div><div class="stl">SUS Score<br>"Excellent" band</div></div>
+    <div class="st"><div class="sv">5/5</div><div class="stl">Participants rated<br>Excellent</div></div>
+    <div class="st"><div class="sv">HHAI '26</div><div class="stl">Peer-reviewed<br>working paper</div></div>
+    <div class="st"><div class="sv">67 yrs</div><div class="stl">Oldest participant<br>scored 85/100</div></div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-text">
+      <h2>Try Proche Aidant — it's live</h2>
+      <p>This isn't a mockup or a prototype. Proche Aidant is deployed on Google App Engine and available right now. Say your name, ask about the weather, log a medication — it remembers everything.</p>
+    </div>
+    <a href="https://proche-aidant-jarvis.el.r.appspot.com" target="_blank" class="demo-btn">Open live demo →</a>
+  </div>
+
+  <div class="conf">
+    <div class="conf-ico">📄</div>
+    <div class="conf-body">
+      <h3>HHAI 2026 — Peer-Reviewed Working Paper</h3>
+      <p>A working paper describing the system, its hybrid NLU architecture, and usability evaluation has been submitted to HHAI 2026 — an international peer-reviewed conference on human-AI collaboration hosted in Brussels.</p>
+      <div class="cg">
+        <div class="ci"><div class="l">Conference</div><div class="v">HHAI 2026</div></div>
+        <div class="ci"><div class="l">Location</div><div class="v">Brussels, Belgium</div></div>
+        <div class="ci"><div class="l">Dates</div><div class="v">July 8–10, 2026</div></div>
+        <div class="ci"><div class="l">Submission</div><div class="v">#65</div></div>
+        <div class="ci"><div class="l">License</div><div class="v">CC BY-NC</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sl">How it works</div>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><h3>Start talking</h3><p>No login, no forms. Just say your name and Proche Aidant remembers. Your profile builds naturally through conversation.</p></div>
+    <div class="step"><div class="sn">2</div><h3>AI learns your routine</h3><p>Medications, schedules, emergency contacts, entertainment preferences — all stored persistently and recalled across sessions.</p></div>
+    <div class="step"><div class="sn">3</div><h3>Stay safe, stay connected</h3><p>Proactive medication reminders, distress detection that routes to your personal emergency contact, and a companion that's always there.</p></div>
+  </div>
+
+  <div class="sl">What makes it different</div>
+  <div class="hg">
+    <div class="hc"><div class="hi2">🔒</div><div><h3>Persistent memory</h3><p>Say "my name is Priya" on Monday — Proche Aidant greets you as Priya on Thursday. Names, medications, contacts, and preferences persist indefinitely.</p></div></div>
+    <div class="hc"><div class="hi2">🚨</div><div><h3>Distress detection</h3><p>Keyword and semantic pattern matching detects fear, confusion, or emergency signals and routes directly to the user's stored emergency contact.</p></div></div>
+    <div class="hc"><div class="hi2">💊</div><div><h3>Medication tracking</h3><p>"I took the white pill" is understood as a medication log. Proactive push reminders via Server-Sent Events ensure doses aren't missed.</p></div></div>
+    <div class="hc"><div class="hi2">🗣️</div><div><h3>Tolerant to imprecise speech</h3><p>Designed for users who can't produce precise commands. Indirect, vague, and conversational inputs are handled gracefully by the NLU routing engine.</p></div></div>
+    <div class="hc"><div class="hi2">🎬</div><div><h3>Entertainment &amp; weather</h3><p>Movie recommendations with genre, language, and mood filters. Real-time weather queries. Daily companionship, not just clinical utility.</p></div></div>
+    <div class="hc"><div class="hi2">🛡️</div><div><h3>Three-layer safety</h3><p>Distress detection, toxic content filtering, and graceful degradation — if any service fails, the system returns a calm, reassuring message.</p></div></div>
+  </div>
+
+  <div class="sl">Why not Alexa, Google, or Siri?</div>
+  <div class="cmp">
+    <table>
+      <thead><tr><th>Feature</th><th>General Assistants</th><th>Proche Aidant</th></tr></thead>
+      <tbody>
+        <tr><td>Memory</td><td>Resets between sessions. Doesn't remember your name.</td><td>Persistent across all sessions. Remembers name, meds, contacts.</td></tr>
+        <tr><td>Input tolerance</td><td>Requires precise commands. Fails on vague input.</td><td>Understands indirect phrasing. "I took the white pill" works.</td></tr>
+        <tr><td>Safety</td><td>No distress detection. Routes to generic helplines.</td><td>Detects distress and routes to personal emergency contacts.</td></tr>
+        <tr><td>Designed for</td><td>General population. Assumes working memory.</td><td>Early-stage dementia. Accounts for cognitive decline.</td></tr>
+        <tr><td>Model</td><td>Large, resource-heavy (GPT-4 scale).</td><td>Llama 3.1 8B — small, fast, sustainable by design.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sl">Who it's for</div>
+  <div class="ag">
+    <div class="ac2"><div class="ico">👨‍👩‍👧</div><h3>Family Caregivers</h3><p>Caring for a parent or loved one with dementia. Proche Aidant reduces the daily burden.</p></div>
+    <div class="ac2"><div class="ico">🧓</div><h3>People with Early-Stage Dementia</h3><p>A companion that preserves independence — no technical literacy required.</p></div>
+    <div class="ac2"><div class="ico">🏥</div><h3>Healthcare Researchers</h3><p>A deployed proof-of-concept for conversational AI in cognitive care, with published evaluation data.</p></div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sl" style="margin-top:0">For Partners &amp; Investors</div>
+  <div class="th2">Under the hood</div>
+  <p class="ts2">Proche Aidant is a deployed, live system — not a prototype. Here's the technical detail for those who want to go deeper.</p>
+
+  <div class="arch">
+    <div class="arc"><div class="al">Frontend</div><div class="av">HTML / CSS / JS</div><div class="ad">Responsive, mobile-first</div></div>
+    <div class="arc"><div class="al">Backend</div><div class="av">Flask · Python 3</div><div class="ad">REST API + NLU routing</div></div>
+    <div class="arc"><div class="al">LLM</div><div class="av">Groq · Llama 3.1 8B</div><div class="ad">Fast, efficient, sustainable</div></div>
+    <div class="arc"><div class="al">Database</div><div class="av">Google Firestore</div><div class="ad">Persistent session storage</div></div>
+  </div>
+
+  <div class="bw">
+    <div class="bl">Full stack</div>
+    <div class="pills">
+      <span class="pill">Python · Flask</span><span class="pill">Groq · Llama 3.1 8B</span><span class="pill">Google Firestore</span><span class="pill">Google App Engine</span><span class="pill">OpenWeatherMap API</span><span class="pill">TMDB API</span><span class="pill">Server-Sent Events</span><span class="pill">AI-assisted dev (Claude)</span>
+    </div>
+  </div>
+
+  <div class="sl">Evaluation results</div>
+  <div class="sus">
+    <table>
+      <thead><tr><th>Participant</th><th>SUS Score</th><th>Band</th><th>Profile</th></tr></thead>
+      <tbody>
+        <tr><td>P1</td><td><span class="sc">95</span></td><td>Excellent</td><td>Adult, caregiving background</td></tr>
+        <tr><td>P2</td><td><span class="sc">87</span></td><td>Excellent</td><td>Biotechnologist, patient care experience</td></tr>
+        <tr><td>P3</td><td><span class="sc">85</span></td><td>Excellent</td><td>Elderly participant, aged 67</td></tr>
+        <tr><td>P4</td><td><span class="sc">85</span></td><td>Excellent</td><td>Cares for elderly family member</td></tr>
+        <tr><td>P5</td><td><span class="sc">83</span></td><td>Excellent</td><td>Cares for elderly family member</td></tr>
+        <tr class="mr"><td>Mean</td><td><span class="sc">87.0</span></td><td>Excellent</td><td>SD = 4.69 (highly consistent)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sl">Future research directions</div>
+  <div class="fg">
+    <div class="fi"><h4>🎙️ Voice Interface</h4><p>Replace text input entirely for late-stage patients. NLU models for disordered speech are an open research problem.</p></div>
+    <div class="fi"><h4>🧩 Adaptive NLU</h4><p>Learn a user's idiosyncratic language patterns over time. Personalised language modelling for cognitive impairment.</p></div>
+    <div class="fi"><h4>📡 IoT Integration</h4><p>Smart medication dispensers, door sensors, wearable fall detectors — continuous passive monitoring.</p></div>
+    <div class="fi"><h4>🏥 Clinical Validation</h4><p>Structured study with actual dementia patients under ethics approval — transforming proof-of-concept into evidence.</p></div>
+  </div>
+
+  <div class="cta">
+    <h2>Interested in Proche Aidant?</h2>
+    <p>Whether you're a caregiver, researcher, or potential partner — we'd love to hear from you.</p>
+    <a href="mailto:contact@nimbus-24.com">✉ &ensp; Contact Us</a>
+  </div>
+
+</div>
+
+<footer><p>© 2026 <a href="index.html">Nimbus-24</a> · nimbus-24.com</p></footer>
+</body>
+</html>
