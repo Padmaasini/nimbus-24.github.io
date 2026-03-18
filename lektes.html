@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lektes — AI Recruitment Screening · Nimbus-24</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --forest: #1a2e1a;
+    --emerald: #2d7a4f;
+    --emerald-bright: #38a169;
+    --cream: #faf7f2;
+    --cream-2: #f3ede3;
+    --sand: #c9a96e;
+    --text-dark: #1c2b1c;
+    --text-mid: #4a6355;
+    --text-light: #8aaa95;
+    --border: #ddd5c4;
+    --strong-bg: #edf7f1;
+    --strong-bd: #b8dfc8;
+    --amber-bg: #fff8ed;
+    --amber-bd: #e8d5a8;
+    --red-bg: #fdf0ee;
+    --red-bd: #f0b8b0;
+  }
+
+  [data-theme="dark"] {
+    --cream: #0f170f; --cream-2: #162016; --text-dark: #ddd8cc; --text-mid: #98a890;
+    --text-light: #506850; --border: #243024; --strong-bg: #1a2e1a; --strong-bd: #2d5a3d;
+    --forest: #e0ddd4; --emerald: #68d391; --emerald-bright: #7ee8a8;
+    --amber-bg: #1f1a0f; --amber-bd: #5a4a2a; --red-bg: #1f0f0f; --red-bd: #5a2a2a;
+  }
+  [data-theme="dark"] nav { background: rgba(15,23,15,0.94); border-bottom-color: rgba(255,255,255,0.06); }
+  [data-theme="dark"] .nav-logo { color: #e0ddd4; }
+  [data-theme="dark"] .nav-cta { background: #2d7a4f !important; }
+  [data-theme="dark"] .nav-cta:hover { background: #38a169 !important; }
+  [data-theme="dark"] .btn-primary { background: #2d7a4f; } [data-theme="dark"] .btn-primary:hover { background: #38a169; }
+  [data-theme="dark"] .btn-secondary { border-color: rgba(45,122,79,0.3); color: #68d391; }
+  [data-theme="dark"] .hero-bg { background: #0f170f; }
+  [data-theme="dark"] .hero-bg::after { background-image: radial-gradient(circle,rgba(104,211,145,0.03) 1px,transparent 1px); }
+  [data-theme="dark"] .stat-row { background: #162016; }
+  [data-theme="dark"] .stat { border-color: rgba(255,255,255,0.05); }
+  [data-theme="dark"] .sv { color: #68d391; } [data-theme="dark"] .stat-label { color: rgba(255,255,255,0.35); }
+  [data-theme="dark"] .problem-table, [data-theme="dark"] .highlight, [data-theme="dark"] .step-card,
+  [data-theme="dark"] .built-with { background: #142014; border-color: rgba(255,255,255,0.06); }
+  [data-theme="dark"] .problem-table th, [data-theme="dark"] .step-num { background: #1a2e1a; }
+  [data-theme="dark"] .highlight-ico { background: #1a2e1a; }
+  [data-theme="dark"] .pill { background: #1a2e1a; border-color: rgba(255,255,255,0.06); color: #98a890; }
+  [data-theme="dark"] .cta { background: #162016; }
+  [data-theme="dark"] .cta-btn { background: #2d7a4f; } [data-theme="dark"] .cta-btn:hover { background: #38a169; }
+  [data-theme="dark"] footer { border-top-color: rgba(255,255,255,0.06); }
+  .dt { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px; cursor: pointer; font-size: 14px; line-height: 1; transition: all .2s; color: var(--text-mid); }
+  .dt:hover { border-color: var(--emerald); }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    -webkit-font-smoothing: antialiased;
+    transition: background .3s, color .3s;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,247,242,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 28px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px;
+    color: var(--forest); text-decoration: none; letter-spacing: -0.5px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: var(--text-mid);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--emerald); }
+  .nav-links a.active { color: var(--emerald); font-weight: 600; }
+  .nav-cta {
+    font-size: 13px !important; font-weight: 600 !important;
+    color: #fff !important; background: var(--forest);
+    padding: 9px 20px; border-radius: 10px; transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: #2d4a2d !important; }
+
+  /* ── PAGE ── */
+  .page { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 130px 28px 64px; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 50% 50% at 75% 25%, rgba(45,122,79,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 15% 75%, rgba(201,169,110,0.04) 0%, transparent 70%),
+      var(--cream);
+  }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(26,46,26,0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--emerald); margin-bottom: 16px;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-size: clamp(34px, 5vw, 50px);
+    font-weight: 700; color: var(--forest); line-height: 1.12;
+    letter-spacing: -1px; margin-bottom: 8px;
+    opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .hero h1 span { color: var(--emerald); }
+  .hero-etymology {
+    font-size: 15px; color: var(--sage); font-style: italic; margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.8s 0.45s forwards;
+  }
+  .hero-etymology strong { font-style: normal; color: var(--text-mid); font-weight: 600; }
+  .hero-desc {
+    font-size: 17px; color: var(--text-mid); line-height: 1.75;
+    max-width: 600px; margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.8s 0.55s forwards;
+  }
+  .hero-actions {
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    opacity: 0; animation: fadeUp 0.8s 0.65s forwards;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--forest); color: #fff;
+    font-size: 14px; font-weight: 600; padding: 13px 26px;
+    border-radius: 10px; text-decoration: none; transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #2d4a2d; }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--emerald);
+    font-size: 14px; font-weight: 600; padding: 13px 20px;
+    border-radius: 10px; border: 1.5px solid var(--strong-bd);
+    text-decoration: none; transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--strong-bg); }
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--emerald); font-weight: 500;
+  }
+  .live-dot {
+    width: 7px; height: 7px; background: var(--emerald); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-light); margin-bottom: 20px;
+  }
+
+  /* ── STATS ── */
+  .stat-row {
+    display: flex; background: var(--forest);
+    border-radius: 14px; overflow: hidden; margin-bottom: 56px;
+  }
+  .stat {
+    flex: 1; padding: 24px 20px; text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.07);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-value {
+    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 800;
+    color: #68d391; line-height: 1; margin-bottom: 6px;
+  }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+
+  /* ── PROBLEM TABLE ── */
+  .problem-table {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; margin-bottom: 56px;
+  }
+  .problem-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .problem-table th {
+    background: var(--cream-2); padding: 12px 18px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-light);
+    text-align: left; border-bottom: 1px solid var(--border);
+  }
+  .problem-table td {
+    padding: 14px 18px; border-bottom: 1px solid rgba(0,0,0,0.04);
+    color: var(--text-mid); line-height: 1.5; vertical-align: top;
+  }
+  .problem-table tr:last-child td { border-bottom: none; }
+  .problem-table td:first-child { font-weight: 600; color: var(--text-dark); width: 160px; }
+  .problem-table td:last-child { color: var(--emerald); font-weight: 500; }
+
+  /* ── STEPS ── */
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 14px; margin-bottom: 56px;
+  }
+  .step-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 18px;
+  }
+  .step-num {
+    width: 28px; height: 28px; background: var(--strong-bg);
+    border-radius: 8px; font-size: 13px; font-weight: 800; color: var(--emerald);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+  }
+  .step-title { font-size: 13px; font-weight: 700; color: var(--forest); margin-bottom: 6px; }
+  .step-desc { font-size: 12px; color: var(--text-mid); line-height: 1.55; }
+
+  /* ── HIGHLIGHTS ── */
+  .highlights {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 56px;
+  }
+  .highlight {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px 24px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .highlight-ico {
+    width: 40px; height: 40px; background: var(--strong-bg);
+    border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; flex-shrink: 0;
+  }
+  .highlight-title { font-size: 14px; font-weight: 700; color: var(--forest); margin-bottom: 5px; }
+  .highlight-desc { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+
+  /* ── SCORING ── */
+  .score-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-bottom: 56px;
+  }
+  .score-card {
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .score-card.green { background: var(--strong-bg); border: 1px solid var(--strong-bd); }
+  .score-card.amber { background: var(--amber-bg); border: 1px solid var(--amber-bd); }
+  .score-card.red { background: var(--red-bg); border: 1px solid var(--red-bd); }
+  .score-range {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; margin-bottom: 4px;
+  }
+  .score-card.green .score-range { color: var(--emerald); }
+  .score-card.amber .score-range { color: #b07a1a; }
+  .score-card.red .score-range { color: #c0392b; }
+  .score-meaning { font-size: 12px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; }
+  .score-action { font-size: 11px; color: var(--text-light); }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px; margin-bottom: 16px;
+  }
+  .price-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 14px; padding: 28px 24px; position: relative;
+    transition: border-color 0.3s;
+  }
+  .price-card:hover { border-color: var(--strong-bd); }
+  .price-card.featured {
+    border-color: var(--emerald); background: var(--strong-bg);
+  }
+  .price-card.featured::after {
+    content: 'POPULAR'; position: absolute; top: 14px; right: 14px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+    background: var(--emerald); color: #fff; padding: 3px 10px; border-radius: 6px;
+  }
+  .price-name {
+    font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600;
+    color: var(--forest); margin-bottom: 4px;
+  }
+  .price-target { font-size: 12px; color: var(--text-light); margin-bottom: 14px; }
+  .price-amount {
+    font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700;
+    color: var(--forest); line-height: 1; margin-bottom: 2px;
+  }
+  .price-amount span { font-size: 14px; font-weight: 400; color: var(--text-light); }
+  .price-includes {
+    font-size: 12px; color: var(--text-mid); margin-top: 14px; line-height: 1.6;
+  }
+  .payg-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 56px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .payg-left { display: flex; align-items: baseline; gap: 12px; }
+  .payg-left .price-name { margin-bottom: 0; }
+  .payg-price {
+    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--emerald);
+  }
+  .payg-desc { font-size: 12px; color: var(--text-light); }
+
+  /* ── BUILT WITH ── */
+  .built-with {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px 28px; margin-bottom: 56px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .built-label {
+    font-size: 12px; font-weight: 600; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+  }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px; font-weight: 500; padding: 5px 13px;
+    border-radius: 20px; background: var(--cream-2);
+    border: 1px solid var(--border); color: var(--text-dark);
+  }
+
+  /* ── CTA ── */
+  .cta {
+    background: var(--forest); border-radius: 16px;
+    padding: 44px 40px; text-align: center; margin-bottom: 72px;
+  }
+  .cta-title {
+    font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700;
+    color: #fff; margin-bottom: 10px; letter-spacing: -0.3px;
+  }
+  .cta-desc { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--emerald); color: #fff;
+    font-size: 15px; font-weight: 700; padding: 14px 32px;
+    border-radius: 10px; text-decoration: none; transition: background 0.2s;
+  }
+  .cta-btn:hover { background: var(--emerald-bright); }
+
+  footer {
+    max-width: 860px; margin: 0 auto;
+    border-top: 1px solid var(--border); padding: 32px 28px; text-align: center;
+  }
+  footer p { font-size: 13px; color: var(--text-light); }
+  footer a { color: var(--emerald); text-decoration: none; }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .steps { grid-template-columns: 1fr 1fr; }
+    .highlights { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .stat-row { flex-wrap: wrap; }
+    .stat { min-width: 50%; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .built-with { flex-direction: column; align-items: flex-start; }
+    .problem-table { overflow-x: auto; }
+    .cta { padding: 32px 24px; }
+    .payg-card { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#2d7a4f"/><path d="M16.5 4.5 L10.5 14 L14 14 L11.5 23.5 L19.5 12.5 L16 12.5 Z" fill="#c9a96e"/></svg>
+      Nimbus-24
+    </a>
+    <div class="nav-links">
+      <a href="proche-aidant.html">Proche Aidant</a>
+      <a href="lektes.html" class="active">Lektes</a>
+      <button class="dt" onclick="toggleDark()" id="dt">🌙</button>
+      <a href="index.html#contact" class="nav-cta">Contact Us</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">🌿 AI Recruitment Screening · Nimbus-24</div>
+    <h1>Smarter screening.<br>Better hires. <span>Less time.</span></h1>
+    <p class="hero-etymology">From the Greek <strong>lektós</strong> (λεκτός) — <em>chosen, selected.</em></p>
+    <p class="hero-desc">
+      Lektes automates first-round CV screening — paste a job description,
+      upload CVs, and get a ranked shortlist with scores, skills analysis, and
+      ready-to-use interview questions. The AI screens. You decide.
+      Built as an API-first screening layer that works with any ATS,
+      designed for EU AI Act compliance from day one.
+    </p>
+    <div class="hero-actions">
+      <a href="https://lektes.nimbus-24.com" target="_blank" class="btn-primary">Try it live →</a>
+      <span class="live-badge"><span class="live-dot"></span> Live product</span>
+    </div>
+  </div>
+</section>
+
+<div class="page">
+
+  <!-- STATS -->
+  <div class="stat-row reveal">
+    <div class="stat">
+      <div class="stat-value">&lt; 2 min</div>
+      <div class="stat-label">Time to rank<br>a full shortlist</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">20</div>
+      <div class="stat-label">CVs per<br>screening session</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">API-first</div>
+      <div class="stat-label">Works with<br>any ATS</div>
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="section-label reveal">The problem</div>
+  <div class="problem-table reveal">
+    <table>
+      <thead>
+        <tr><th>Pain Point</th><th>Current Reality</th><th>Lektes Solution</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Manual screening</td><td>15–30 mins per CV, 200+ per role</td><td>Automated in seconds per CV</td></tr>
+        <tr><td>Unverified claims</td><td>No way to check if skills are real</td><td>Cross-checks LinkedIn &amp; GitHub</td></tr>
+        <tr><td>Inconsistent ranking</td><td>Subjective judgment varies by reviewer</td><td>Objective % score with justification</td></tr>
+        <tr><td>Time to shortlist</td><td>3–5 days average</td><td>Under 2 minutes for 20 CVs</td></tr>
+        <tr><td>Interview prep</td><td>HR researches each candidate manually</td><td>Auto-generated technical questions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-label reveal">How it works</div>
+  <div class="steps">
+    <div class="step-card reveal">
+      <div class="step-num">1</div>
+      <div class="step-title">Paste the job ad</div>
+      <div class="step-desc">AI reads the posting and extracts the role, required skills, and experience level automatically.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">2</div>
+      <div class="step-title">Upload CVs</div>
+      <div class="step-desc">Drop up to 20 PDF or Word CVs at once. No formatting required — Lektes handles the parsing.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">3</div>
+      <div class="step-title">AI screens &amp; ranks</div>
+      <div class="step-desc">Each candidate is scored on skills, experience, education, and verified against LinkedIn and GitHub.</div>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">4</div>
+      <div class="step-title">Get the report</div>
+      <div class="step-desc">Ranked shortlist + tailored interview questions with answer benchmarks, emailed directly to HR.</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section-label reveal">What makes Lektes different</div>
+  <div class="highlights">
+    <div class="highlight reveal">
+      <div class="highlight-ico">🧠</div>
+      <div>
+        <div class="highlight-title">Understands transferable skills</div>
+        <div class="highlight-desc">Knows that Power BI bridges to Microsoft Fabric, that AWS knowledge transfers to Azure. Partial credit instead of hard misses.</div>
+      </div>
+    </div>
+    <div class="highlight reveal">
+      <div class="highlight-ico">📋</div>
+      <div>
+        <div class="highlight-title">Interview questions included</div>
+        <div class="highlight-desc">5 tailored questions per role with Strong, Acceptable, and Weak answer examples — written so any HR professional can use them.</div>
+      </div>
+    </div>
+    <div class="highlight reveal">
+      <div class="highlight-ico">🔍</div>
+      <div>
+        <div class="highlight-title">Profile verification</div>
+        <div class="highlight-desc">Cross-references LinkedIn existence, GitHub activity, Kaggle contributions, and StackOverflow profiles to validate CV claims.</div>
+      </div>
+    </div>
+    <div class="highlight reveal">
+      <div class="highlight-ico">🔗</div>
+      <div>
+        <div class="highlight-title">API-first architecture</div>
+        <div class="highlight-desc">REST API with auto-generated Swagger docs. Integrates with any ATS — Greenhouse, Lever, Workday, BambooHR, or custom systems.</div>
+      </div>
+    </div>
+    <div class="highlight reveal">
+      <div class="highlight-ico">🔒</div>
+      <div>
+        <div class="highlight-title">Built with GDPR in mind</div>
+        <div class="highlight-desc">Candidate data deleted when position is filled. 30-day auto-delete fallback. Right-to-erasure endpoint for candidate requests.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUMAN IN THE LOOP + EU AI ACT -->
+  <div style="background:var(--cream-2);border:1px solid var(--border);border-radius:16px;padding:36px 32px;margin-bottom:40px" class="reveal">
+    <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:24px">
+      <div style="width:48px;height:48px;border-radius:12px;background:var(--strong-bg);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🤝</div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--forest);margin-bottom:6px">AI assists. Humans decide.</div>
+        <p style="font-size:14px;color:var(--text-mid);line-height:1.7">Lektes is a screening tool, not a decision-maker. It ranks, scores, and surfaces insights — but the final hiring decision always rests with the human. Every score comes with a written justification so HR professionals can evaluate the AI's reasoning, agree or disagree, and make their own informed call. We believe AI should reduce workload, not remove judgment.</p>
+      </div>
+    </div>
+    <div style="background:#1a2e1a;border-radius:12px;padding:28px 28px;margin-top:20px">
+      <div style="display:flex;gap:16px;align-items:flex-start">
+        <div style="font-size:20px;flex-shrink:0;margin-top:2px">🇪🇺</div>
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;margin-bottom:6px">Designed for the EU AI Act</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:14px">The EU AI Act classifies AI recruitment screening as "high-risk." Core compliance requirements — documentation, bias testing, human oversight, and audit trails — become enforceable on <strong style="color:#68d391">2 August 2026</strong>. Lektes is built with these requirements in mind from day one.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:8px;background:rgba(104,211,145,0.15);color:#68d391">Human oversight built-in</span>
+            <span style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:8px;background:rgba(104,211,145,0.15);color:#68d391">Transparent scoring + justifications</span>
+            <span style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:8px;background:rgba(104,211,145,0.15);color:#68d391">GDPR-compliant data handling</span>
+            <span style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:8px;background:rgba(201,169,110,0.2);color:#c9a96e">Audit trail for every decision</span>
+            <span style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:8px;background:rgba(201,169,110,0.2);color:#c9a96e">30-day auto-delete + right-to-erasure</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUILT WITH -->
+  <div class="built-with reveal">
+    <div class="built-label">Built with</div>
+    <div class="pills">
+      <span class="pill">Python · FastAPI</span>
+      <span class="pill">Google Gemini 1.5 Flash</span>
+      <span class="pill">LangGraph</span>
+      <span class="pill">Resend</span>
+      <span class="pill">ReportLab</span>
+      <span class="pill">Render · Cloudflare</span>
+      <span class="pill">LinkedIn API</span>
+      <span class="pill">GitHub API</span>
+      <span class="pill">Coded with Claude (Anthropic)</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta reveal">
+    <div class="cta-title">See Lektes in action</div>
+    <div class="cta-desc">Live product — no sign-up needed to explore the demo</div>
+    <a href="https://lektes.nimbus-24.com" target="_blank" class="cta-btn">Open Lektes →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 <a href="index.html">Nimbus-24</a> · nimbus-24.com · <em>Lektes: from the Greek lektós — chosen.</em></p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  function toggleDark(){var d=document.documentElement,t=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',t);localStorage.setItem('nimbus-theme',t);document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'}
+  (function(){var t=localStorage.getItem('nimbus-theme');if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.addEventListener('DOMContentLoaded',function(){document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'})})();
+</script>
+</body>
+</html>

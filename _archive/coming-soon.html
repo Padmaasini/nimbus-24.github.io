@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nimbus-24 — Something Extraordinarily Tech Is Coming</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f0c040'/%3E%3Cstop offset='100%25' style='stop-color:%23c9a84c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M36 2 L14 34 L28 34 L24 62 L50 26 L34 26 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --midnight: #06060f; --deep-navy: #0a0a1a; --void: #080812;
+      --gold: #c9a84c; --gold-bright: #f0c040; --gold-dim: #7a6030;
+      --parchment: #f2e8c9; --parchment-dim: #a89060;
+      --crimson: #8b0000; --silver: #c8c8d8;
+      --magic-purple: #4a1080; --magic-blue: #1a1a6e;
+      --glow: rgba(201, 168, 76, 0.4); --ink: #1a0e05;
+    }
+    html, body { width: 100%; height: 100%; overflow-x: hidden; }
+    body { background: var(--midnight); color: var(--parchment); font-family: 'EB Garamond', serif; min-height: 100vh; cursor: none; }
+
+    .cursor { position: fixed; width: 24px; height: 24px; pointer-events: none; z-index: 9999; transform: translate(-12px, -12px); }
+    .cursor svg { width: 100%; height: 100%; filter: drop-shadow(0 0 6px rgba(240,192,64,0.9)); animation: cursorSpin 4s linear infinite; }
+    @keyframes cursorSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .cursor-trail { position: fixed; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); opacity: 0.5; box-shadow: 0 0 6px var(--gold); }
+
+    #starfield { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+    .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--dur) ease-in-out infinite var(--delay); }
+    @keyframes twinkle { 0%, 100% { opacity: var(--base-opacity); transform: scale(1); } 50% { opacity: 1; transform: scale(1.4); } }
+
+    .particle { position: fixed; pointer-events: none; z-index: 9997; border-radius: 50%; animation: floatUp var(--p-dur) ease-out forwards; }
+    @keyframes floatUp { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), -120px) scale(0); opacity: 0; } }
+
+    .nebula { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 1; animation: nebulaFloat 20s ease-in-out infinite alternate; }
+    .nebula-1 { width:600px;height:600px;background:radial-gradient(circle,rgba(74,16,128,0.25) 0%,transparent 70%);top:-100px;left:-100px; }
+    .nebula-2 { width:500px;height:500px;background:radial-gradient(circle,rgba(26,26,110,0.3) 0%,transparent 70%);bottom:-100px;right:-100px;animation-delay:-10s; }
+    .nebula-3 { width:400px;height:400px;background:radial-gradient(circle,rgba(139,0,0,0.12) 0%,transparent 70%);top:40%;left:50%;transform:translate(-50%,-50%);animation-delay:-5s; }
+    @keyframes nebulaFloat { from{transform:translate(0,0) scale(1);} to{transform:translate(30px,20px) scale(1.1);} }
+
+    #app { position: relative; z-index: 10; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+
+    #map-screen { position: fixed; inset: 0; z-index: 100; cursor: pointer; transition: opacity 1.4s ease, visibility 1.4s ease; }
+    #map-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .map-parchment { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(160,130,80,0.06) 28px, rgba(160,130,80,0.06) 29px), radial-gradient(ellipse at 30% 20%, #ddd0b0 0%, #c8b88a 40%, #b8a878 80%, #a89868 100%); overflow: hidden; }
+    .map-parchment::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 15% 85%, rgba(120,90,40,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 15%, rgba(100,70,30,0.15) 0%, transparent 40%), radial-gradient(ellipse at 50% 50%, rgba(140,110,60,0.08) 0%, transparent 60%); pointer-events: none; }
+
+    .fold-h, .fold-v { position: absolute; pointer-events: none; z-index: 2; }
+    .fold-h { left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent 0%, rgba(100,80,40,0.35) 15%, rgba(100,80,40,0.5) 50%, rgba(100,80,40,0.35) 85%, transparent 100%); }
+    .fold-v { top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent 0%, rgba(100,80,40,0.35) 15%, rgba(100,80,40,0.5) 50%, rgba(100,80,40,0.35) 85%, transparent 100%); }
+    .fold-h.f1 { top: 33.3%; } .fold-h.f2 { top: 66.6%; } .fold-v.f1 { left: 50%; }
+
+    .map-tap-prompt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 10px; animation: pulsePrompt 2.5s ease-in-out infinite; }
+    .tap-main { font-family: 'Cinzel Decorative', cursive; font-size: clamp(22px, 5vw, 38px); font-weight: 700; color: rgba(50,35,10,0.55); letter-spacing: 0.12em; text-transform: uppercase; }
+    .tap-sub { font-family: 'EB Garamond', serif; font-style: italic; font-size: clamp(12px, 2vw, 17px); color: rgba(60,40,15,0.4); letter-spacing: 0.2em; }
+    .tap-ornament { font-size: 12px; color: rgba(120,90,40,0.35); letter-spacing: 0.6em; }
+    @keyframes pulsePrompt { 0%,100%{opacity:0.3;} 50%{opacity:0.7;} }
+
+
+
+    .ink-bleed { position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: radial-gradient(circle, var(--void) 0%, rgba(8,8,18,0.97) 60%, transparent 100%); transform: translate(-50%, -50%); z-index: 15; pointer-events: none; opacity: 0; }
+    .map-parchment.ink-spreading .ink-bleed { animation: inkSpread 1.6s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+    @keyframes inkSpread { 0% { width: 0; height: 0; opacity: 0.8; } 30% { opacity: 1; } 100% { width: 300vmax; height: 300vmax; opacity: 1; } }
+
+    #main-content { opacity: 0; transform: translateY(30px); transition: opacity 1s ease 0.3s, transform 1s ease 0.3s; width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; gap: 50px; text-align: center; }
+    #main-content.revealed { opacity: 1; transform: translateY(0); }
+
+    .crest-container { position: relative; }
+    .crest-ring { width:120px;height:120px;border:2px solid var(--gold-dim);border-radius:50%;position:relative;margin:0 auto 20px;animation:ringRotate 30s linear infinite;box-shadow:0 0 20px rgba(201,168,76,0.2),inset 0 0 20px rgba(201,168,76,0.05); }
+    @keyframes ringRotate { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    .crest-ring::before,.crest-ring::after { content:'\2726';position:absolute;color:var(--gold);font-size:12px; }
+    .crest-ring::before { top:-8px;left:50%;transform:translateX(-50%); }
+    .crest-ring::after { bottom:-8px;left:50%;transform:translateX(-50%); }
+    .crest-inner { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:36px;animation:ringRotate 30s linear infinite reverse; }
+
+    .brand-name { font-family:'Cinzel Decorative',cursive;font-size:clamp(36px,8vw,80px);font-weight:900;background:linear-gradient(135deg,var(--gold-dim) 0%,var(--gold-bright) 40%,var(--parchment) 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.08em;line-height:1;filter:drop-shadow(0 0 30px rgba(201,168,76,0.4)); }
+    .brand-sub { font-family:'Cinzel',serif;font-size:clamp(11px,1.5vw,14px);color:var(--gold);letter-spacing:0.5em;text-transform:uppercase;margin-top:10px;text-shadow:0 0 10px rgba(201,168,76,0.5); }
+
+    .ornate-divider { display:flex;align-items:center;gap:16px;width:100%;max-width:600px; }
+    .divider-line { flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent); }
+    .divider-gem { color:var(--gold);font-size:14px; }
+
+    .tagline { font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,3vw,26px);color:var(--parchment);line-height:1.6;max-width:700px;opacity:0.9; }
+    .tagline em { color:var(--gold-bright);font-style:normal; }
+
+    .countdown-label { font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;text-shadow:0 0 12px rgba(201,168,76,0.6); }
+    .countdown { display:flex;gap:clamp(16px,4vw,40px);align-items:center; }
+    .countdown-unit { display:flex;flex-direction:column;align-items:center;gap:8px; }
+    .countdown-number { font-family:'Cinzel Decorative',cursive;font-size:clamp(32px,7vw,64px);font-weight:700;color:var(--gold-bright);line-height:1;min-width:clamp(60px,10vw,90px);text-align:center;position:relative;text-shadow:0 0 20px rgba(240,192,64,0.5);transition:transform 0.15s ease; }
+    .countdown-number.flip { transform:scaleY(0.85); }
+    .countdown-number::before { content:'';position:absolute;inset:-8px;border:1px solid rgba(201,168,76,0.2);border-radius:8px;background:rgba(201,168,76,0.03); }
+    .countdown-sep { font-family:'Cinzel Decorative',cursive;font-size:clamp(24px,5vw,48px);color:var(--gold-dim);margin-top:-8px;opacity:0.6; }
+    .countdown-word { font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.25em;color:var(--parchment-dim);text-transform:uppercase; }
+
+    .products-title { font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;text-shadow:0 0 12px rgba(201,168,76,0.6); }
+    .products { display:flex;gap:24px;flex-wrap:wrap;justify-content:center;width:100%; }
+    .product-card { flex:1;min-width:240px;max-width:380px;border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:30px 28px;background:rgba(10,10,26,0.6);backdrop-filter:blur(10px);position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s; }
+    .product-card:hover { border-color:rgba(201,168,76,0.5);transform:translateY(-4px); }
+    .product-card::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent); }
+    .product-icon { font-size:28px;margin-bottom:14px; }
+    .product-name { font-family:'Cinzel',serif;font-size:16px;color:var(--gold);letter-spacing:0.1em;margin-bottom:10px; }
+    .product-teaser { font-family:'EB Garamond',serif;font-size:15px;color:var(--silver);line-height:1.6;font-style:italic;opacity:0.8; }
+    .product-badge { display:inline-block;margin-top:14px;padding:3px 12px;border:1px solid var(--gold-dim);border-radius:20px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase; }
+
+    .footer { font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;opacity:0.85;text-shadow:0 0 8px rgba(201,168,76,0.4); }
+
+    @keyframes inkReveal { 0%{opacity:0;filter:blur(8px);} 100%{opacity:1;filter:blur(0);} }
+    .ink-reveal { animation: inkReveal 1.5s ease forwards; }
+    .ink-reveal:nth-child(1){animation-delay:0.1s;} .ink-reveal:nth-child(2){animation-delay:0.3s;} .ink-reveal:nth-child(3){animation-delay:0.5s;} .ink-reveal:nth-child(4){animation-delay:0.7s;} .ink-reveal:nth-child(5){animation-delay:0.9s;} .ink-reveal:nth-child(6){animation-delay:1.1s;} .ink-reveal:nth-child(7){animation-delay:1.3s;}
+
+    @media (max-width:600px) { .products{flex-direction:column;align-items:center;} .product-card{max-width:100%;} .countdown{gap:12px;} }
+
+    .waitlist-wrap { width:100%;max-width:520px;text-align:center; }
+    .waitlist-title { font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:18px;text-shadow:0 0 12px rgba(201,168,76,0.6); }
+    .waitlist-form { display:flex;gap:0;border:1px solid rgba(201,168,76,0.35);border-radius:50px;overflow:hidden;background:rgba(10,10,26,0.7);backdrop-filter:blur(10px);transition:border-color 0.3s,box-shadow 0.3s; }
+    .waitlist-form:focus-within { border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,0.2); }
+    .waitlist-input { flex:1;background:transparent;border:none;outline:none;padding:14px 22px;font-family:'EB Garamond',serif;font-size:16px;color:var(--parchment);min-width:0; }
+    .waitlist-input::placeholder { color:var(--parchment-dim);opacity:0.6; }
+    .waitlist-btn { background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;padding:14px 26px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--midnight);text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:background 0.3s,transform 0.15s;font-weight:600; }
+    .waitlist-btn:hover { background:linear-gradient(135deg,var(--gold),var(--gold-bright));transform:scale(1.03); }
+    .waitlist-btn:active { transform:scale(0.98); }
+    .waitlist-consent { margin-top:10px;font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:var(--parchment-dim);opacity:0.6; }
+    .waitlist-success { display:none;font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:0.15em;padding:16px;border:1px solid rgba(201,168,76,0.3);border-radius:50px;background:rgba(10,10,26,0.7);text-shadow:0 0 10px rgba(201,168,76,0.5); }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#fff8e0"/><stop offset="50%" style="stop-color:#f0c040"/><stop offset="100%" style="stop-color:#c9a84c"/></linearGradient></defs>
+    <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="url(#starGrad)"/>
+    <circle cx="12" cy="12" r="3" fill="#ffffff" opacity="0.7"/>
+  </svg>
+</div>
+<div class="cursor-trail" id="cursor-trail"></div>
+
+<div id="starfield"></div>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<div id="map-screen" onclick="openMap()">
+  <div class="map-parchment" id="map-parchment">
+    <div class="fold-h f1"></div>
+    <div class="fold-h f2"></div>
+    <div class="fold-v f1"></div>
+
+    <div class="ink-bleed" id="ink-bleed"></div>
+  </div>
+  <div class="map-tap-prompt" id="tap-prompt">
+    <div class="tap-ornament">&#x2726; &#x2726; &#x2726;</div>
+    <div class="tap-main">Tap to Open</div>
+    <div class="tap-sub">the magic awaits</div>
+    <div class="tap-ornament">&#x2726; &#x2726; &#x2726;</div>
+  </div>
+</div>
+
+<div id="app">
+  <div id="main-content">
+    <div class="crest-container ink-reveal">
+      <div class="crest-ring"><span class="crest-inner">&#x26A1;</span></div>
+      <div class="brand-name">NIMBUS-24</div>
+      <div class="brand-sub">Technology for the extraordinary</div>
+    </div>
+    <div class="ornate-divider ink-reveal"><div class="divider-line"></div><span class="divider-gem">&#x2726;</span><div class="divider-line"></div></div>
+    <div class="tagline ink-reveal"><em>We solemnly swear</em> we are up to something<br/>extraordinarily tech.</div>
+    <div class="ink-reveal" style="text-align:center">
+      <div class="countdown-label">The enchantment begins in</div>
+      <div class="countdown" id="countdown">
+        <div class="countdown-unit"><div class="countdown-number" id="cd-days">00</div><div class="countdown-word">Days</div></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><div class="countdown-number" id="cd-hours">00</div><div class="countdown-word">Hours</div></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><div class="countdown-number" id="cd-minutes">00</div><div class="countdown-word">Minutes</div></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><div class="countdown-number" id="cd-seconds">00</div><div class="countdown-word">Seconds</div></div>
+      </div>
+    </div>
+    <div class="ornate-divider ink-reveal"><div class="divider-line"></div><span class="divider-gem">&#x2726;</span><div class="divider-line"></div></div>
+    <div class="ink-reveal" style="width:100%;text-align:center">
+      <div class="products-title">Spells in the making</div>
+      <div class="products">
+        <div class="product-card">
+          <div class="product-icon">&#x1F9E0;</div>
+          <div class="product-name">Proche Aidant</div>
+          <div class="product-teaser">A compassionate AI companion for those who need care &mdash; and the families who give it.</div>
+          <div class="product-badge">Healthcare AI &middot; Coming Soon</div>
+        </div>
+        <div class="product-card">
+          <div class="product-icon">&#x26A1;</div>
+          <div class="product-name">TalentMesh</div>
+          <div class="product-teaser">Where extraordinary talent finds its place &mdash; intelligent matching for the modern workforce.</div>
+          <div class="product-badge">HR Tech &middot; Coming Soon</div>
+        </div>
+      </div>
+    </div>
+    <div class="ornate-divider ink-reveal"><div class="divider-line"></div><span class="divider-gem">&#x2726;</span><div class="divider-line"></div></div>
+    <div class="waitlist-wrap ink-reveal">
+      <div class="waitlist-title">&#x2726; Be the first to know &#x2726;</div>
+      <form class="waitlist-form" id="waitlist-form" action="https://formspree.io/f/mreavzjr" method="POST">
+        <input class="waitlist-input" type="email" name="email" placeholder="your@email.com" required />
+        <button class="waitlist-btn" type="submit">Notify Me &#x26A1;</button>
+      </form>
+      <div class="waitlist-consent">By joining you agree to receive one launch notification. No spam, ever.</div>
+      <div class="waitlist-success" id="waitlist-success">&#x26A1; You're on the list &mdash; mischief managed!</div>
+    </div>
+    <div class="ornate-divider ink-reveal"><div class="divider-line"></div><span class="divider-gem">&#x2726;</span><div class="divider-line"></div></div>
+    <div class="ink-reveal" style="text-align:center;max-width:560px">
+      <div class="products-title" style="margin-bottom:16px">The Founder</div>
+      <div style="border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:28px 32px;background:rgba(10,10,26,0.6);backdrop-filter:blur(10px);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)"></div>
+        <div style="font-size:28px;margin-bottom:12px">&#x1F9D9;&#x200D;&#x2640;&#xFE0F;</div>
+        <div style="font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:0.08em;margin-bottom:14px">Nimbus-24</div>
+        <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--silver);line-height:1.7;opacity:0.85">Founded by a researcher at the intersection of AI and human care &mdash; building technology that listens, remembers, and truly helps.</div>
+      </div>
+    </div>
+    <div class="ornate-divider ink-reveal"><div class="divider-line"></div><span class="divider-gem">&#x2726;</span><div class="divider-line"></div></div>
+    <div class="footer ink-reveal">&copy; 2026 Nimbus-24 &nbsp;&middot;&nbsp; nimbus-24.com</div>
+  </div>
+</div>
+
+<script>
+  var cursor=document.getElementById('cursor'),trail=document.getElementById('cursor-trail');
+  var mx=0,my=0,tx=0,ty=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';spawnParticle(mx,my);});
+  function animTrail(){tx+=(mx-tx)*0.15;ty+=(my-ty)*0.15;trail.style.left=tx+'px';trail.style.top=ty+'px';requestAnimationFrame(animTrail);}
+  animTrail();
+
+  var sf=document.getElementById('starfield');
+  for(var i=0;i<220;i++){var s=document.createElement('div');s.className='star';var sz=Math.random()*2.5+0.5;s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--dur:'+(2+Math.random()*4)+'s;--delay:-'+(Math.random()*6)+'s;--base-opacity:'+(0.2+Math.random()*0.6)+';';sf.appendChild(s);}
+
+  var colors=['#f0c040','#c9a84c','#ffffff','#a87cff','#4af0ff'];
+  var lastParticle=0;
+  function spawnParticle(x,y){var now=Date.now();if(now-lastParticle<60)return;lastParticle=now;var p=document.createElement('div');p.className='particle';var sz=Math.random()*5+2;var dx=(Math.random()-0.5)*60;p.style.cssText='left:'+x+'px;top:'+y+'px;width:'+sz+'px;height:'+sz+'px;background:'+colors[Math.floor(Math.random()*colors.length)]+';--dx:'+dx+'px;--p-dur:'+(0.6+Math.random()*0.6)+'s;';document.body.appendChild(p);setTimeout(function(){p.remove();},1200);}
+
+  var mapOpened=false;
+  function openMap(){
+    if(mapOpened)return;mapOpened=true;
+    var parchment=document.getElementById('map-parchment');
+    
+    var tapPrompt=document.getElementById('tap-prompt');
+    tapPrompt.style.opacity='0';tapPrompt.style.transition='opacity 0.3s';
+    setTimeout(function(){
+      parchment.classList.add('ink-spreading');
+    },300);
+    setTimeout(function(){
+      document.getElementById('map-screen').classList.add('hidden');
+      document.getElementById('main-content').classList.add('revealed');
+    },1400);
+  }
+
+  var launch=new Date('2026-03-19T00:00:00+05:30');
+  function pad(n){return String(n).padStart(2,'0');}
+  function updateCountdown(){var now=new Date();var diff=launch-now;if(diff<=0){document.getElementById('cd-days').textContent='00';document.getElementById('cd-hours').textContent='00';document.getElementById('cd-minutes').textContent='00';document.getElementById('cd-seconds').textContent='00';return;}var days=Math.floor(diff/86400000);var hours=Math.floor((diff%86400000)/3600000);var minutes=Math.floor((diff%3600000)/60000);var seconds=Math.floor((diff%60000)/1000);function setUnit(id,val){var el=document.getElementById(id);var nv=pad(val);if(el.textContent!==nv){el.classList.add('flip');setTimeout(function(){el.textContent=nv;el.classList.remove('flip');},75);}}setUnit('cd-days',days);setUnit('cd-hours',hours);setUnit('cd-minutes',minutes);setUnit('cd-seconds',seconds);}
+  updateCountdown();setInterval(updateCountdown,1000);
+
+  var wlForm=document.getElementById('waitlist-form');
+  if(wlForm){wlForm.addEventListener('submit',async function(e){e.preventDefault();var btn=wlForm.querySelector('.waitlist-btn');btn.textContent='Sending...';btn.disabled=true;try{var res=await fetch(wlForm.action,{method:'POST',body:new FormData(wlForm),headers:{'Accept':'application/json'}});if(res.ok){wlForm.style.display='none';wlForm.nextElementSibling.style.display='none';document.getElementById('waitlist-success').style.display='block';}else{btn.textContent='Try again';btn.disabled=false;}}catch(err){btn.textContent='Try again';btn.disabled=false;}});}
+</script>
+</body>
+</html>
