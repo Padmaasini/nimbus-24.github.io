@@ -1,1 +1,41 @@
-cron: '0 23 18 3 *'
+name: Launch Nimbus-24
+
+on:
+  schedule:
+    - cron: '0 23 18 3 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Swap to launch site
+        run: |
+          mkdir -p _archive
+          if [ -f index.html ]; then
+            cp index.html _archive/coming-soon.html
+          fi
+          if [ -d _launch ]; then
+            cp _launch/index.html ./index.html
+            cp _launch/proche-aidant.html ./proche-aidant.html
+            cp _launch/lektes.html ./lektes.html
+          else
+            echo "ERROR: _launch/ folder not found"
+            exit 1
+          fi
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Launch Nimbus-24" || echo "No changes"
+          git push
