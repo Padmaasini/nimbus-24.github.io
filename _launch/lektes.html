@@ -27,6 +27,34 @@
     --red-bd: #f0b8b0;
   }
 
+  [data-theme="dark"] {
+    --cream: #0f170f; --cream-2: #162016; --text-dark: #ddd8cc; --text-mid: #98a890;
+    --text-light: #506850; --border: #243024; --strong-bg: #1a2e1a; --strong-bd: #2d5a3d;
+    --forest: #e0ddd4; --emerald: #68d391; --emerald-bright: #7ee8a8;
+    --amber-bg: #1f1a0f; --amber-bd: #5a4a2a; --red-bg: #1f0f0f; --red-bd: #5a2a2a;
+  }
+  [data-theme="dark"] nav { background: rgba(15,23,15,0.94); border-bottom-color: rgba(255,255,255,0.06); }
+  [data-theme="dark"] .nav-logo { color: #e0ddd4; }
+  [data-theme="dark"] .nav-cta { background: #2d7a4f !important; }
+  [data-theme="dark"] .nav-cta:hover { background: #38a169 !important; }
+  [data-theme="dark"] .btn-primary { background: #2d7a4f; } [data-theme="dark"] .btn-primary:hover { background: #38a169; }
+  [data-theme="dark"] .btn-secondary { border-color: rgba(45,122,79,0.3); color: #68d391; }
+  [data-theme="dark"] .hero-bg { background: #0f170f; }
+  [data-theme="dark"] .hero-bg::after { background-image: radial-gradient(circle,rgba(104,211,145,0.03) 1px,transparent 1px); }
+  [data-theme="dark"] .stat-row { background: #162016; }
+  [data-theme="dark"] .stat { border-color: rgba(255,255,255,0.05); }
+  [data-theme="dark"] .sv { color: #68d391; } [data-theme="dark"] .stat-label { color: rgba(255,255,255,0.35); }
+  [data-theme="dark"] .problem-table, [data-theme="dark"] .highlight, [data-theme="dark"] .step-card,
+  [data-theme="dark"] .built-with { background: #142014; border-color: rgba(255,255,255,0.06); }
+  [data-theme="dark"] .problem-table th, [data-theme="dark"] .step-num { background: #1a2e1a; }
+  [data-theme="dark"] .highlight-ico { background: #1a2e1a; }
+  [data-theme="dark"] .pill { background: #1a2e1a; border-color: rgba(255,255,255,0.06); color: #98a890; }
+  [data-theme="dark"] .cta { background: #162016; }
+  [data-theme="dark"] .cta-btn { background: #2d7a4f; } [data-theme="dark"] .cta-btn:hover { background: #38a169; }
+  [data-theme="dark"] footer { border-top-color: rgba(255,255,255,0.06); }
+  .dt { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px; cursor: pointer; font-size: 14px; line-height: 1; transition: all .2s; color: var(--text-mid); }
+  .dt:hover { border-color: var(--emerald); }
+
   html { scroll-behavior: smooth; }
 
   body {
@@ -34,6 +62,7 @@
     background: var(--cream);
     color: var(--text-dark);
     -webkit-font-smoothing: antialiased;
+    transition: background .3s, color .3s;
   }
 
   /* ── NAV ── */
@@ -361,6 +390,7 @@
     <div class="nav-links">
       <a href="proche-aidant.html">Proche Aidant</a>
       <a href="lektes.html" class="active">Lektes</a>
+      <button class="dt" onclick="toggleDark()" id="dt">🌙</button>
       <a href="index.html#contact" class="nav-cta">Contact Us</a>
     </div>
   </div>
@@ -488,7 +518,7 @@
   </div>
 
   <!-- HUMAN IN THE LOOP + EU AI ACT -->
-  <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:36px 32px;margin-bottom:40px" class="reveal">
+  <div style="background:var(--cream-2);border:1px solid var(--border);border-radius:16px;padding:36px 32px;margin-bottom:40px" class="reveal">
     <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:24px">
       <div style="width:48px;height:48px;border-radius:12px;background:var(--strong-bg);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🤝</div>
       <div>
@@ -496,7 +526,7 @@
         <p style="font-size:14px;color:var(--text-mid);line-height:1.7">Lektes is a screening tool, not a decision-maker. It ranks, scores, and surfaces insights — but the final hiring decision always rests with the human. Every score comes with a written justification so HR professionals can evaluate the AI's reasoning, agree or disagree, and make their own informed call. We believe AI should reduce workload, not remove judgment.</p>
       </div>
     </div>
-    <div style="background:var(--forest);border-radius:12px;padding:28px 28px;margin-top:20px">
+    <div style="background:#1a2e1a;border-radius:12px;padding:28px 28px;margin-top:20px">
       <div style="display:flex;gap:16px;align-items:flex-start">
         <div style="font-size:20px;flex-shrink:0;margin-top:2px">🇪🇺</div>
         <div>
@@ -526,7 +556,7 @@
       <span class="pill">Render · Cloudflare</span>
       <span class="pill">LinkedIn API</span>
       <span class="pill">GitHub API</span>
-      <span class="pill">AI-assisted dev (Claude)</span>
+      <span class="pill">Coded with Claude (Anthropic)</span>
     </div>
   </div>
 
@@ -548,6 +578,9 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  function toggleDark(){var d=document.documentElement,t=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',t);localStorage.setItem('nimbus-theme',t);document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'}
+  (function(){var t=localStorage.getItem('nimbus-theme');if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.addEventListener('DOMContentLoaded',function(){document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'})})();
 </script>
 </body>
 </html>

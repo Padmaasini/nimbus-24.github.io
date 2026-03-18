@@ -8,8 +8,25 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--forest:#1a2e1a;--emerald:#2d7a4f;--emerald-bright:#38a169;--cream:#faf7f2;--cream-2:#f3ede3;--sand:#c9a96e;--text-dark:#1c2b1c;--text-mid:#4a6355;--text-light:#8aaa95;--border:#ddd5c4;--strong-bg:#edf7f1;--strong-bd:#b8dfc8}
+[data-theme="dark"]{--cream:#0f170f;--cream-2:#162016;--text-dark:#ddd8cc;--text-mid:#98a890;--text-light:#506850;--border:#243024;--strong-bg:#1a2e1a;--strong-bd:#2d5a3d;--forest:#e0ddd4;--emerald:#68d391;--emerald-bright:#7ee8a8}
+[data-theme="dark"] nav{background:rgba(15,23,15,0.94);border-bottom-color:rgba(255,255,255,0.06)}
+[data-theme="dark"] .nl{color:#e0ddd4}
+[data-theme="dark"] .nc{background:#2d7a4f!important}[data-theme="dark"] .nc:hover{background:#38a169!important}
+[data-theme="dark"] .bp{background:#2d7a4f;color:#fff}[data-theme="dark"] .bp:hover{background:#38a169}
+[data-theme="dark"] .hero-bg{background:#0f170f}
+[data-theme="dark"] .stats,.demo{transition:background .3s}[data-theme="dark"] .stats{background:#162016}[data-theme="dark"] .demo{background:#162016}
+[data-theme="dark"] .sv{color:#68d391}[data-theme="dark"] .stl{color:rgba(255,255,255,0.35)}
+[data-theme="dark"] .st{border-color:rgba(255,255,255,0.05)}
+[data-theme="dark"] .step,.hc,.conf,.cmp,.ac2,.fi,.sus,.bw,.pf-item{background:#142014!important;border-color:rgba(255,255,255,0.06)!important}
+[data-theme="dark"] .cmp th,.sus th{background:#1a2e1a}
+[data-theme="dark"] .conf-item,.ci{background:#0f170f!important}
+[data-theme="dark"] .archc,.arc{background:#162016}
+[data-theme="dark"] .cta{background:#162016}[data-theme="dark"] .cta a{background:#2d7a4f}[data-theme="dark"] .cta a:hover{background:#38a169}
+[data-theme="dark"] .demo-btn{background:#38a169}
+[data-theme="dark"] .pill{background:#1a2e1a;border-color:rgba(255,255,255,0.06);color:#98a890}
+.dt{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 9px;cursor:pointer;font-size:14px;line-height:1;transition:all .2s;color:var(--text-mid)}.dt:hover{border-color:var(--emerald)}
 html{scroll-behavior:smooth}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text-dark);-webkit-font-smoothing:antialiased}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text-dark);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,247,242,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .ni{max-width:1080px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between}
 .nl{font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--forest);text-decoration:none;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
@@ -116,7 +133,7 @@ footer a{color:var(--emerald);text-decoration:none}
 
 <nav><div class="ni">
   <a href="index.html" class="nl"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#2d7a4f"/><path d="M16.5 4.5 L10.5 14 L14 14 L11.5 23.5 L19.5 12.5 L16 12.5 Z" fill="#c9a96e"/></svg> Nimbus-24</a>
-  <div class="nk"><a href="proche-aidant.html" class="ac">Proche Aidant</a><a href="lektes.html">Lektes</a><a href="index.html#contact" class="nc">Contact Us</a></div>
+  <div class="nk"><a href="proche-aidant.html" class="ac">Proche Aidant</a><a href="lektes.html">Lektes</a><button class="dt" onclick="toggleDark()" id="dt">🌙</button><a href="index.html#contact" class="nc">Contact Us</a></div>
 </div></nav>
 
 <section class="hero">
@@ -218,7 +235,7 @@ footer a{color:var(--emerald);text-decoration:none}
   <div class="bw">
     <div class="bl">Full stack</div>
     <div class="pills">
-      <span class="pill">Python · Flask</span><span class="pill">Groq · Llama 3.1 8B</span><span class="pill">Google Firestore</span><span class="pill">Google App Engine</span><span class="pill">OpenWeatherMap API</span><span class="pill">TMDB API</span><span class="pill">Server-Sent Events</span><span class="pill">AI-assisted dev (Claude)</span>
+      <span class="pill">Python · Flask</span><span class="pill">Groq · Llama 3.1 8B</span><span class="pill">Google Firestore</span><span class="pill">Google App Engine</span><span class="pill">OpenWeatherMap API</span><span class="pill">TMDB API</span><span class="pill">Server-Sent Events</span><span class="pill">Coded with Claude (Anthropic)</span>
     </div>
   </div>
 
@@ -254,5 +271,9 @@ footer a{color:var(--emerald);text-decoration:none}
 </div>
 
 <footer><p>© 2026 <a href="index.html">Nimbus-24</a> · nimbus-24.com</p></footer>
+<script>
+function toggleDark(){var d=document.documentElement,t=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',t);localStorage.setItem('nimbus-theme',t);document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'}
+(function(){var t=localStorage.getItem('nimbus-theme');if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.addEventListener('DOMContentLoaded',function(){document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'})})();
+</script>
 </body>
 </html>
