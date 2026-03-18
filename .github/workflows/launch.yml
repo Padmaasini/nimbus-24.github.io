@@ -39,3 +39,22 @@ jobs:
           git add -A
           git commit -m "Launch Nimbus-24" || echo "No changes"
           git push
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install resend
+
+      - name: Send waitlist notification emails
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          if [ -f _launch/waitlist_emails.csv ]; then
+            cp _launch/waitlist_emails.csv ./waitlist_emails.csv
+            python _launch/send_launch_emails.py
+          else
+            echo "No waitlist_emails.csv found — skipping email send"
+          fi
