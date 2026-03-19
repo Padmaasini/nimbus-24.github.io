@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lektes — AI Recruitment Screening · Nimbus-24</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a2e1a'/%3E%3Cpath d='M20 2 L9 17 L15 17 L12 30 L25 13 L18 13 Z' fill='%23c9a96e'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,45 +14,45 @@
     --emerald: #2d7a4f;
     --emerald-bright: #38a169;
     --cream: #faf7f2;
-    --cream-2: #f3ede3;
+    --cream-2: #f0e8d8;
     --sand: #c9a96e;
-    --text-dark: #1c2b1c;
-    --text-mid: #4a6355;
-    --text-light: #8aaa95;
-    --border: #ddd5c4;
-    --strong-bg: #edf7f1;
-    --strong-bd: #b8dfc8;
-    --amber-bg: #fff8ed;
-    --amber-bd: #e8d5a8;
-    --red-bg: #fdf0ee;
-    --red-bd: #f0b8b0;
+    --text-dark: #111c11;
+    --text-mid: #2e4a3a;
+    --text-light: #5a7a68;
+    --border: #c8bfae;
+    --strong-bg: #e0f5ea;
+    --strong-bd: #7ec49e;
+    --amber-bg: #fff4e0;
+    --amber-bd: #d4b070;
+    --red-bg: #fde8e5;
+    --red-bd: #e09088;
   }
 
   [data-theme="dark"] {
-    --cream: #0f170f; --cream-2: #162016; --text-dark: #ddd8cc; --text-mid: #98a890;
-    --text-light: #506850; --border: #243024; --strong-bg: #1a2e1a; --strong-bd: #2d5a3d;
-    --forest: #e0ddd4; --emerald: #68d391; --emerald-bright: #7ee8a8;
-    --amber-bg: #1f1a0f; --amber-bd: #5a4a2a; --red-bg: #1f0f0f; --red-bd: #5a2a2a;
+    --cream: #0a120a; --cream-2: #111d11; --text-dark: #e8e4d8; --text-mid: #b8c8b0;
+    --text-light: #7a9a82; --border: #2a3c2a; --strong-bg: #162816; --strong-bd: #3a6e4a;
+    --forest: #e8e4d8; --emerald: #68d391; --emerald-bright: #7ee8a8;
+    --amber-bg: #1f1a08; --amber-bd: #6a5520; --red-bg: #1f0a0a; --red-bd: #6a2a2a;
   }
-  [data-theme="dark"] nav { background: rgba(15,23,15,0.94); border-bottom-color: rgba(255,255,255,0.06); }
-  [data-theme="dark"] .nav-logo { color: #e0ddd4; }
+  [data-theme="dark"] nav { background: rgba(10,18,10,0.96); border-bottom-color: rgba(255,255,255,0.08); }
+  [data-theme="dark"] .nav-logo { color: #e8e4d8; }
   [data-theme="dark"] .nav-cta { background: #2d7a4f !important; }
   [data-theme="dark"] .nav-cta:hover { background: #38a169 !important; }
   [data-theme="dark"] .btn-primary { background: #2d7a4f; } [data-theme="dark"] .btn-primary:hover { background: #38a169; }
-  [data-theme="dark"] .btn-secondary { border-color: rgba(45,122,79,0.3); color: #68d391; }
-  [data-theme="dark"] .hero-bg { background: #0f170f; }
-  [data-theme="dark"] .hero-bg::after { background-image: radial-gradient(circle,rgba(104,211,145,0.03) 1px,transparent 1px); }
-  [data-theme="dark"] .stat-row { background: #162016; }
-  [data-theme="dark"] .stat { border-color: rgba(255,255,255,0.05); }
-  [data-theme="dark"] .sv { color: #68d391; } [data-theme="dark"] .stat-label { color: rgba(255,255,255,0.35); }
+  [data-theme="dark"] .btn-secondary { border-color: rgba(45,122,79,0.4); color: #68d391; }
+  [data-theme="dark"] .hero-bg { background: #0a120a; }
+  [data-theme="dark"] .hero-bg::after { background-image: radial-gradient(circle,rgba(104,211,145,0.04) 1px,transparent 1px); }
+  [data-theme="dark"] .stat-row { background: #111d11; }
+  [data-theme="dark"] .stat { border-color: rgba(255,255,255,0.08); }
+  [data-theme="dark"] .sv { color: #68d391; } [data-theme="dark"] .stat-label { color: rgba(255,255,255,0.55); }
   [data-theme="dark"] .problem-table, [data-theme="dark"] .highlight, [data-theme="dark"] .step-card,
-  [data-theme="dark"] .built-with { background: #142014; border-color: rgba(255,255,255,0.06); }
-  [data-theme="dark"] .problem-table th, [data-theme="dark"] .step-num { background: #1a2e1a; }
-  [data-theme="dark"] .highlight-ico { background: #1a2e1a; }
-  [data-theme="dark"] .pill { background: #1a2e1a; border-color: rgba(255,255,255,0.06); color: #98a890; }
-  [data-theme="dark"] .cta { background: #162016; }
+  [data-theme="dark"] .built-with { background: #0f1c0f; border-color: rgba(255,255,255,0.08); }
+  [data-theme="dark"] .problem-table th, [data-theme="dark"] .step-num { background: #162816; }
+  [data-theme="dark"] .highlight-ico { background: #162816; }
+  [data-theme="dark"] .pill { background: #162816; border-color: rgba(255,255,255,0.08); color: #b8c8b0; }
+  [data-theme="dark"] .cta { background: #111d11; }
   [data-theme="dark"] .cta-btn { background: #2d7a4f; } [data-theme="dark"] .cta-btn:hover { background: #38a169; }
-  [data-theme="dark"] footer { border-top-color: rgba(255,255,255,0.06); }
+  [data-theme="dark"] footer { border-top-color: rgba(255,255,255,0.08); }
   .dt { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px; cursor: pointer; font-size: 14px; line-height: 1; transition: all .2s; color: var(--text-mid); }
   .dt:hover { border-color: var(--emerald); }
 
@@ -400,7 +401,7 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">🌿 AI Recruitment Screening · Nimbus-24</div>
+    <div class="hero-eyebrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="16" height="16" style="vertical-align:-2px;margin-right:6px"><g transform="translate(10,10)"><rect x="-7" y="-7" width="14" height="14" rx="4" transform="rotate(45)" fill="#2d7a4f"/><circle cx="-3" cy="-3" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="0" cy="-3" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="3" cy="-3" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="-3" cy="0" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="0" cy="0" r="1.5" fill="#c9a96e" opacity="0.95"/><circle cx="3" cy="0" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="-3" cy="3" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="0" cy="3" r="0.9" fill="#faf7f2" opacity="0.6"/><circle cx="3" cy="3" r="0.9" fill="#faf7f2" opacity="0.6"/></g></svg>AI Recruitment Screening · Nimbus-24</div>
     <h1>Smarter screening.<br>Better hires. <span>Less time.</span></h1>
     <p class="hero-etymology">From the Greek <strong>lektós</strong> (λεκτός) — <em>chosen, selected.</em></p>
     <p class="hero-desc">

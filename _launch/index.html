@@ -4,16 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nimbus-24 — Technology for the Extraordinary</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a2e1a'/%3E%3Cpath d='M20 2 L9 17 L15 17 L12 30 L25 13 L18 13 Z' fill='%23c9a96e'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--forest:#1a2e1a;--emerald:#2d7a4f;--emerald-bright:#38a169;--cream:#faf7f2;--cream-2:#f3ede3;--sand:#c9a96e;--text-dark:#1c2b1c;--text-mid:#4a6355;--text-light:#8aaa95;--border:#ddd5c4;--strong-bg:#edf7f1;--strong-bd:#b8dfc8;--card-bg:#ffffff;--nav-bg:rgba(250,247,242,0.92);--hero-dot:rgba(26,46,26,0.03);--stats-bg:#1a2e1a}
-[data-theme="dark"]{--cream:#0f170f;--cream-2:#162016;--text-dark:#ddd8cc;--text-mid:#98a890;--text-light:#506850;--border:#243024;--strong-bg:#1a2e1a;--strong-bd:#2d5a3d;--card-bg:#142014;--nav-bg:rgba(15,23,15,0.94);--hero-dot:rgba(104,211,145,0.03);--forest:#e0ddd4;--stats-bg:#162016}
+:root{--forest:#1a2e1a;--emerald:#2d7a4f;--emerald-bright:#38a169;--cream:#faf7f2;--cream-2:#f0e8d8;--sand:#c9a96e;--text-dark:#111c11;--text-mid:#2e4a3a;--text-light:#5a7a68;--border:#c8bfae;--strong-bg:#e0f5ea;--strong-bd:#7ec49e;--card-bg:#ffffff;--nav-bg:rgba(250,247,242,0.96);--hero-dot:rgba(26,46,26,0.05);--stats-bg:#1a2e1a}
+[data-theme="dark"]{--cream:#0a120a;--cream-2:#111d11;--text-dark:#e8e4d8;--text-mid:#b8c8b0;--text-light:#7a9a82;--border:#2a3c2a;--strong-bg:#162816;--strong-bd:#3a6e4a;--card-bg:#0f1c0f;--nav-bg:rgba(10,18,10,0.96);--hero-dot:rgba(104,211,145,0.04);--forest:#e8e4d8;--stats-bg:#111d11}
 [data-theme="dark"] .bp{background:var(--emerald);color:#fff}[data-theme="dark"] .bp:hover{background:var(--emerald-bright)}
 [data-theme="dark"] .nc{background:var(--emerald)!important}[data-theme="dark"] .nc:hover{background:var(--emerald-bright)!important}
-[data-theme="dark"] .sv{color:#68d391}[data-theme="dark"] .stl{color:rgba(255,255,255,0.35)}
-[data-theme="dark"] .st{border-color:rgba(255,255,255,0.05)}
-[data-theme="dark"] .cta{background:#162016}[data-theme="dark"] .cta h2{color:#e0ddd4}
+[data-theme="dark"] .sv{color:#68d391}[data-theme="dark"] .stl{color:rgba(255,255,255,0.55)}
+[data-theme="dark"] .st{border-color:rgba(255,255,255,0.08)}
+[data-theme="dark"] .cta{background:#111d11}[data-theme="dark"] .cta h2{color:#e8e4d8}
 html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--text-dark);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:background .3s,border .3s}
 .ni{max-width:1080px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between}
@@ -59,14 +60,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);bac
 .pc-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
 .pc-ico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .pc-top h3{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--forest);line-height:1.2;transition:color .3s}
-.pc-top .tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-light)}
+.pc-top .tag{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-mid)}
 .pc p{font-size:14px;color:var(--text-mid);line-height:1.65;margin-bottom:20px;flex-grow:1}
 .pc-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--emerald);text-decoration:none;transition:gap .2s}.pc-link:hover{gap:10px}
 
 .stats{display:flex;background:var(--stats-bg);border-radius:14px;overflow:hidden;margin-top:48px;transition:background .3s}
 .st{flex:1;padding:28px 20px;text-align:center;border-right:1px solid rgba(255,255,255,0.07)}.st:last-child{border-right:none}
 .sv{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#68d391;line-height:1;margin-bottom:6px}
-.stl{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.4}
+.stl{font-size:12px;color:rgba(255,255,255,0.65);line-height:1.4}
 
 .cta{background:var(--stats-bg);border-radius:16px;padding:48px 40px;text-align:center;margin-top:48px;transition:background .3s}
 .cta h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:10px}.cta p{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:28px}
@@ -109,14 +110,14 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
       <div class="pf-grid">
         <div class="pf-item"><h4>📄 HHAI 2026 Working Paper</h4><p>Peer-reviewed paper on Proche Aidant submitted to the International Conference on Hybrid Human-Artificial Intelligence, Brussels, July 2026.</p></div>
         <div class="pf-item"><h4>🏢 Enterprise Background</h4><p>Capgemini (BI Consultant, Boehringer Ingelheim) and Cognizant (Programmer Analyst, US Healthcare). Led teams, delivered BI analytics, won XtraMile Award twice.</p></div>
-        <div class="pf-item"><h4>🤖 Coded with Claude (Anthropic)</h4><p>I designed the architecture, system design, and engineering for both products. Claude was used strictly as a coding tool — to implement, debug, and deploy what I architected.</p></div>
+        <div class="pf-item"><h4>🤖 Coded with Claude (Anthropic)</h4><p>I architected and engineered both products end-to-end. Claude was my coding tool — used strictly to implement, debug, and deploy.</p></div>
         <div class="pf-item"><h4>🎓 Certifications</h4><p>Microsoft Power BI Data Analyst Associate, Applied Data Science (IIT Palakkad), Azure AI Fundamentals (AI-900), Azure Data Fundamentals (DP-900).</p></div>
       </div>
       <div class="pf-links">
         <a href="https://github.com/Padmaasini" target="_blank" class="pf-link">GitHub ↗</a>
         <a href="https://linkedin.com/in/padmaasini-thulasirajan-39ba56a5" target="_blank" class="pf-link">LinkedIn ↗</a>
         <a href="https://padmaasini.github.io/" target="_blank" class="pf-link">Full Portfolio ↗</a>
-        <a href="mailto:padmaasinit94@hotmail.com" class="pf-link">✉ Email</a>
+        <a href="/cdn-cgi/l/email-protection#9bebfafff6fafae8f2f5f2efa2afdbf3f4eff6faf2f7b5f8f4f6" class="pf-link">✉ Email</a>
       </div>
       <div class="pf-tags">
         <span class="pf-tag">Python</span><span class="pf-tag">FastAPI · Flask</span><span class="pf-tag">LangGraph · LangChain</span><span class="pf-tag">LLMs · RAG · NLP</span><span class="pf-tag">Power BI · Tableau</span><span class="pf-tag">GCP · Azure</span>
@@ -131,12 +132,12 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
   <p class="sd">Each product is deployed, evaluated, and solving real problems today. Click through for the full story.</p>
   <div class="pg">
     <div class="pc">
-      <div class="pc-top"><div class="pc-ico" style="background:#1a2e1a"><svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="3" fill="#2d7a4f"/><circle cx="16" cy="16" r="1.8" fill="#68d391"/><circle cx="11" cy="11" r="1.2" fill="#68d391" opacity="0.5"/><circle cx="21" cy="11" r="1.2" fill="#c9a96e" opacity="0.5"/><circle cx="9" cy="16" r="1.2" fill="#68d391" opacity="0.5"/><circle cx="23" cy="16" r="1.2" fill="#c9a96e" opacity="0.5"/><circle cx="11" cy="21" r="1.2" fill="#68d391" opacity="0.5"/><circle cx="21" cy="21" r="1.2" fill="#c9a96e" opacity="0.5"/></svg></div><div><h3>Proche Aidant</h3><span class="tag">Healthcare AI · Live</span></div></div>
+      <div class="pc-top"><div class="pc-ico" style="background:transparent;width:44px;height:44px;padding:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="44" height="44"><rect width="80" height="80" rx="16" fill="#2d7a4f"/><path d="M38 40 C35 38 28 36 24 38 C20 40 18 44 20 48 C18 50 18 55 22 57 C26 59 32 57 36 53 C32 54 28 52 28 48 C28 44 32 42 36 43 Z" fill="#38a169" opacity="0.5" stroke="#68d391" stroke-width="1.6" stroke-linejoin="round"/><path d="M42 40 C45 38 52 36 56 38 C60 40 62 44 60 48 C62 50 62 55 58 57 C54 59 48 57 44 53 C48 54 52 52 52 48 C52 44 48 42 44 43 Z" fill="#38a169" opacity="0.5" stroke="#68d391" stroke-width="1.6" stroke-linejoin="round"/><path d="M38 36 C32 28 20 24 20 30 C20 36 32 40 38 40Z" fill="#38a169" opacity="0.35" stroke="#68d391" stroke-width="1.2" stroke-linejoin="round"/><path d="M42 36 C48 28 60 24 60 30 C60 36 48 40 42 40Z" fill="#38a169" opacity="0.35" stroke="#68d391" stroke-width="1.2" stroke-linejoin="round"/><rect x="35" y="32" width="10" height="20" rx="3" fill="#2d7a4f" stroke="#c9a96e" stroke-width="1.8"/><circle cx="40" cy="42" r="2.2" fill="#c9a96e"/><path d="M38 32 L34 22" stroke="#faf7f2" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/><path d="M42 32 L46 22" stroke="#faf7f2" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/><circle cx="34" cy="22" r="2" fill="#c9a96e"/><circle cx="46" cy="22" r="2" fill="#c9a96e"/></svg></div><div><h3>Proche Aidant</h3><span class="tag">Healthcare AI · Live</span></div></div>
       <p>A conversational AI companion for people in the early stages of dementia and their caregivers. It remembers who you are, tracks medications, and responds when you're in distress. Peer-reviewed at HHAI 2026.</p>
       <a href="proche-aidant.html" class="pc-link">Explore Proche Aidant →</a>
     </div>
     <div class="pc">
-      <div class="pc-top"><div class="pc-ico" style="background:#2d7a4f"><svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M16 6 C22 6 26 12 26 18 C26 24 22 28 16 28 C10 28 6 24 6 18 C6 12 10 6 16 6Z" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/><line x1="16" y1="9" x2="16" y2="25" stroke="rgba(255,255,255,0.2)" stroke-width="0.6"/><circle cx="11" cy="10" r="1.2" fill="rgba(255,255,255,0.35)"/><circle cx="21" cy="10" r="1.2" fill="rgba(255,255,255,0.35)"/><circle cx="10" cy="17" r="1.2" fill="rgba(255,255,255,0.35)"/><circle cx="22" cy="17" r="1.2" fill="rgba(255,255,255,0.35)"/></svg></div><div><h3>Lektes</h3><span class="tag">AI Recruitment Screening · Live</span></div></div>
+      <div class="pc-top"><div class="pc-ico" style="background:transparent;width:44px;height:44px;padding:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="44" height="44"><g transform="translate(20,20)"><rect x="-14" y="-14" width="28" height="28" rx="8" transform="rotate(45)" fill="#2d7a4f"/><rect x="-14" y="-14" width="28" height="28" rx="8" transform="rotate(45)" fill="none" stroke="#38a169" stroke-width="1.2" opacity="0.5"/><circle cx="-6" cy="-6" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="0" cy="-6" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="6" cy="-6" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="-6" cy="0" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="0" cy="0" r="2.4" fill="#c9a96e" opacity="0.95"/><circle cx="6" cy="0" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="-6" cy="6" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="0" cy="6" r="1.4" fill="#faf7f2" opacity="0.55"/><circle cx="6" cy="6" r="1.4" fill="#faf7f2" opacity="0.55"/><line x1="-6" y1="-6" x2="6" y2="6" stroke="#faf7f2" stroke-width="0.7" opacity="0.28"/><line x1="6" y1="-6" x2="-6" y2="6" stroke="#faf7f2" stroke-width="0.7" opacity="0.28"/><line x1="-6" y1="0" x2="6" y2="0" stroke="#faf7f2" stroke-width="0.7" opacity="0.28"/><line x1="0" y1="-6" x2="0" y2="6" stroke="#faf7f2" stroke-width="0.7" opacity="0.28"/></g></svg></div><div><h3>Lektes</h3><span class="tag">AI Recruitment Screening · Live</span></div></div>
       <p>From the Greek <em>lektós</em> — chosen. AI-powered CV screening that ranks candidates, verifies profiles, and generates interview questions. Designed for the EU AI Act (August 2026) with humans always in control.</p>
       <a href="lektes.html" class="pc-link">Explore Lektes →</a>
     </div>
@@ -153,15 +154,12 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
   <div class="cta">
     <h2>Let's build something extraordinary</h2>
     <p>Open to PhD opportunities, research collaborations, and senior AI roles across Europe.</p>
-    <a href="mailto:padmaasinit94@hotmail.com">✉ &ensp; Get in Touch</a>
+    <a href="/cdn-cgi/l/email-protection#631302070e0202100a0d0a175a57230b0c170e020a0f4d000c0e">✉ &ensp; Get in Touch</a>
   </div>
 </div>
 
 <footer><p>© 2026 <a href="index.html">Nimbus-24</a> · nimbus-24.com</p></footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 function toggleDark(){var d=document.documentElement,t=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',t);localStorage.setItem('nimbus-theme',t);document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'}
-(function(){var t=localStorage.getItem('nimbus-theme');if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.addEventListener('DOMContentLoaded',function(){document.getElementById('dt').textContent=t==='dark'?'☀️':'🌙'})})();
-</script>
-</body>
-</html>
+(function(){var t=localStorage.getItem('nimbus-theme');if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document
