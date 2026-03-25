@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Cirrio — AI Travel Planner by Nimbus-24</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a2e1a'/%3E%3Cellipse cx='16' cy='13' rx='10' ry='5.5' fill='%232d7a4f' opacity='0.6'/%3E%3Cellipse cx='16' cy='10' rx='6.5' ry='3.5' fill='%2338a169' opacity='0.5'/%3E%3Cellipse cx='16' cy='8' rx='3.5' ry='2' fill='%23c9a96e'/%3E%3Cpath d='M6 13 Q6 24 16 27 Q26 24 26 13' fill='none' stroke='%232d7a4f' stroke-width='1.2' opacity='0.7'/%3E%3Cpath d='M13.5 19 L16 14.5 L18.5 19' stroke='%23c9a96e' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='20.5' r='1' fill='%23c9a96e'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -311,6 +312,22 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
   color:#fff;cursor:pointer;transition:opacity .18s}
 .key-save:hover{opacity:.9}
 .key-note{font-size:11px;color:var(--text-l);margin-top:10px;text-align:center;line-height:1.5}
+/* ── IMAGES ── */
+.card-img{width:100%;height:180px;object-fit:cover;border-radius:9px 9px 0 0;display:block;background:var(--cream2)}
+.card-img-wrap{border-radius:9px 9px 0 0;overflow:hidden;margin:-20px -20px 16px -20px;height:180px;background:var(--cream2);position:relative}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.card-img-wrap img:hover{transform:scale(1.04)}
+.card-img-wrap .img-tag{position:absolute;bottom:8px;left:10px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:20px;backdrop-filter:blur(6px);background:rgba(26,46,26,.55);color:#faf7f2}
+.accom-img-wrap{border-radius:9px 9px 0 0;overflow:hidden;margin:-20px -20px 16px -20px;height:200px;background:var(--cream2);position:relative}
+.accom-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.accom-card:hover .accom-img-wrap img{transform:scale(1.04)}
+.accom-img-wrap .accom-img-tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:20px;backdrop-filter:blur(6px)}
+/* ── DRAG REORDER ── */
+.drag-hint{font-size:11px;color:var(--text-l);text-align:center;padding:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;border:1px dashed var(--border);border-radius:8px;background:var(--cream2)}
+.day-card{cursor:grab;transition:opacity .2s,transform .15s,box-shadow .15s}
+.day-card.dragging{opacity:.45;transform:scale(.98);box-shadow:none;cursor:grabbing}
+.day-card.drag-over{box-shadow:0 0 0 2px var(--emerald),0 4px 16px rgba(45,122,79,.15);transform:translateY(-2px)}
+.day-hdr{cursor:default}
 </style>
 </head>
 <body>
@@ -318,7 +335,17 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 <!-- NAV -->
 <nav>
   <div class="logo" onclick="showForm()">
-    <div class="logo-mark">☁</div>
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
+        <rect width="38" height="38" rx="10" fill="#1a2e1a"/>
+        <ellipse cx="19" cy="15" rx="11" ry="6" fill="#2d7a4f" opacity="0.55"/>
+        <ellipse cx="19" cy="11.5" rx="7" ry="3.8" fill="#38a169" opacity="0.5"/>
+        <ellipse cx="19" cy="9" rx="3.8" ry="2.2" fill="#c9a96e" opacity="0.9"/>
+        <path d="M8 15 Q8 27 19 30 Q30 27 30 15" fill="none" stroke="#2d7a4f" stroke-width="1.3" opacity="0.65"/>
+        <path d="M16 22 L19 16.5 L22 22" stroke="#c9a96e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="19" cy="23.5" r="1.2" fill="#c9a96e"/>
+      </svg>
+    </div>
     <div>
       <div class="logo-text">Cir<em>rio</em></div>
       <div class="logo-by">by nimbus-24.com</div>
@@ -439,7 +466,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
       <div class="dest-h1" id="r-dest"></div>
       <div class="trip-tags" id="r-tags"></div>
     </div>
-    <div class="budget-pill" id="r-budget"></div>
+    <div class="budget-pill" id="r-budget" style="display:none"></div>
   </div>
   <div class="tabs" id="tabs-bar"></div>
   <div id="panels-wrap"></div>
@@ -535,6 +562,8 @@ function buildPrompt(f) {
 
   return `You are Cirrio, a premium AI travel planner. Return ONLY a valid JSON object. No markdown code fences, no explanation, no text before or after the JSON.
 
+CRITICAL: You MUST generate ALL ${days} days of itinerary. Do not stop after day 1. Every day must be fully populated with activities and meals.
+
 TRIP DETAILS:
 Destination: ${f.dest}
 Origin: ${f.origin || 'not specified'}
@@ -545,7 +574,7 @@ Adults: ${f.adults}${f.kids > 0 ? `, Children: ${f.kids}${f.kidsAge ? ` aged ${f
 Cuisine preferences: ${cuisines}
 Travelling with pet: ${f.hasPet ? `Yes (${f.petType || 'pet'})` : 'No'}
 
-Return this exact JSON structure with realistic data:
+Return this JSON structure. The itinerary array MUST contain exactly ${days} objects, one per day:
 {
   "destination": "City, Country",
   "tripSummary": "3 sentences about why this trip suits this traveller type",
@@ -576,6 +605,7 @@ Return this exact JSON structure with realistic data:
       "petFriendly": false,
       "kidFriendly": true,
       "adultsOnly": false,
+      "imageKeyword": "luxury hotel room interior",
       "highlights": ["highlight 1", "highlight 2", "highlight 3"],
       "bookingLink": "https://www.booking.com/searchresults.html?ss=${encodeURIComponent(f.dest)}",
       "tag": "Top pick"
@@ -584,8 +614,8 @@ Return this exact JSON structure with realistic data:
   "itinerary": [
     {
       "day": 1,
-      "date": "Day 1 – Arrival",
-      "theme": "Theme name",
+      "date": "Day 1 – Arrival & First Impressions",
+      "theme": "Arrival",
       "activities": [
         {
           "time": "10:00",
@@ -595,7 +625,8 @@ Return this exact JSON structure with realistic data:
           "cost": 0,
           "currency": "${f.currency}",
           "isFree": false,
-          "category": "Museum",
+          "category": "Landmark",
+          "imageKeyword": "famous landmark sightseeing",
           "kidFriendly": true,
           "petFriendly": false,
           "tip": "Practical insider tip"
@@ -622,6 +653,7 @@ Return this exact JSON structure with realistic data:
       "description": "Two sentence description of why it is worth visiting.",
       "openingHours": "Daily 9am-6pm",
       "area": "Neighbourhood",
+      "imageKeyword": "city park garden outdoor",
       "kidFriendly": true,
       "petFriendly": true,
       "tip": "Best time to visit or practical tip"
@@ -652,17 +684,26 @@ Return this exact JSON structure with realistic data:
       "tip": "Practical taxi tip"
     },
     "recommendation": "Clear recommendation comparing public transport vs taxi with reasoning",
-    "savingsExample": "e.g. 3-day pass at €18 vs 6 taxi rides at €8 each saves €30"
+    "savingsExample": "e.g. 3-day pass at EUR18 vs 6 taxi rides at EUR8 each saves EUR30"
   },
   "insurance": {
     "recommended": "SafetyWing or WorldNomads",
     "reason": "Why this insurance suits this trip and traveller profile",
-    "estimatedCost": "~€X per day",
+    "estimatedCost": "approx X per day",
     "link": "https://safetywing.com"
   }
 }
 
-Rules: use real place names, realistic ${f.currency} prices, generate exactly ${days} days of itinerary, include 6-8 free attractions, provide 3 accommodation options at different price points.${f.kids > 0 ? ' Ensure activities are family-appropriate with realistic pacing for children.' : ''}${f.hasPet ? ' Clearly flag pet-friendly status on all accommodation options.' : ''}`;
+MANDATORY RULES:
+- The itinerary array MUST have EXACTLY ${days} complete day objects numbered Day 1 through Day ${days}
+- Each day needs at least 3-4 activities and 3 meals (breakfast, lunch, dinner)
+- Use real place names in ${f.dest}
+- All prices in ${f.currency}
+- Provide exactly 3 accommodation options (budget, mid-range, luxury)
+- Include 6-8 free attractions
+- imageKeyword must be 2-4 descriptive words for a stock photo search
+${f.kids > 0 ? '- Ensure activities are family-appropriate with realistic pacing for children' : ''}
+${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activity options' : ''}`;
 }
 
 /* ─── PLAN TRIP — calls Groq API ─── */
@@ -713,7 +754,7 @@ async function planTrip() {
             content: buildPrompt(formSnap)
           }
         ],
-        max_tokens: 4000,
+        max_tokens: 8000,
         temperature: 0.7
       })
     });
@@ -867,18 +908,35 @@ function actColor(cat) {
   return '#8aaa95';
 }
 
+function imgUrl(keyword, w, h) {
+  const q = encodeURIComponent((keyword||'travel').replace(/\s+/g,','));
+  return `https://source.unsplash.com/featured/${w}x${h}/?${q}`;
+}
+
+let itineraryOrder = [];
+
 function buildItinerary(R, f) {
-  return (R.itinerary||[]).map((day, i) => {
+  itineraryOrder = (R.itinerary||[]).map((_,i) => i);
+  return renderItinerary(R, f);
+}
+
+function renderItinerary(R, f) {
+  const days = R.itinerary || [];
+  if (!days.length) return '<p style="color:var(--text-l);padding:20px">No itinerary data.</p>';
+
+  const cards = itineraryOrder.map((idx, pos) => {
+    const day = days[idx];
+    if (!day) return '';
     const acts = (day.activities||[]).map(a => `
       <div class="activity">
-        <span class="act-time">${a.time}</span>
+        <span class="act-time">${a.time||''}</span>
         <div class="act-dot" style="background:${actColor(a.category)}"></div>
         <div class="act-body">
           <div class="act-title">
-            ${a.title}
+            ${a.title||''}
             ${a.isFree ? '<span class="free-badge">FREE</span>' : ''}
           </div>
-          <p class="act-desc">${a.description}</p>
+          <p class="act-desc">${a.description||''}</p>
           <div class="act-meta">
             ${a.duration ? `<span class="act-chip">⏱ ${a.duration}</span>` : ''}
             ${!a.isFree && a.cost > 0 ? `<span class="act-chip">💰 ${f.currency}${a.cost}</span>` : ''}
@@ -892,37 +950,81 @@ function buildItinerary(R, f) {
 
     const meals = (day.meals||[]).map(m => `
       <div class="meal-row">
-        <span class="meal-type">${m.meal}</span>
+        <span class="meal-type">${m.meal||''}</span>
         <div>
-          <div class="meal-name">${m.suggestion}</div>
-          <div class="meal-detail">${m.cuisine} · ${m.area} · ~${f.currency}${m.approxCost}${m.kidFriendly ? ' · 👧 Kids' : ''}</div>
+          <div class="meal-name">${m.suggestion||''}</div>
+          <div class="meal-detail">${m.cuisine||''} · ${m.area||''} · ~${f.currency}${m.approxCost||0}${m.kidFriendly ? ' · 👧 Kids' : ''}</div>
           ${m.note ? `<div class="meal-note">${m.note}</div>` : ''}
         </div>
       </div>`).join('');
 
+    const firstAct = (day.activities||[])[0];
+    const imgKw = firstAct?.imageKeyword || `${f.dest} travel sightseeing`;
+
     return `
-      <div class="day-card">
-        <div class="day-hdr" onclick="toggleDay(${i})">
-          <div>
-            <span class="day-num">Day ${day.day}</span>
-            <span class="day-theme">${day.theme}</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="day-date">${day.date}</span>
-            <span class="day-chev${i===0?' open':''}" id="chev-${i}">▼</span>
+      <div class="day-card" draggable="true" data-idx="${idx}" data-pos="${pos}"
+        ondragstart="dragStart(event)" ondragover="dragOver(event)"
+        ondrop="dragDrop(event)"
+        ondragend="dragEnd(event)" ondragleave="dragLeave(event)">
+        <div style="border-radius:9px 9px 0 0;overflow:hidden;height:150px;position:relative;background:var(--cream2)">
+          <img src="${imgUrl(imgKw,800,300)}" alt="${day.theme||''}"
+            style="width:100%;height:100%;object-fit:cover;display:block"
+            onerror="this.style.display='none'"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,46,26,.7) 0%,transparent 60%)"></div>
+          <div style="position:absolute;bottom:10px;left:14px;right:14px;display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <span class="day-num" style="color:#faf7f2">Day ${day.day}</span>
+              <span class="day-theme" style="color:#faf7f2">${day.theme||''}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:11px;color:rgba(255,255,255,.7)">${day.date||''}</span>
+              <span style="font-size:11px;color:rgba(255,255,255,.5)" title="Drag to reorder">⠿</span>
+            </div>
           </div>
         </div>
-        <div class="day-body${i===0?' open':''}" id="day-body-${i}">
+        <div class="day-hdr" onclick="toggleDay('dc-${idx}')" style="border-radius:0;background:var(--cream2)">
+          <div style="font-size:12px;color:var(--text-m);font-weight:500">${(day.activities||[]).length} activities · ${(day.meals||[]).length} meals</div>
+          <span class="day-chev open" id="chev-dc-${idx}">▼</span>
+        </div>
+        <div class="day-body open" id="day-body-dc-${idx}">
           ${acts}
           ${meals ? `<div class="meals-hdr">Meal suggestions</div>${meals}` : ''}
         </div>
       </div>`;
   }).join('');
+
+  return `
+    <div class="drag-hint">⠿ Drag day cards to reorder your itinerary</div>
+    <div id="itinerary-list">${cards}</div>`;
 }
 
-function toggleDay(i) {
-  document.getElementById('day-body-'+i).classList.toggle('open');
-  document.getElementById('chev-'+i).classList.toggle('open');
+/* ── DRAG AND DROP ── */
+let dragSrcPos = null;
+
+function dragStart(e) {
+  dragSrcPos = parseInt(e.currentTarget.dataset.pos);
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function dragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.day-card').forEach(c => c.classList.remove('drag-over'));
+}
+function dragDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const targetPos = parseInt(e.currentTarget.dataset.pos);
+  if (dragSrcPos === null || dragSrcPos === targetPos) return;
+  const moved = itineraryOrder.splice(dragSrcPos, 1)[0];
+  itineraryOrder.splice(targetPos, 0, moved);
+  dragSrcPos = null;
+  document.getElementById('panel-itinerary').innerHTML = renderItinerary(tripData, formSnap);
 }
 
 function starsHtml(n) {
@@ -939,13 +1041,18 @@ function tagClass(tag) {
 }
 
 function buildStay(R, f) {
-  return (R.accommodation||[]).map(a => `
+  return (R.accommodation||[]).map(a => {
+    const imgKw = a.imageKeyword || `${a.type||'hotel'} room interior luxury`;
+    return `
     <div class="accom-card">
-      <span class="accom-tag ${tagClass(a.tag)}">${a.tag}</span>
-      <div class="accom-name">${a.name}</div>
-      <div class="accom-type">${a.type} · ${a.area}</div>
+      <div class="accom-img-wrap">
+        <img src="${imgUrl(imgKw,800,400)}" alt="${a.name||''}" onerror="this.parentElement.style.display='none'"/>
+        <span class="accom-img-tag ${tagClass(a.tag)}">${a.tag||''}</span>
+      </div>
+      <div class="accom-name">${a.name||''}</div>
+      <div class="accom-type">${a.type||''} · ${a.area||''}</div>
       <div class="stars">${starsHtml(a.stars)}</div>
-      <div class="accom-price">${f.currency}${a.pricePerNight}<span> / night</span></div>
+      <div class="accom-price">${f.currency}${a.pricePerNight||0}<span> / night</span></div>
       <div class="accom-feats">
         ${a.petFriendly ? '<span class="feat feat-g">🐾 Pet-friendly</span>' : ''}
         ${a.kidFriendly ? '<span class="feat feat-g">👧 Kid-friendly</span>' : ''}
@@ -955,18 +1062,24 @@ function buildStay(R, f) {
       <a href="${a.bookingLink||'https://www.booking.com'}" target="_blank" class="book-link">
         🔗 View on Booking.com
       </a>
-    </div>`).join('');
+    </div>`; }).join('');
 }
 
 function buildFree(R) {
-  const cards = (R.freeAttractions||[]).map(a => `
+  const cards = (R.freeAttractions||[]).map(a => {
+    const imgKw = a.imageKeyword || `${a.type||'park'} outdoor attraction`;
+    return `
     <div class="attr-card">
+      <div class="card-img-wrap">
+        <img src="${imgUrl(imgKw,800,350)}" alt="${a.name||''}" onerror="this.parentElement.style.display='none'"/>
+        <span class="img-tag">${a.type||'Attraction'}</span>
+      </div>
       <div class="attr-type-row">
         <span class="attr-free">FREE</span>
-        <span class="attr-cat">${a.type}</span>
+        <span class="attr-cat">${a.type||''}</span>
       </div>
-      <div class="attr-name">${a.name}</div>
-      <p class="attr-desc">${a.description}</p>
+      <div class="attr-name">${a.name||''}</div>
+      <p class="attr-desc">${a.description||''}</p>
       <div class="attr-meta">
         ${a.openingHours ? `<span class="attr-chip">🕐 ${a.openingHours}</span>` : ''}
         ${a.area ? `<span class="attr-chip">📍 ${a.area}</span>` : ''}
@@ -974,7 +1087,7 @@ function buildFree(R) {
         ${a.petFriendly ? '<span class="attr-chip">🐾 Pets welcome</span>' : ''}
       </div>
       ${a.tip ? `<div class="attr-tip">💡 ${a.tip}</div>` : ''}
-    </div>`).join('');
+    </div>`; }).join('');
   return `
     <div class="free-notice">✓ All attractions below are free to enter — no booking fee unless noted</div>
     <div class="g2">${cards}</div>`;
