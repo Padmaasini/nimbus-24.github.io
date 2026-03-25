@@ -75,7 +75,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);bac
 
 footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;transition:border .3s}footer p{font-size:13px;color:var(--text-light)}footer a{color:var(--emerald);text-decoration:none}
 
-@media(max-width:768px){.pg{grid-template-columns:1fr}.pf{flex-direction:column;padding:32px 24px;gap:24px}.pf-photo{width:88px;height:88px}.pf-grid{grid-template-columns:1fr}.stats{flex-wrap:wrap}.st{min-width:50%;border-bottom:1px solid rgba(255,255,255,0.07)}.cta{padding:36px 24px}}
+@media(max-width:900px){.pg{grid-template-columns:1fr 1fr!important}}
+@media(max-width:768px){.pg{grid-template-columns:1fr!important}.pf{flex-direction:column;padding:32px 24px;gap:24px}.pf-photo{width:88px;height:88px}.pf-grid{grid-template-columns:1fr}.stats{flex-wrap:wrap}.st{min-width:50%;border-bottom:1px solid rgba(255,255,255,0.07)}.cta{padding:36px 24px}}
 @media(max-width:520px){.nk a:not(.nc):not(.dt-a){display:none}.hero h1{font-size:32px}}
 </style>
 </head>
@@ -85,6 +86,7 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
   <div class="nk">
     <a href="proche-aidant.html">Proche Aidant</a>
     <a href="lektes.html">Lektes</a>
+    <a href="cirrio.html">Cirrio</a>
     <button class="dt" onclick="toggleDark()" aria-label="Toggle dark mode" id="dt">🌙</button>
     <a href="#contact" class="nc">Contact Us</a>
   </div>
@@ -93,7 +95,7 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
 <section class="hero"><div class="hero-bg"></div><div class="hc">
   <div class="ey">⚡ Nimbus-24 · March 2026</div>
   <h1>Technology built for<br><span>extraordinary</span> humans.</h1>
-  <p class="hd">Two AI-powered products. One mission. Technology that listens, understands, and genuinely helps — from healthcare companions to smarter hiring.</p>
+  <p class="hd">Three AI-powered products. One mission. Technology that listens, understands, and genuinely helps — from healthcare companions to smarter hiring and intelligent travel planning.</p>
   <div class="ha"><a href="#about" class="btn bp">About me →</a><a href="#products" class="btn bo">See the products</a></div>
 </div></section>
 
@@ -128,9 +130,9 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
 
 <div class="section" id="products" style="padding-top:0">
   <div class="sl">Our Products</div>
-  <div class="st2">Two live products. Zero prototypes.</div>
+  <div class="st2">Three live products. Zero prototypes.</div>
   <p class="sd">Each product is deployed, evaluated, and solving real problems today. Click through for the full story.</p>
-  <div class="pg">
+  <div class="pg" style="grid-template-columns:1fr 1fr 1fr">
     <div class="pc">
       <div class="pc-top"><div class="pc-ico" style="background:transparent;width:44px;height:44px;padding:0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="44" height="44"><rect width="80" height="80" rx="16" fill="#2d7a4f"/><path d="M38 40 C35 38 28 36 24 38 C20 40 18 44 20 48 C18 50 18 55 22 57 C26 59 32 57 36 53 C32 54 28 52 28 48 C28 44 32 42 36 43 Z" fill="#38a169" opacity="0.5" stroke="#68d391" stroke-width="1.6" stroke-linejoin="round"/><path d="M42 40 C45 38 52 36 56 38 C60 40 62 44 60 48 C62 50 62 55 58 57 C54 59 48 57 44 53 C48 54 52 52 52 48 C52 44 48 42 44 43 Z" fill="#38a169" opacity="0.5" stroke="#68d391" stroke-width="1.6" stroke-linejoin="round"/><path d="M38 36 C32 28 20 24 20 30 C20 36 32 40 38 40Z" fill="#38a169" opacity="0.35" stroke="#68d391" stroke-width="1.2" stroke-linejoin="round"/><path d="M42 36 C48 28 60 24 60 30 C60 36 48 40 42 40Z" fill="#38a169" opacity="0.35" stroke="#68d391" stroke-width="1.2" stroke-linejoin="round"/><rect x="35" y="32" width="10" height="20" rx="3" fill="#2d7a4f" stroke="#c9a96e" stroke-width="1.8"/><circle cx="40" cy="42" r="2.2" fill="#c9a96e"/><path d="M38 32 L34 22" stroke="#faf7f2" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/><path d="M42 32 L46 22" stroke="#faf7f2" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/><circle cx="34" cy="22" r="2" fill="#c9a96e"/><circle cx="46" cy="22" r="2" fill="#c9a96e"/></svg></div><div><h3>Proche Aidant</h3><span class="tag">Healthcare AI · Live</span></div></div>
       <p>A conversational AI companion for people in the early stages of dementia and their caregivers. It remembers who you are, tracks medications, and responds when you're in distress. Peer-reviewed at HHAI 2026.</p>
@@ -141,9 +143,29 @@ footer{border-top:1px solid var(--border);padding:32px 28px;text-align:center;tr
       <p>From the Greek <em>lektós</em> — chosen. AI-powered CV screening that ranks candidates, verifies profiles, and generates interview questions. Designed for the EU AI Act (August 2026) with humans always in control.</p>
       <a href="lektes.html" class="pc-link">Explore Lektes →</a>
     </div>
+
+    <div class="pc">
+      <div class="pc-top">
+        <div class="pc-ico" style="background:transparent;width:44px;height:44px;padding:0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="44" height="44">
+            <rect width="80" height="80" rx="16" fill="#1a2e1a"/>
+            <ellipse cx="40" cy="28" rx="22" ry="12" fill="#2d7a4f" opacity="0.5" stroke="#38a169" stroke-width="1.2"/>
+            <ellipse cx="40" cy="22" rx="14" ry="7" fill="#38a169" opacity="0.35" stroke="#68d391" stroke-width="1"/>
+            <ellipse cx="40" cy="18" rx="7" ry="3.5" fill="#c9a96e" opacity="0.85"/>
+            <path d="M18 28 Q18 52 40 58 Q62 52 62 28" fill="none" stroke="#2d7a4f" stroke-width="1.4" opacity="0.6"/>
+            <path d="M26 32 Q26 50 40 55 Q54 50 54 32" fill="#2d7a4f" opacity="0.15"/>
+            <path d="M36 42 L40 34 L44 42" stroke="#c9a96e" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="40" cy="44" r="2" fill="#c9a96e"/>
+          </svg>
+        </div>
+        <div><h3>Cirrio</h3><span class="tag">AI Travel Planner · New</span></div>
+      </div>
+      <p>From the Latin <em>cirrus</em> — the cloud that signals a journey. An agentic AI travel planner that builds personalised itineraries with real hotel options, free attractions, transport comparisons, weather-aware packing lists, and insurance recommendations — all in one place.</p>
+      <a href="cirrio.html" class="pc-link">Plan a trip with Cirrio →</a>
+    </div>
   </div>
   <div class="stats">
-    <div class="st"><div class="sv">2</div><div class="stl">Live products<br>deployed</div></div>
+    <div class="st"><div class="sv">3</div><div class="stl">Live products<br>deployed</div></div>
     <div class="st"><div class="sv">87.0</div><div class="stl">SUS usability<br>score</div></div>
     <div class="st"><div class="sv">&lt; 2 min</div><div class="stl">Screen &amp; rank<br>20 CVs</div></div>
     <div class="st"><div class="sv">HHAI '26</div><div class="stl">Peer-reviewed<br>working paper</div></div>
