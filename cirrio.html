@@ -328,7 +328,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 </nav>
 
 <!-- API KEY MODAL -->
-<div id="key-modal">
+<div id="key-modal" style="display:none">
   <div class="key-box">
     <h2>Welcome to Cirrio</h2>
     <div class="groq-info">
@@ -447,7 +447,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || '';
+let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
 let travellerType = '';
 let hasPet = false;
 let tripData = null;
