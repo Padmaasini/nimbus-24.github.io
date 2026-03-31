@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Cirrio — AI Travel Planner by Nimbus-24</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a2e1a'/%3E%3Cellipse cx='16' cy='13' rx='10' ry='5.5' fill='%232d7a4f' opacity='0.6'/%3E%3Cellipse cx='16' cy='10' rx='6.5' ry='3.5' fill='%2338a169' opacity='0.5'/%3E%3Cellipse cx='16' cy='8' rx='3.5' ry='2' fill='%23c9a96e'/%3E%3Cpath d='M6 13 Q6 24 16 27 Q26 24 26 13' fill='none' stroke='%232d7a4f' stroke-width='1.2' opacity='0.7'/%3E%3Cpath d='M13.5 19 L16 14.5 L18.5 19' stroke='%23c9a96e' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='20.5' r='1' fill='%23c9a96e'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a2e1a'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%232d7a4f' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%2338a169' stroke-width='1' opacity='0.5'/%3E%3Cpath d='M16 5 L16 8M16 24 L16 27M5 16 L8 16M24 16 L27 16' stroke='%23c9a96e' stroke-width='1.2' stroke-linecap='round'/%3E%3Cpath d='M13 16 L15.2 11 L17.4 16 L22 16 L18.3 18.8 L19.6 23.5 L15.2 20.5 L10.8 23.5 L12.1 18.8 L8.4 16 Z' fill='%23c9a96e' opacity='0.85'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -343,6 +343,17 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 .to-book-btn:hover{opacity:.87}
 .to-book-btn-train{background:linear-gradient(135deg,#3366cc,#254fa8)}
 .to-book-btn-bus{background:linear-gradient(135deg,var(--gold),var(--gold-dk))}
+/* ── FUN FACT ── */
+.fact-card{background:linear-gradient(135deg,var(--forest) 0%,#1e3a1e 100%);border-radius:16px;padding:24px 28px;margin-top:13px;position:relative;overflow:hidden}
+.fact-card::before{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(201,169,110,.08);pointer-events:none}
+.fact-card::after{content:'';position:absolute;bottom:-30px;left:-10px;width:80px;height:80px;border-radius:50%;background:rgba(56,161,105,.06);pointer-events:none}
+.fact-emoji{font-size:36px;margin-bottom:10px;display:block}
+.fact-headline{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold);margin-bottom:8px;line-height:1.2}
+.fact-body{font-size:14px;color:rgba(250,247,242,.85);line-height:1.7;margin-bottom:10px}
+.fact-source{font-size:11px;color:var(--sage);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.fact-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.fact-label::before{content:'';display:inline-block;width:16px;height:1px;background:var(--sage)}
+.fact-label::after{content:'';display:inline-block;width:16px;height:1px;background:var(--sage)}
 </style>
 </head>
 <body>
@@ -353,12 +364,15 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <div class="logo-mark">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
         <rect width="38" height="38" rx="10" fill="#1a2e1a"/>
-        <ellipse cx="19" cy="15" rx="11" ry="6" fill="#2d7a4f" opacity="0.55"/>
-        <ellipse cx="19" cy="11.5" rx="7" ry="3.8" fill="#38a169" opacity="0.5"/>
-        <ellipse cx="19" cy="9" rx="3.8" ry="2.2" fill="#c9a96e" opacity="0.9"/>
-        <path d="M8 15 Q8 27 19 30 Q30 27 30 15" fill="none" stroke="#2d7a4f" stroke-width="1.3" opacity="0.65"/>
-        <path d="M16 22 L19 16.5 L22 22" stroke="#c9a96e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="19" cy="23.5" r="1.2" fill="#c9a96e"/>
+        <!-- Globe rings -->
+        <circle cx="19" cy="19" r="13" fill="none" stroke="#2d7a4f" stroke-width="1.4"/>
+        <circle cx="19" cy="19" r="8" fill="none" stroke="#38a169" stroke-width="0.9" opacity="0.5"/>
+        <!-- Cardinal tick marks -->
+        <path d="M19 6 L19 9M19 29 L19 32M6 19 L9 19M29 19 L32 19" stroke="#c9a96e" stroke-width="1.3" stroke-linecap="round"/>
+        <!-- Compass star / plane hybrid -->
+        <path d="M16.8 19 L18.7 13.5 L20.6 19 L26 19 L21.8 22.2 L23.4 27.5 L18.7 24.2 L14 27.5 L15.6 22.2 L11.4 19 Z" fill="#c9a96e" opacity="0.9"/>
+        <!-- Centre dot -->
+        <circle cx="18.7" cy="19" r="1.4" fill="#1a2e1a"/>
       </svg>
     </div>
     <div>
@@ -431,8 +445,8 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
       </div>
     </div>
     <div class="field-row">
-      <div class="field"><label>Adults</label><input id="f-adults" type="number" min="1" max="20" value="2"/></div>
-      <div class="field"><label>Children</label><input id="f-kids" type="number" min="0" max="10" value="0" onchange="toggleKidAge()"/></div>
+      <div class="field"><label>Adults</label><input id="f-adults" type="number" min="1" max="20" placeholder="e.g. 2"/></div>
+      <div class="field"><label>Children</label><input id="f-kids" type="number" min="0" max="10" placeholder="0" onchange="toggleKidAge()"/></div>
     </div>
     <div class="field" id="kids-age-row">
       <label>Children's ages (optional)</label><input id="f-kids-age" placeholder="e.g. 4, 7, 11"/>
@@ -496,6 +510,10 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
   </div>
   <div class="tabs" id="tabs-bar"></div>
   <div id="panels-wrap"></div>
+  <div style="margin-top:32px;padding:14px 18px;background:var(--cream2);border-radius:10px;border:1px solid var(--border);font-size:11px;color:var(--text-l);line-height:1.7;text-align:center">
+    <strong style="color:var(--text-m)">AI-generated suggestions</strong> — prices, availability and opening hours are estimates. Always verify before booking.
+    &nbsp;·&nbsp; Cirrio earns a small affiliate commission on bookings made through our links, at no extra cost to you.
+  </div>
 </div>
 
 <script>
@@ -824,6 +842,12 @@ Return this JSON structure. The itinerary array MUST contain exactly ${days} obj
     "reason": "Why this insurance suits this trip",
     "estimatedCost": "approx X per day",
     "link": "https://safetywing.com"
+  },
+  "funFact": {
+    "emoji": "single relevant emoji",
+    "headline": "Short punchy headline — max 10 words",
+    "fact": "One genuinely surprising, specific, delightful fact about ${f.dest} or the country. Not generic. Make it something the traveller will want to share. Max 2 sentences.",
+    "source": "e.g. UNESCO / Local lore / Historical record"
   }
 }
 
@@ -835,6 +859,8 @@ MANDATORY RULES:
 - Provide exactly 3 accommodation options (budget, mid-range, luxury)
 - Include 6-8 free attractions
 - imageKeyword must be 2-4 descriptive words for a stock photo search
+- funFact.fact must be genuinely surprising and specific to ${f.dest} — not a generic travel tip. Think unusual history, bizarre record, unexpected cultural detail.
+- funFact.emoji must be thematically relevant to the fact, not just a generic globe
 - Transport section MUST match the user's preference: ${prefLabel}
 - travelOptions: if origin and destination are within mainland Europe (e.g. Brussels to Paris, Amsterdam, Cologne, London), ALWAYS include train as available:true with real operator and price. Bus is realistic for <6hr journeys. Only default to flight if distance genuinely requires it.
 - travelOptions.trains: include Eurostar, Thalys, Intercity, TGV, ICE, Renfe, or IRCTC as appropriate for the route
@@ -850,6 +876,11 @@ async function planTrip() {
     document.getElementById('err-box').style.display = 'block';
     return;
   }
+  // Prevent double-submit
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Planning…';
+  setTimeout(() => { btn.disabled = false; btn.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }, 30000);
   document.getElementById('err-box').style.display = 'none';
 
   const cuisines = [...document.querySelectorAll('.chip.active')].map(c => c.textContent);
@@ -862,7 +893,7 @@ async function planTrip() {
     currency: document.getElementById('f-currency').value,
     travellerType,
     transportPref,
-    adults: document.getElementById('f-adults').value,
+    adults: parseInt(document.getElementById('f-adults').value) || 1,
     kids: parseInt(document.getElementById('f-kids').value) || 0,
     kidsAge: document.getElementById('f-kids-age').value,
     cuisines,
@@ -981,6 +1012,9 @@ function renderResults() {
   `;
 
   showPage('page-results');
+  // Re-enable submit button
+  const sb = document.querySelector('.submit-btn');
+  if (sb) { sb.disabled = false; sb.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }
 }
 
 function switchTab(id, btn) {
@@ -1031,6 +1065,15 @@ function buildOverview(R, f) {
       </div>
     </div>` : '';
 
+  const factCard = R.funFact ? `
+    <div class="fact-card">
+      <div class="fact-label">Did you know?</div>
+      <span class="fact-emoji">${R.funFact.emoji || '🌍'}</span>
+      <div class="fact-headline">${R.funFact.headline || ''}</div>
+      <p class="fact-body">${R.funFact.fact || ''}</p>
+      ${R.funFact.source ? `<div class="fact-source">Source: ${R.funFact.source}</div>` : ''}
+    </div>` : '';
+
   return `
     <div class="card">
       <div class="card-lbl">Trip summary</div>
@@ -1042,7 +1085,8 @@ function buildOverview(R, f) {
         <div class="bar-rows">${bars}</div>
       </div>
       <div>${wCard}${ins}</div>
-    </div>`;
+    </div>
+    ${factCard}`;
 }
 
 function actColor(cat) {
