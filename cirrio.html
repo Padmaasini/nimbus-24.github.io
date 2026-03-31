@@ -328,6 +328,21 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 .day-card.dragging{opacity:.45;transform:scale(.98);box-shadow:none;cursor:grabbing}
 .day-card.drag-over{box-shadow:0 0 0 2px var(--emerald),0 4px 16px rgba(45,122,79,.15);transform:translateY(-2px)}
 .day-hdr{cursor:default}
+/* ── TRAVEL OPTION CARDS ── */
+.to-grid{display:flex;flex-direction:column;gap:10px}
+.travel-option-card{display:flex;gap:14px;padding:14px;border:1px solid var(--border);border-radius:11px;background:var(--cream2);transition:border-color .18s}
+.travel-option-card:hover{border-color:var(--emerald)}
+.to-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.to-body{flex:1}
+.to-title{font-size:15px;font-weight:700;color:var(--forest);margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.to-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--match-bg);color:var(--em-bright);border:1px solid var(--match-bd);letter-spacing:.04em;text-transform:uppercase}
+.to-badge-train{background:#f0f4ff;color:#3366cc;border-color:#b8caef}
+.to-badge-bus{background:#fff8ed;color:var(--gold-dk);border-color:var(--warn-bd)}
+.to-meta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:6px}
+.to-book-btn{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:8px 16px;border-radius:8px;background:linear-gradient(135deg,var(--emerald),#235f3d);color:#fff;font-size:12px;font-weight:700;text-decoration:none;transition:opacity .18s}
+.to-book-btn:hover{opacity:.87}
+.to-book-btn-train{background:linear-gradient(135deg,#3366cc,#254fa8)}
+.to-book-btn-bus{background:linear-gradient(135deg,var(--gold),var(--gold-dk))}
 </style>
 </head>
 <body>
@@ -368,7 +383,9 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
       </div>
     </div>
     <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off"/>
-    <button class="key-save" onclick="saveKey()">Save key &amp; start planning →</button>
+    <div style="font-size:12px;color:var(--text-m);margin:-8px 0 10px;line-height:1.5">For richer, more accurate results, also add a free <a href="https://tavily.com" target="_blank" style="color:#f55036;font-weight:600">Tavily</a> search key (optional — tavily.com, free 1,000 searches/month):</div>
+    <input type="password" id="tavily-key-input" placeholder="tvly-... (optional)" autocomplete="off" style="margin-bottom:14px"/>
+    <button class="key-save" onclick="saveKey()">Save keys &amp; start planning →</button>
     <div class="key-note">Your key is stored only in your browser (localStorage).<br>Clear browser data anytime to remove it. Never sent to Cirrio servers.</div>
   </div>
 </div>
@@ -385,8 +402,8 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
       <div class="field"><label>Flying from</label><input id="f-origin" placeholder="e.g. Brussels"/></div>
     </div>
     <div class="field-row">
-      <div class="field"><label>Check-in date</label><input id="f-checkin" type="date"/></div>
-      <div class="field"><label>Check-out date</label><input id="f-checkout" type="date"/></div>
+      <div class="field"><label>Trip start date</label><input id="f-checkin" type="date"/></div>
+      <div class="field"><label>Trip end date</label><input id="f-checkout" type="date"/></div>
     </div>
     <div class="field-row-3">
       <div class="field" style="grid-column:span 2">
@@ -423,6 +440,15 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <div class="pet-row">
       <button class="pet-toggle" id="pet-toggle" onclick="togglePet()">🐾 Travelling with a pet</button>
       <input id="pet-type-input" placeholder="e.g. small dog"/>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="sec-label">How will you get around at the destination? *</div>
+      <div class="type-grid" id="transport-pref-grid">
+        <button class="type-btn" data-val="public" onclick="selectTransportPref(this)">🚇 Public transport</button>
+        <button class="type-btn" data-val="cab"    onclick="selectTransportPref(this)">🚕 Taxi / Cab</button>
+        <button class="type-btn" data-val="both"   onclick="selectTransportPref(this)">⚖️ Compare both</button>
+      </div>
     </div>
     <div class="divider"></div>
     <div>
@@ -474,8 +500,10 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
+let apiKey = localStorage.getItem('cirrio_groq_key') || 'PASTE_YOUR_GROQ_KEY_HERE';
+let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '';
 let travellerType = '';
+let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
 let tripData = null;
 let formSnap = {};
@@ -484,14 +512,55 @@ let formSnap = {};
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
 const LOADING_MSGS = [
+  'Searching for current travel information…',
+  'Finding flights, trains & travel options…',
   'Scouting the best neighbourhoods…',
-  'Comparing hotels, hostels & hidden gems…',
+  'Checking hotel options and prices…',
   'Finding free museums, parks & attractions…',
-  'Checking public transport passes vs taxi costs…',
+  'Checking transport options for your visit…',
   'Reviewing weather & building your packing list…',
-  'Matching cuisine spots to your preferences…',
   'Putting your itinerary together…'
 ];
+
+/* ─── RAG: Tavily web search to ground the AI in current facts ─── */
+async function retrieveContext(dest, origin, checkin) {
+  if (!tavilyKey) return '';          // gracefully skip if no key
+  const month = checkin
+    ? new Date(checkin).toLocaleString('en', { month: 'long', year: 'numeric' })
+    : new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
+
+  const queries = [
+    `best hotels ${dest} ${new Date().getFullYear()} neighbourhoods`,
+    `${dest} public transport pass price ${new Date().getFullYear()} visitor card`,
+    `${dest} free attractions museums parks opening hours`,
+    origin ? `${origin} to ${dest} train bus flight options ${new Date().getFullYear()}` : null
+  ].filter(Boolean);
+
+  const results = [];
+  for (const q of queries) {
+    try {
+      const r = await fetch('https://api.tavily.com/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          api_key: tavilyKey,
+          query: q,
+          search_depth: 'basic',
+          max_results: 3,
+          include_answer: true
+        })
+      });
+      const d = await r.json();
+      if (d.answer) results.push(`[${q}]: ${d.answer}`);
+      else if (d.results?.length) {
+        results.push(`[${q}]: ${d.results.slice(0,2).map(x => x.content?.slice(0,300)).join(' | ')}`);
+      }
+    } catch (_) { /* silently skip failed searches */ }
+  }
+  return results.length
+    ? `\n\nCURRENT WEB CONTEXT (retrieved ${month} — use this as ground truth over your training data):\n${results.join('\n')}\n`
+    : '';
+}
 
 /* ─── KEY MODAL ─── */
 function saveKey() {
@@ -502,6 +571,8 @@ function saveKey() {
   }
   apiKey = v;
   localStorage.setItem('cirrio_groq_key', v);
+  const tv = document.getElementById('tavily-key-input').value.trim();
+  if (tv) { tavilyKey = tv; localStorage.setItem('cirrio_tavily_key', tv); }
   document.getElementById('key-modal').style.display = 'none';
 }
 if (apiKey) document.getElementById('key-modal').style.display = 'none';
@@ -517,6 +588,11 @@ function togglePet() {
   hasPet = !hasPet;
   document.getElementById('pet-toggle').classList.toggle('active', hasPet);
   document.getElementById('pet-type-input').style.display = hasPet ? 'block' : 'none';
+}
+function selectTransportPref(btn) {
+  document.querySelectorAll('#transport-pref-grid .type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  transportPref = btn.dataset.val;
 }
 function toggleKidAge() {
   const n = parseInt(document.getElementById('f-kids').value) || 0;
@@ -554,16 +630,84 @@ function startLoading() {
 }
 
 /* ─── PROMPT BUILDER ─── */
-function buildPrompt(f) {
+function buildPrompt(f, ragContext = '') {
   const days = f.checkin && f.checkout
     ? Math.max(1, Math.ceil((new Date(f.checkout) - new Date(f.checkin)) / 86400000))
     : 5;
   const cuisines = f.cuisines.length ? f.cuisines.join(', ') : 'no preference';
+  const prefLabel = { public: 'public transport only', cab: 'taxi/cab only', both: 'both public transport and taxi' }[f.transportPref] || 'both';
+
+  // Build transport JSON schema based on user preference
+  const transportSchema = f.transportPref === 'cab' ? `
+  "transport": {
+    "overview": "Two sentence overview of getting around ${f.dest} by taxi/rideshare.",
+    "taxi": {
+      "averageShortTrip": 0,
+      "averageLongTrip": 0,
+      "currency": "${f.currency}",
+      "app": "Uber / Bolt / local app name",
+      "tip": "Practical taxi booking tip",
+      "safetyNote": "Any taxi safety tips specific to this destination"
+    },
+    "airportTransfer": { "approxCost": 0, "currency": "${f.currency}", "tip": "Best way from airport" }
+  }` : f.transportPref === 'public' ? `
+  "transport": {
+    "overview": "Two sentence overview of the public transport network in ${f.dest}.",
+    "publicTransport": {
+      "types": ["Metro", "Bus", "Tram etc"],
+      "network": "Name of the transport network",
+      "visitorPass": {
+        "available": true,
+        "name": "Pass name (e.g. IC Card, Oyster, OV-Chipkaart)",
+        "options": [
+          {"duration": "1 day", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
+          {"duration": "3 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
+          {"duration": "7 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"}
+        ],
+        "whereToBuy": "Airport / station / app",
+        "topUpApp": "App name for topping up or checking balance"
+      },
+      "singleTicket": { "price": 0, "currency": "${f.currency}" },
+      "keyLines": ["Most useful metro line or route 1", "Most useful route 2"],
+      "tip": "One practical public transport tip for this city",
+      "accessibility": "Note on accessibility for this network"
+    }
+  }` : `
+  "transport": {
+    "overview": "Two sentence overview of getting around ${f.dest}.",
+    "publicTransport": {
+      "types": ["Metro", "Bus"],
+      "network": "Network name",
+      "visitorPass": {
+        "available": true,
+        "name": "Pass name",
+        "options": [
+          {"duration": "1 day", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
+          {"duration": "3 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
+          {"duration": "7 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"}
+        ],
+        "whereToBuy": "Where to buy",
+        "topUpApp": "App name"
+      },
+      "singleTicket": { "price": 0, "currency": "${f.currency}" },
+      "keyLines": ["Key route 1", "Key route 2"],
+      "tip": "Practical public transport tip"
+    },
+    "taxi": {
+      "averageShortTrip": 0,
+      "averageLongTrip": 0,
+      "currency": "${f.currency}",
+      "app": "Uber / Bolt / local app",
+      "tip": "Practical taxi tip"
+    },
+    "comparison": "One sentence on when to use public transport vs taxi in this city",
+    "savingsExample": "e.g. 3-day pass EUR18 vs 6 taxis = saves EUR30"
+  }`;
 
   return `You are Cirrio, a premium AI travel planner. Return ONLY a valid JSON object. No markdown code fences, no explanation, no text before or after the JSON.
 
 CRITICAL: You MUST generate ALL ${days} days of itinerary. Do not stop after day 1. Every day must be fully populated with activities and meals.
-
+${ragContext}
 TRIP DETAILS:
 Destination: ${f.dest}
 Origin: ${f.origin || 'not specified'}
@@ -573,38 +717,27 @@ Traveller type: ${f.travellerType}
 Adults: ${f.adults}${f.kids > 0 ? `, Children: ${f.kids}${f.kidsAge ? ` aged ${f.kidsAge}` : ''}` : ''}
 Cuisine preferences: ${cuisines}
 Travelling with pet: ${f.hasPet ? `Yes (${f.petType || 'pet'})` : 'No'}
+Transport preference at destination: ${prefLabel}
 
 Return this JSON structure. The itinerary array MUST contain exactly ${days} objects, one per day:
 {
   "destination": "City, Country",
   "tripSummary": "3 sentences about why this trip suits this traveller type",
   "budgetBreakdown": {
-    "accommodation": 0,
-    "activities": 0,
-    "food": 0,
-    "transport": 0,
-    "misc": 0,
+    "accommodation": 0, "activities": 0, "food": 0, "transport": 0, "misc": 0,
     "currency": "${f.currency}"
   },
   "weather": {
     "summary": "2 sentence weather overview for the travel period",
-    "avgTempDay": "26°C",
-    "avgTempNight": "18°C",
-    "condition": "Sunny / Mixed / Rainy etc",
+    "avgTempDay": "26°C", "avgTempNight": "18°C", "condition": "Sunny / Mixed / Rainy etc",
     "packingList": ["item1","item2","item3","item4","item5","item6","item7","item8","item9","item10"],
     "tip": "One practical weather tip"
   },
   "accommodation": [
     {
-      "name": "Real hotel or hostel name",
-      "type": "Hotel / Hostel / Boutique / Apartment",
-      "pricePerNight": 0,
-      "currency": "${f.currency}",
-      "area": "Neighbourhood name",
-      "stars": 3,
-      "petFriendly": false,
-      "kidFriendly": true,
-      "adultsOnly": false,
+      "name": "Real hotel or hostel name", "type": "Hotel / Hostel / Boutique / Apartment",
+      "pricePerNight": 0, "currency": "${f.currency}", "area": "Neighbourhood name", "stars": 3,
+      "petFriendly": false, "kidFriendly": true, "adultsOnly": false,
       "imageKeyword": "luxury hotel room interior",
       "highlights": ["highlight 1", "highlight 2", "highlight 3"],
       "bookingLink": "https://www.booking.com/searchresults.html?ss=${encodeURIComponent(f.dest)}",
@@ -613,98 +746,102 @@ Return this JSON structure. The itinerary array MUST contain exactly ${days} obj
   ],
   "itinerary": [
     {
-      "day": 1,
-      "date": "Day 1 – Arrival & First Impressions",
-      "theme": "Arrival",
+      "day": 1, "date": "Day 1 – Arrival & First Impressions", "theme": "Arrival",
       "activities": [
         {
-          "time": "10:00",
-          "title": "Activity name",
-          "description": "Two sentence description of this activity.",
-          "duration": "2 hrs",
-          "cost": 0,
-          "currency": "${f.currency}",
-          "isFree": false,
-          "category": "Landmark",
-          "imageKeyword": "famous landmark sightseeing",
-          "kidFriendly": true,
-          "petFriendly": false,
-          "tip": "Practical insider tip"
+          "time": "10:00", "title": "Activity name",
+          "description": "Two sentence description.", "duration": "2 hrs",
+          "cost": 0, "currency": "${f.currency}", "isFree": false,
+          "category": "Landmark", "imageKeyword": "famous landmark sightseeing",
+          "kidFriendly": true, "petFriendly": false, "tip": "Practical insider tip"
         }
       ],
       "meals": [
         {
-          "meal": "Breakfast",
-          "suggestion": "Specific place or food type",
-          "cuisine": "Local",
-          "area": "Neighbourhood",
-          "approxCost": 0,
-          "currency": "${f.currency}",
-          "kidFriendly": true,
-          "note": "Short note"
+          "meal": "Breakfast", "suggestion": "Specific place or food type",
+          "cuisine": "Local", "area": "Neighbourhood",
+          "approxCost": 0, "currency": "${f.currency}", "kidFriendly": true, "note": "Short note"
         }
       ]
     }
   ],
   "freeAttractions": [
     {
-      "name": "Attraction name",
-      "type": "Park",
-      "description": "Two sentence description of why it is worth visiting.",
-      "openingHours": "Daily 9am-6pm",
-      "area": "Neighbourhood",
+      "name": "Attraction name", "type": "Park",
+      "description": "Two sentence description.",
+      "openingHours": "Daily 9am-6pm", "area": "Neighbourhood",
       "imageKeyword": "city park garden outdoor",
-      "kidFriendly": true,
-      "petFriendly": true,
-      "tip": "Best time to visit or practical tip"
+      "kidFriendly": true, "petFriendly": true, "tip": "Best time to visit"
     }
   ],
-  "transport": {
-    "overview": "Two sentence overview of getting around in this city.",
-    "publicTransport": {
-      "types": ["Metro", "Bus"],
-      "visitorPass": {
+  ${transportSchema},
+  "travelOptions": {
+    "origin": "${f.origin || 'not specified'}",
+    "destination": "City, Country",
+    "summary": "2 sentences on ALL realistic ways to travel from origin to destination — consider distance, whether within Europe, and available modes",
+    "flights": [
+      {
+        "type": "Direct or Connecting",
+        "airline": "Airline name or 'Multiple airlines'",
+        "duration": "X hrs",
+        "approxPrice": 0,
+        "currency": "${f.currency}",
+        "bookingTip": "Tip on timing or booking",
+        "searchLink": "https://www.skyscanner.net/transport/flights/${encodeURIComponent(f.origin||'BRU')}/${encodeURIComponent(f.dest)}/"
+      }
+    ],
+    "trains": [
+      {
+        "operator": "Eurostar / Thalys / SNCF / DB / IRCTC / N/A",
+        "route": "e.g. Brussels Midi → Paris Gare du Nord, or N/A",
+        "duration": "X hrs or N/A",
+        "frequency": "e.g. Hourly / 3 per day / N/A",
+        "approxPrice": 0,
+        "currency": "${f.currency}",
         "available": true,
-        "name": "Pass name",
-        "options": [
-          {"duration": "1 day", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
-          {"duration": "3 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
-          {"duration": "7 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"}
-        ],
-        "whereToBuy": "Where to purchase the pass"
-      },
-      "singleTicket": {"price": 0, "currency": "${f.currency}"},
-      "app": "App or card name"
-    },
-    "taxi": {
-      "averageShortTrip": 0,
-      "averageLongTrip": 0,
+        "bookingTip": "Book via operator website for best price",
+        "searchLink": "https://www.omio.com",
+        "note": "Additional note e.g. scenic route, advance booking recommended"
+      }
+    ],
+    "bus": {
+      "available": false,
+      "operator": "FlixBus / Eurolines / N/A",
+      "route": "Route description or N/A",
+      "duration": "X hrs or N/A",
+      "frequency": "e.g. 2 per day or N/A",
+      "approxPrice": 0,
       "currency": "${f.currency}",
-      "app": "Uber / Bolt / local app",
-      "tip": "Practical taxi tip"
+      "note": "Only include if bus is genuinely practical for this route",
+      "searchLink": "https://www.flixbus.com"
     },
-    "recommendation": "Clear recommendation comparing public transport vs taxi with reasoning",
-    "savingsExample": "e.g. 3-day pass at EUR18 vs 6 taxi rides at EUR8 each saves EUR30"
+    "recommended": "Train / Flight / Bus — with one sentence reason based on journey time, cost and comfort",
+    "bestBookingTime": "e.g. Book 6-8 weeks in advance for best flight prices, or 3 months for Eurostar",
+    "visaNote": "Specific visa requirement for ${f.origin || 'Belgian'} passport holders visiting ${f.dest}"
   },
   "insurance": {
     "recommended": "SafetyWing or WorldNomads",
-    "reason": "Why this insurance suits this trip and traveller profile",
+    "reason": "Why this insurance suits this trip",
     "estimatedCost": "approx X per day",
     "link": "https://safetywing.com"
   }
 }
 
 MANDATORY RULES:
-- The itinerary array MUST have EXACTLY ${days} complete day objects numbered Day 1 through Day ${days}
+- The itinerary array MUST have EXACTLY ${days} complete day objects
 - Each day needs at least 3-4 activities and 3 meals (breakfast, lunch, dinner)
 - Use real place names in ${f.dest}
 - All prices in ${f.currency}
 - Provide exactly 3 accommodation options (budget, mid-range, luxury)
 - Include 6-8 free attractions
 - imageKeyword must be 2-4 descriptive words for a stock photo search
+- Transport section MUST match the user's preference: ${prefLabel}
+- travelOptions: if origin and destination are within mainland Europe (e.g. Brussels to Paris, Amsterdam, Cologne, London), ALWAYS include train as available:true with real operator and price. Bus is realistic for <6hr journeys. Only default to flight if distance genuinely requires it.
+- travelOptions.trains: include Eurostar, Thalys, Intercity, TGV, ICE, Renfe, or IRCTC as appropriate for the route
+- travelOptions.visaNote must be specific — not generic
+- If RAG context is provided above, use those facts as ground truth for prices, pass names, and hotel recommendations
 ${f.kids > 0 ? '- Ensure activities are family-appropriate with realistic pacing for children' : ''}
 ${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activity options' : ''}`;
-}
 
 /* ─── PLAN TRIP — calls Groq API ─── */
 async function planTrip() {
@@ -724,6 +861,7 @@ async function planTrip() {
     budget: document.getElementById('f-budget').value || '0',
     currency: document.getElementById('f-currency').value,
     travellerType,
+    transportPref,
     adults: document.getElementById('f-adults').value,
     kids: parseInt(document.getElementById('f-kids').value) || 0,
     kidsAge: document.getElementById('f-kids-age').value,
@@ -735,7 +873,10 @@ async function planTrip() {
   startLoading();
 
   try {
-    /* ── Groq API call (OpenAI-compatible format) ── */
+    /* ── Step 1: RAG — retrieve current travel context from Tavily ── */
+    const ragContext = await retrieveContext(formSnap.dest, formSnap.origin, formSnap.checkin);
+
+    /* ── Step 2: Groq API call with augmented prompt ── */
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -751,7 +892,7 @@ async function planTrip() {
           },
           {
             role: 'user',
-            content: buildPrompt(formSnap)
+            content: buildPrompt(formSnap, ragContext)
           }
         ],
         max_tokens: 8000,
@@ -808,10 +949,14 @@ function renderResults() {
   tags.innerHTML += `<span class="trip-tag">👤 ${f.adults} adult${f.adults>1?'s':''}${f.kids>0?` + ${f.kids} kids`:''}</span>`;
   if (f.cuisines.length) tags.innerHTML += `<span class="trip-tag">🍽 ${f.cuisines.slice(0,2).join(', ')}</span>`;
   if (f.hasPet) tags.innerHTML += `<span class="trip-tag">🐾 Pet-friendly</span>`;
+  const tpLabels = { public:'🚇 Public transport', cab:'🚕 Taxi only', both:'⚖️ Both modes' };
+  if (f.transportPref) tags.innerHTML += `<span class="trip-tag">${tpLabels[f.transportPref] || ''}</span>`;
+  if (tavilyKey) tags.innerHTML += `<span class="trip-tag" style="background:var(--match-bg);border-color:var(--match-bd);color:var(--em-bright)">⚡ RAG-enhanced</span>`;
 
   // Tabs
   const TABS = [
     {id:'overview',  icon:'🗺', label:'Overview'},
+    {id:'getting-there', icon:'✈️', label:'Getting There'},
     {id:'itinerary', icon:'📅', label:'Itinerary'},
     {id:'stay',      icon:'🏨', label:'Stay'},
     {id:'free',      icon:'🆓', label:'Free Spots'},
@@ -826,12 +971,13 @@ function renderResults() {
 
   // Panels
   document.getElementById('panels-wrap').innerHTML = `
-    <div id="panel-overview"  class="panel active">${buildOverview(R,f)}</div>
-    <div id="panel-itinerary" class="panel">${buildItinerary(R,f)}</div>
-    <div id="panel-stay"      class="panel">${buildStay(R,f)}</div>
-    <div id="panel-free"      class="panel">${buildFree(R)}</div>
-    <div id="panel-transport" class="panel">${buildTransport(R,f)}</div>
-    <div id="panel-weather"   class="panel">${buildWeather(R,f)}</div>
+    <div id="panel-overview"       class="panel active">${buildOverview(R,f)}</div>
+    <div id="panel-getting-there"  class="panel">${buildGettingThere(R,f)}</div>
+    <div id="panel-itinerary"      class="panel">${buildItinerary(R,f)}</div>
+    <div id="panel-stay"           class="panel">${buildStay(R,f)}</div>
+    <div id="panel-free"           class="panel">${buildFree(R)}</div>
+    <div id="panel-transport"      class="panel">${buildTransport(R,f)}</div>
+    <div id="panel-weather"        class="panel">${buildWeather(R,f)}</div>
   `;
 
   showPage('page-results');
@@ -1093,59 +1239,175 @@ function buildFree(R) {
     <div class="g2">${cards}</div>`;
 }
 
-function buildTransport(R, f) {
-  const t  = R.transport || {};
-  const pt = t.publicTransport || {};
-  const tx = t.taxi || {};
-  const pass3 = pt.visitorPass?.options?.[1]?.price || 0;
-  const taxi6 = (tx.averageShortTrip || 0) * 6;
-  const pubWins = pass3 > 0 && pass3 < taxi6;
+/* ─── GETTING THERE PANEL ─── */
+function buildGettingThere(R, f) {
+  const t = R.travelOptions || {};
+  if (!t.flights && !t.trains) {
+    return `<div class="card"><p class="summary-p">Travel options were not generated. Please re-run your plan with an origin city filled in.</p></div>`;
+  }
 
-  const passRows = (pt.visitorPass?.options||[]).map(o =>
-    `<tr><td>${o.duration}</td><td>${o.zones}</td><td>${f.currency}${o.price}</td></tr>`
-  ).join('');
+  const recBox = t.recommended ? `
+    <div class="rec-box" style="margin-bottom:13px">
+      <strong>Cirrio recommends:</strong> ${t.recommended}
+      ${t.bestBookingTime ? `<div class="savings-row">🗓 ${t.bestBookingTime}</div>` : ''}
+    </div>` : '';
+
+  const visaBox = t.visaNote ? `
+    <div class="card" style="background:var(--warn-bg);border-color:var(--warn-bd)">
+      <div class="card-lbl" style="color:var(--gold-dk)">🛂 Visa information</div>
+      <p style="font-size:14px;color:var(--text-m);line-height:1.65">${t.visaNote}</p>
+    </div>` : '';
+
+  const summaryCard = `
+    <div class="card">
+      <div class="card-lbl">Getting from ${t.origin || f.origin || 'your origin'} to ${t.destination || f.dest}</div>
+      <p class="summary-p">${t.summary || ''}</p>
+    </div>`;
+
+  // FLIGHTS
+  const flightCards = (t.flights || []).map(fl => `
+    <div class="travel-option-card">
+      <div class="to-icon">✈️</div>
+      <div class="to-body">
+        <div class="to-title">${fl.airline || 'Flight'} <span class="to-badge">${fl.type || 'Flight'}</span></div>
+        <div class="to-meta">
+          <span class="act-chip">⏱ ${fl.duration || '—'}</span>
+          <span class="act-chip">💰 ~${f.currency}${fl.approxPrice || 0}</span>
+        </div>
+        ${fl.bookingTip ? `<div class="act-tip" style="margin-top:8px">💡 ${fl.bookingTip}</div>` : ''}
+        <a href="${fl.searchLink || 'https://www.skyscanner.net'}" target="_blank" class="to-book-btn">
+          Search on Skyscanner →
+        </a>
+      </div>
+    </div>`).join('');
+
+  // TRAINS
+  const trainAvail = t.trains && t.trains.some(tr => tr.available !== false && tr.operator !== 'N/A');
+  const trainCards = trainAvail ? (t.trains || []).filter(tr => tr.available !== false && tr.operator !== 'N/A').map(tr => `
+    <div class="travel-option-card">
+      <div class="to-icon">🚄</div>
+      <div class="to-body">
+        <div class="to-title">${tr.operator || 'Train'} <span class="to-badge to-badge-train">Train</span></div>
+        ${tr.route && tr.route !== 'N/A' ? `<div style="font-size:12px;color:var(--text-m);margin-bottom:6px">📍 ${tr.route}</div>` : ''}
+        <div class="to-meta">
+          <span class="act-chip">⏱ ${tr.duration || '—'}</span>
+          <span class="act-chip">💰 ~${f.currency}${tr.approxPrice || 0}</span>
+          ${tr.frequency && tr.frequency !== 'N/A' ? `<span class="act-chip">🕐 ${tr.frequency}</span>` : ''}
+        </div>
+        ${tr.note ? `<div class="act-tip" style="margin-top:6px">💡 ${tr.note}</div>` : ''}
+        ${tr.bookingTip ? `<div class="act-tip" style="margin-top:4px">🎟 ${tr.bookingTip}</div>` : ''}
+        <a href="${tr.searchLink || 'https://www.omio.com'}" target="_blank" class="to-book-btn to-book-btn-train">
+          Search on Omio →
+        </a>
+      </div>
+    </div>`).join('') : '';
+
+  // BUS
+  const busCard = t.bus && t.bus.available ? `
+    <div class="travel-option-card">
+      <div class="to-icon">🚌</div>
+      <div class="to-body">
+        <div class="to-title">${t.bus.operator || 'Bus'} <span class="to-badge to-badge-bus">Bus</span></div>
+        ${t.bus.route && t.bus.route !== 'N/A' ? `<div style="font-size:12px;color:var(--text-m);margin-bottom:6px">📍 ${t.bus.route}</div>` : ''}
+        <div class="to-meta">
+          <span class="act-chip">⏱ ${t.bus.duration || '—'}</span>
+          <span class="act-chip">💰 ~${f.currency}${t.bus.approxPrice || 0}</span>
+          ${t.bus.frequency && t.bus.frequency !== 'N/A' ? `<span class="act-chip">🕐 ${t.bus.frequency}</span>` : ''}
+        </div>
+        ${t.bus.note ? `<div class="act-tip" style="margin-top:6px">💡 ${t.bus.note}</div>` : ''}
+        <a href="${t.bus.searchLink || 'https://www.flixbus.com'}" target="_blank" class="to-book-btn to-book-btn-bus">Search on FlixBus →</a>
+      </div>
+    </div>` : '';
+
+  const hasTrainSection = trainCards || busCard;
 
   return `
+    ${summaryCard}
+    ${recBox}
     <div class="card">
-      <div class="card-lbl">Getting around</div>
-      <p style="font-size:14px;color:var(--text-m);line-height:1.65">${t.overview||''}</p>
+      <div class="card-lbl">✈️ Flight options</div>
+      <div class="to-grid">${flightCards || '<p style="font-size:13px;color:var(--text-l)">No flight data available.</p>'}</div>
     </div>
-    <div class="t-compare">
-      <div class="t-card${pubWins?' winner':''}">
-        <div class="t-icon">🚇</div>
-        <div class="t-name">Public Transport</div>
-        <div class="t-sub">${(pt.types||[]).join(' · ')}</div>
-        ${pt.visitorPass?.available ? `
-          <div class="t-price">${f.currency}${pt.visitorPass.options?.[1]?.price ?? '—'}</div>
-          <div class="t-pnote">3-day ${pt.visitorPass.name||''}</div>
-          <div class="t-detail">Single ticket: ${f.currency}${pt.singleTicket?.price||0}</div>
-          <div class="t-detail" style="color:var(--emerald);font-weight:600">App: ${pt.app||''}</div>
-          <div class="t-detail">Buy at: ${pt.visitorPass.whereToBuy||''}</div>` : ''}
-        ${pubWins ? '<div class="t-win">✓ Recommended</div>' : ''}
-      </div>
-      <div class="t-card${!pubWins?' winner':''}">
-        <div class="t-icon">🚕</div>
-        <div class="t-name">Taxi / Rideshare</div>
-        <div class="t-sub">${tx.app||''}</div>
-        <div class="t-price">${f.currency}${tx.averageShortTrip||0}</div>
-        <div class="t-pnote">average short trip</div>
-        <div class="t-detail">Long trip: ~${f.currency}${tx.averageLongTrip||0}</div>
-        <div class="t-detail" style="color:var(--gold-dk);font-weight:600">💡 ${tx.tip||''}</div>
-        ${!pubWins ? '<div class="t-win">✓ Recommended</div>' : ''}
-      </div>
-    </div>
-    ${pt.visitorPass?.available && passRows ? `
+    ${hasTrainSection ? `
     <div class="card">
-      <div class="card-lbl">Visitor pass — ${pt.visitorPass.name||''}</div>
-      <table class="pass-table">
-        <thead><tr><th>Duration</th><th>Coverage</th><th>Price</th></tr></thead>
-        <tbody>${passRows}</tbody>
-      </table>
+      <div class="card-lbl">🚄 Train & bus options</div>
+      <div class="to-grid">${trainCards}${busCard}</div>
     </div>` : ''}
-    <div class="rec-box">
-      <strong>Cirrio recommends:</strong> ${t.recommendation||''}
-      ${t.savingsExample ? `<div class="savings-row">💰 ${t.savingsExample}</div>` : ''}
+    ${visaBox}`;
+}
+
+function buildTransport(R, f) {
+  const t   = R.transport || {};
+  const pt  = t.publicTransport || {};
+  const tx  = t.taxi || {};
+  const pref = f.transportPref || 'both';
+
+  const overviewCard = `
+    <div class="card">
+      <div class="card-lbl">Getting around ${R.destination || f.dest}</div>
+      <p style="font-size:14px;color:var(--text-m);line-height:1.65">${t.overview || ''}</p>
     </div>`;
+
+  /* ── PUBLIC TRANSPORT CARD ── */
+  const passRows = (pt.visitorPass?.options || []).map(o =>
+    `<tr><td>${o.duration}</td><td>${o.zones}</td><td>${f.currency}${o.price}</td></tr>`
+  ).join('');
+  const publicCard = (pref === 'public' || pref === 'both') ? `
+    <div class="card">
+      <div class="card-lbl">🚇 Public transport</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
+        ${(pt.types || []).map(tp => `<span class="act-chip">${tp}</span>`).join('')}
+        ${pt.network ? `<span class="act-chip" style="background:var(--match-bg);border-color:var(--match-bd);color:var(--em-bright)">${pt.network}</span>` : ''}
+      </div>
+      ${pt.keyLines?.length ? `<div style="font-size:12px;color:var(--text-m);margin-bottom:12px">Key routes: ${pt.keyLines.join(' · ')}</div>` : ''}
+      ${pt.visitorPass?.available && passRows ? `
+        <div class="card-lbl" style="margin-bottom:8px">${pt.visitorPass.name || 'Visitor pass'}</div>
+        <table class="pass-table">
+          <thead><tr><th>Duration</th><th>Coverage</th><th>Price</th></tr></thead>
+          <tbody>${passRows}</tbody>
+        </table>
+        <div style="font-size:12px;color:var(--text-m);margin-top:10px">
+          Single ticket: <strong>${f.currency}${pt.singleTicket?.price || 0}</strong>
+          ${pt.visitorPass.whereToBuy ? ` · Buy at: <strong>${pt.visitorPass.whereToBuy}</strong>` : ''}
+          ${pt.visitorPass.topUpApp ? ` · App: <strong style="color:var(--emerald)">${pt.visitorPass.topUpApp}</strong>` : ''}
+        </div>` : ''}
+      ${pt.tip ? `<div class="act-tip" style="margin-top:12px">💡 ${pt.tip}</div>` : ''}
+      ${pt.accessibility ? `<div style="font-size:12px;color:var(--text-l);margin-top:8px">♿ ${pt.accessibility}</div>` : ''}
+    </div>` : '';
+
+  /* ── TAXI CARD ── */
+  const taxiCard = (pref === 'cab' || pref === 'both') ? `
+    <div class="card">
+      <div class="card-lbl">🚕 Taxi & rideshare</div>
+      <div class="t-compare" style="grid-template-columns:1fr 1fr;margin-bottom:12px">
+        <div class="t-card">
+          <div class="t-icon">🛣</div>
+          <div class="t-name">Short trip</div>
+          <div class="t-price">${f.currency}${tx.averageShortTrip || 0}</div>
+          <div class="t-pnote">average fare</div>
+        </div>
+        <div class="t-card">
+          <div class="t-icon">🏙</div>
+          <div class="t-name">Long trip</div>
+          <div class="t-price">${f.currency}${tx.averageLongTrip || 0}</div>
+          <div class="t-pnote">average fare</div>
+        </div>
+      </div>
+      ${tx.app ? `<div style="font-size:13px;font-weight:600;color:var(--emerald);margin-bottom:6px">📱 Use: ${tx.app}</div>` : ''}
+      ${tx.tip ? `<div class="act-tip">💡 ${tx.tip}</div>` : ''}
+      ${tx.safetyNote ? `<div style="font-size:12px;color:var(--gold-dk);margin-top:8px;padding-left:10px;border-left:2px solid var(--warn-bd)">⚠ ${tx.safetyNote}</div>` : ''}
+      ${t.airportTransfer ? `<div style="font-size:12px;color:var(--text-m);margin-top:10px">Airport transfer: ~${f.currency}${t.airportTransfer.approxCost} · ${t.airportTransfer.tip || ''}</div>` : ''}
+    </div>` : '';
+
+  /* ── COMPARISON / RECOMMENDATION ── */
+  const compCard = pref === 'both' && (t.comparison || t.savingsExample) ? `
+    <div class="rec-box">
+      <strong>Cirrio recommends:</strong> ${t.comparison || ''}
+      ${t.savingsExample ? `<div class="savings-row">💰 ${t.savingsExample}</div>` : ''}
+    </div>` : '';
+
+  return overviewCard + publicCard + taxiCard + compCard;
+}
 }
 
 function buildWeather(R, f) {
