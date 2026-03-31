@@ -518,8 +518,8 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
-let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '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';
+let apiKey = localStorage.getItem('cirrio_groq_key') || 'PASTE_YOUR_GROQ_KEY_HERE';
+let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '';
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
@@ -627,7 +627,11 @@ function showPage(id) {
   el.classList.add('active');
   if (id === 'page-loading') el.style.display = 'flex';
 }
-function showForm() { showPage('page-form'); }
+function showForm() {
+  showPage('page-form');
+  const sb = document.querySelector('.submit-btn');
+  if (sb) { sb.disabled = false; sb.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }
+}
 
 /* ─── LOADING ANIMATION ─── */
 function startLoading() {
@@ -876,12 +880,14 @@ async function planTrip() {
     document.getElementById('err-box').style.display = 'block';
     return;
   }
-  // Prevent double-submit
+  document.getElementById('err-box').style.display = 'none';
   const btn = document.querySelector('.submit-btn');
   btn.disabled = true;
-  btn.textContent = 'Planning…';
-  setTimeout(() => { btn.disabled = false; btn.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }, 30000);
-  document.getElementById('err-box').style.display = 'none';
+  btn.innerHTML = '⏳ &nbsp;Planning your trip…';
+  function resetBtn() {
+    btn.disabled = false;
+    btn.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio';
+  }
 
   const cuisines = [...document.querySelectorAll('.chip.active')].map(c => c.textContent);
   formSnap = {
@@ -953,6 +959,7 @@ async function planTrip() {
       : e.message.includes('rate_limit')
       ? 'Rate limit reached. Please wait a moment and try again.'
       : 'Could not generate your plan. Please try again.';
+    resetBtn();
     alert(msg);
     showForm();
   }
