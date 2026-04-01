@@ -435,7 +435,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <div class="divider"></div>
     <div>
       <div class="sec-label">Who's travelling? *</div>
-      <div class="type-grid">
+      <div class="type-grid" id="traveller-grid">
         <button class="type-btn" data-val="family" onclick="selectType(this)">👨‍👩‍👧 Family with kids</button>
         <button class="type-btn" data-val="solo"   onclick="selectType(this)">🎒 Solo traveller</button>
         <button class="type-btn" data-val="couple" onclick="selectType(this)">💑 Couple</button>
@@ -518,13 +518,19 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
-let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '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';
+let apiKey = localStorage.getItem('cirrio_groq_key') || 'PASTE_YOUR_GROQ_KEY_HERE';
+let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '';
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
 let tripData = null;
 let formSnap = {};
+
+/* ─── BUTTON RESET — top-level so always accessible ─── */
+function resetBtn() {
+  const sb = document.querySelector('.submit-btn');
+  if (sb) { sb.disabled = false; sb.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }
+}
 
 /* ─── Groq model to use ─── */
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
@@ -597,7 +603,7 @@ if (apiKey) document.getElementById('key-modal').style.display = 'none';
 
 /* ─── FORM HELPERS ─── */
 function selectType(btn) {
-  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#traveller-grid .type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   travellerType = btn.dataset.val;
 }
@@ -629,8 +635,7 @@ function showPage(id) {
 }
 function showForm() {
   showPage('page-form');
-  const sb = document.querySelector('.submit-btn');
-  if (sb) { sb.disabled = false; sb.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }
+  resetBtn();
 }
 
 /* ─── LOADING ANIMATION ─── */
@@ -884,10 +889,6 @@ async function planTrip() {
   const btn = document.querySelector('.submit-btn');
   btn.disabled = true;
   btn.innerHTML = '⏳ &nbsp;Planning your trip…';
-  function resetBtn() {
-    btn.disabled = false;
-    btn.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio';
-  }
 
   const cuisines = [...document.querySelectorAll('.chip.active')].map(c => c.textContent);
   formSnap = {
@@ -962,6 +963,8 @@ async function planTrip() {
     resetBtn();
     alert(msg);
     showForm();
+  } finally {
+    resetBtn();
   }
 }
 
@@ -1019,9 +1022,6 @@ function renderResults() {
   `;
 
   showPage('page-results');
-  // Re-enable submit button
-  const sb = document.querySelector('.submit-btn');
-  if (sb) { sb.disabled = false; sb.innerHTML = '✈️ &nbsp;Plan my trip with Cirrio'; }
 }
 
 function switchTab(id, btn) {
