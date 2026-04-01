@@ -391,6 +391,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     </div>
   </div>
   <div class="nav-badge">AI Travel Planner</div>
+  <div style="font-size:10px;color:var(--sage);padding:2px 8px;background:rgba(56,161,105,.15);border-radius:4px">v2.1 — Apr 2026</div>
 </nav>
 
 <!-- API KEY MODAL -->
@@ -530,7 +531,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
+let apiKey = localStorage.getItem('cirrio_groq_key') || '';
 let tavilyKey = localStorage.getItem('cirrio_tavily_key') || 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;
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
@@ -607,7 +608,7 @@ function saveKey() {
   document.getElementById('key-modal').style.display = 'none';
   document.getElementById('key-banner').style.display = 'none';
 }
-if (apiKey) document.getElementById('key-modal').style.display = 'none';
+if (apiKey && apiKey.startsWith('gsk_')) document.getElementById('key-modal').style.display = 'none';
 
 /* ─── FORM HELPERS ─── */
 function selectType(btn) {
@@ -892,7 +893,7 @@ async function planTrip() {
   if (!apiKey) {
     var kb=document.getElementById('key-banner'); kb.style.display='block'; kb.scrollIntoView({behavior:'smooth'}); return;
   }
-  document.getElementById('key-banner').style.display='none';
+  
   const dest = document.getElementById('f-dest').value.trim();
   var ok = true;
   if (!dest) { document.getElementById('f-dest').classList.add('field-error'); document.getElementById('dest-err').style.display='block'; ok=false; }
