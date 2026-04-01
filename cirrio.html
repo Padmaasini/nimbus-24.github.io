@@ -606,7 +606,12 @@ function saveKey() {
   document.getElementById('key-modal').style.display = 'none';
   document.getElementById('key-banner').style.display = 'none';
 }
-if (apiKey) document.getElementById('key-modal').style.display = 'none';
+if (apiKey && apiKey.length > 10) {
+  document.getElementById('key-modal').style.display = 'none';
+} else {
+  apiKey = '';
+  document.getElementById('key-modal').style.display = 'flex';
+}
 
 /* ─── FORM HELPERS ─── */
 function selectType(btn) {
@@ -887,7 +892,7 @@ ${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activi
 /* ─── PLAN TRIP — calls Groq API ─── */
 async function planTrip() {
   if (!apiKey) {
-    var kb=document.getElementById('key-banner'); kb.style.display='block'; kb.scrollIntoView({behavior:'smooth'}); return;
+    document.getElementById('key-modal').style.display='flex'; return;
   }
   document.getElementById('key-banner').style.display='none';
   const dest = document.getElementById('f-dest').value.trim();
