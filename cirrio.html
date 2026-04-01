@@ -354,6 +354,16 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 .fact-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .fact-label::before{content:'';display:inline-block;width:16px;height:1px;background:var(--sage)}
 .fact-label::after{content:'';display:inline-block;width:16px;height:1px;background:var(--sage)}
+
+.field input[list]{background:var(--cream);border:1px solid var(--border);border-radius:9px;
+  padding:11px 14px;font-size:14px;color:var(--text-d);font-family:var(--sans);outline:none;
+  transition:border-color .2s,box-shadow .2s;width:100%}
+.field input[list]:focus{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(45,122,79,.1)}
+.field input.field-error{border-color:#e74c3c;box-shadow:0 0 0 3px rgba(231,76,60,.12)}
+.field-err-msg{font-size:11px;color:#e74c3c;margin-top:4px;display:none}
+#key-banner{display:none;background:#fff5f3;border:1px solid rgba(245,80,54,.3);
+  border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#c0392b}
+#key-banner a{color:#f55036;font-weight:600}
 </style>
 </head>
 <body>
@@ -411,13 +421,14 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <p>Tell Cirrio where you're headed, your budget and travel style — get a personalised itinerary in seconds.</p>
   </div>
   <div class="form-card">
+    <div id="key-banner">&#9888; No API key found. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;">Click here to add your free Groq key</a> before planning a trip.</div>
     <div class="field-row">
-      <div class="field"><label>Destination *</label><input id="f-dest" placeholder="e.g. Tokyo, Japan"/></div>
-      <div class="field"><label>Flying from</label><input id="f-origin" placeholder="e.g. Brussels"/></div>
+      <div class="field"><label>Destination *</label><input id="f-dest" list="dest-list" placeholder="e.g. Tokyo, Japan" autocomplete="off" oninput="this.classList.remove('field-error');document.getElementById('dest-err').style.display='none'"/><datalist id="dest-list"><option value="Tokyo, Japan"><option value="Paris, France"><option value="London, UK"><option value="New York, USA"><option value="Rome, Italy"><option value="Barcelona, Spain"><option value="Amsterdam, Netherlands"><option value="Berlin, Germany"><option value="Prague, Czech Republic"><option value="Vienna, Austria"><option value="Lisbon, Portugal"><option value="Athens, Greece"><option value="Dubai, UAE"><option value="Singapore"><option value="Bangkok, Thailand"><option value="Bali, Indonesia"><option value="Sydney, Australia"><option value="Kyoto, Japan"><option value="Mumbai, India"><option value="Delhi, India"><option value="Goa, India"><option value="Jaipur, India"><option value="Istanbul, Turkey"><option value="Cairo, Egypt"><option value="Marrakech, Morocco"><option value="Cape Town, South Africa"><option value="Seoul, South Korea"><option value="Taipei, Taiwan"><option value="Kuala Lumpur, Malaysia"><option value="Hong Kong"><option value="Zurich, Switzerland"><option value="Copenhagen, Denmark"><option value="Stockholm, Sweden"><option value="Budapest, Hungary"><option value="Krakow, Poland"><option value="Maldives"><option value="Toronto, Canada"><option value="Mexico City, Mexico"><option value="Buenos Aires, Argentina"></datalist><div class="field-err-msg" id="dest-err">Please enter a destination</div></div>
+      <div class="field"><label>Flying from</label><input id="f-origin" list="origin-list" placeholder="e.g. Brussels" autocomplete="off"/><datalist id="origin-list"><option value="Brussels"><option value="London"><option value="Paris"><option value="Amsterdam"><option value="Frankfurt"><option value="Berlin"><option value="Rome"><option value="Madrid"><option value="Barcelona"><option value="Lisbon"><option value="Vienna"><option value="Zurich"><option value="Copenhagen"><option value="Stockholm"><option value="Oslo"><option value="Helsinki"><option value="Warsaw"><option value="Prague"><option value="Budapest"><option value="Athens"><option value="Dublin"><option value="Mumbai"><option value="Delhi"><option value="Bangalore"><option value="Chennai"><option value="Kolkata"><option value="Hyderabad"><option value="Dubai"><option value="Singapore"><option value="New York"><option value="Los Angeles"><option value="Toronto"><option value="Sydney"></datalist></div>
     </div>
     <div class="field-row">
       <div class="field"><label>Trip start date</label><input id="f-checkin" type="date"/></div>
-      <div class="field"><label>Trip end date</label><input id="f-checkout" type="date"/></div>
+      <div class="field"><label>Trip end date</label><input id="f-checkout" type="date"/><div class="field-err-msg" id="date-err"></div></div>
     </div>
     <div class="field-row-3">
       <div class="field" style="grid-column:span 2">
@@ -518,8 +529,8 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
-let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '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';
+let apiKey = localStorage.getItem('cirrio_groq_key') || '';
+let tavilyKey = localStorage.getItem('cirrio_tavily_key') || '';
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
@@ -593,6 +604,7 @@ function saveKey() {
   const tv = document.getElementById('tavily-key-input').value.trim();
   if (tv) { tavilyKey = tv; localStorage.setItem('cirrio_tavily_key', tv); }
   document.getElementById('key-modal').style.display = 'none';
+  document.getElementById('key-banner').style.display = 'none';
 }
 if (apiKey) document.getElementById('key-modal').style.display = 'none';
 
@@ -601,6 +613,8 @@ function selectType(btn) {
   document.querySelectorAll('#traveller-grid .type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   travellerType = btn.dataset.val;
+  const aa = {solo:1,couple:2,family:2,adults:2,pet:2,group:4};
+  const av = aa[travellerType]; if (av) document.getElementById('f-adults').value = av;
 }
 function toggleChip(btn) { btn.classList.toggle('active'); }
 function togglePet() {
@@ -872,12 +886,26 @@ ${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activi
 
 /* ─── PLAN TRIP — calls Groq API ─── */
 async function planTrip() {
-  const dest = document.getElementById('f-dest').value.trim();
-  if (!dest || !travellerType) {
-    document.getElementById('err-box').style.display = 'block';
-    return;
+  if (!apiKey) {
+    var kb=document.getElementById('key-banner'); kb.style.display='block'; kb.scrollIntoView({behavior:'smooth'}); return;
   }
-  document.getElementById('err-box').style.display = 'none';
+  document.getElementById('key-banner').style.display='none';
+  const dest = document.getElementById('f-dest').value.trim();
+  var ok = true;
+  if (!dest) { document.getElementById('f-dest').classList.add('field-error'); document.getElementById('dest-err').style.display='block'; ok=false; }
+  else { document.getElementById('f-dest').classList.remove('field-error'); document.getElementById('dest-err').style.display='none'; }
+  if (!travellerType) { document.getElementById('err-box').style.display='block'; ok=false; }
+  else { document.getElementById('err-box').style.display='none'; }
+  var ci=document.getElementById('f-checkin').value, co=document.getElementById('f-checkout').value;
+  var today=new Date(); today.setHours(0,0,0,0);
+  var derr=document.getElementById('date-err');
+  if (ci) {
+    var sd=new Date(ci);
+    if (sd < today) { document.getElementById('f-checkin').classList.add('field-error'); derr.textContent='Start date cannot be in the past'; derr.style.display='block'; ok=false; }
+    else if (co && new Date(co) <= sd) { document.getElementById('f-checkout').classList.add('field-error'); derr.textContent='End date must be after start date'; derr.style.display='block'; ok=false; }
+    else { document.getElementById('f-checkin').classList.remove('field-error'); document.getElementById('f-checkout').classList.remove('field-error'); derr.style.display='none'; }
+  }
+  if (!ok) return;
 
 
   const cuisines = [...document.querySelectorAll('.chip.active')].map(c => c.textContent);
