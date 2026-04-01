@@ -638,11 +638,11 @@ function toggleKidAge() {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
-    p.style.display = '';
+    p.style.display = 'none';
   });
   const el = document.getElementById(id);
   el.classList.add('active');
-  if (id === 'page-loading') el.style.display = 'flex';
+  el.style.display = (id === 'page-loading') ? 'flex' : 'block';
 }
 function showForm() { showPage('page-form'); }
 
