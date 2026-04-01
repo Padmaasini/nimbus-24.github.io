@@ -453,6 +453,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
         <button class="type-btn" data-val="adults" onclick="selectType(this)">🥂 Adults only</button>
         <button class="type-btn" data-val="pet"    onclick="selectType(this)">🐾 With a pet</button>
         <button class="type-btn" data-val="group"  onclick="selectType(this)">👥 Group of friends</button>
+        <button class="type-btn" data-val="girls"  onclick="selectType(this)">👯 Girls trip</button>
       </div>
     </div>
     <div class="field-row">
@@ -529,7 +530,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 
 <script>
 /* ─── STATE ─── */
-let apiKey = localStorage.getItem('cirrio_groq_key') || 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;
+let apiKey = localStorage.getItem('cirrio_groq_key') || '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';
 let tavilyKey = localStorage.getItem('cirrio_tavily_key') || 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;
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
@@ -613,8 +614,9 @@ function selectType(btn) {
   document.querySelectorAll('#traveller-grid .type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   travellerType = btn.dataset.val;
-  const aa = {solo:1,couple:2,family:2,adults:2,pet:2,group:4};
-  const av = aa[travellerType]; if (av) document.getElementById('f-adults').value = av;
+  var aa = {solo:1, couple:2, family:2, adults:2, pet:2, group:4, girls:3};
+  var av = aa[travellerType];
+  if (av !== undefined) document.getElementById('f-adults').value = av;
 }
 function toggleChip(btn) { btn.classList.toggle('active'); }
 function togglePet() {
@@ -882,7 +884,8 @@ MANDATORY RULES:
 - travelOptions.visaNote must be specific — not generic
 - If RAG context is provided above, use those facts as ground truth for prices, pass names, and hotel recommendations
 ${f.kids > 0 ? '- Ensure activities are family-appropriate with realistic pacing for children' : ''}
-${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activity options' : ''}`;
+${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activity options' : ''}
+${f.travellerType === 'girls' ? '- This is a girls trip. Suggest women-friendly accommodation (safe neighbourhood, good reviews from female travellers), activities suited to a group of women (spa days, cooking classes, food tours, rooftop bars, cultural experiences), and flag any safety tips specific to this destination for women. Include at least one luxury or pampering activity per day.' : ''}`;
 
 /* ─── PLAN TRIP — calls Groq API ─── */
 async function planTrip() {
@@ -998,9 +1001,9 @@ function renderResults() {
   const tags = document.getElementById('r-tags');
   tags.innerHTML = '';
   if (f.checkin) tags.innerHTML += `<span class="trip-tag">📅 ${f.checkin} → ${f.checkout}</span>`;
-  const icons  = {family:'👨‍👩‍👧',solo:'🎒',couple:'💑',adults:'🥂',pet:'🐾',group:'👥'};
+  const icons  = {family:'👨‍👩‍👧',solo:'🎒',couple:'💑',adults:'🥂',pet:'🐾',group:'👥',girls:'👯'};
   const labels = {family:'Family with kids',solo:'Solo traveller',couple:'Couple',
-                  adults:'Adults only',pet:'With a pet',group:'Group of friends'};
+                  adults:'Adults only',pet:'With a pet',group:'Group of friends',girls:'Girls trip'};
   tags.innerHTML += `<span class="trip-tag">${icons[f.travellerType]} ${labels[f.travellerType]}</span>`;
   tags.innerHTML += `<span class="trip-tag">👤 ${f.adults} adult${f.adults>1?'s':''}${f.kids>0?` + ${f.kids} kids`:''}</span>`;
   if (f.cuisines.length) tags.innerHTML += `<span class="trip-tag">🍽 ${f.cuisines.slice(0,2).join(', ')}</span>`;
