@@ -398,18 +398,16 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
   <div class="key-box">
     <h2>Welcome to Cirrio</h2>
     <div class="groq-info">
-      <strong>Powered by Groq — completely free to use.</strong><br>
-      Groq gives you a free API key with no credit card required. Get yours in 2 minutes:
+      <strong>Powered by Google Gemini — completely free to use.</strong><br>
+      Get your free Gemini API key in 2 minutes — no credit card needed:
       <div class="groq-steps">
-        <div class="groq-step"><div class="groq-step-num">1</div>Go to <a href="https://console.groq.com" target="_blank">console.groq.com</a> and sign up with your email</div>
-        <div class="groq-step"><div class="groq-step-num">2</div>Click <strong>API Keys</strong> → <strong>Create API Key</strong></div>
-        <div class="groq-step"><div class="groq-step-num">3</div>Copy the key (starts with <strong>gsk_</strong>) and paste it below</div>
+        <div class="groq-step"><div class="groq-step-num">1</div>Go to <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> and sign in with Google</div>
+        <div class="groq-step"><div class="groq-step-num">2</div>Click <strong>Get API Key</strong> → <strong>Create API key</strong></div>
+        <div class="groq-step"><div class="groq-step-num">3</div>Copy the key and paste it below</div>
       </div>
     </div>
-    <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off"/>
-    <div style="font-size:12px;color:var(--text-m);margin:-8px 0 10px;line-height:1.5">For richer, more accurate results, also add a free <a href="https://tavily.com" target="_blank" style="color:#f55036;font-weight:600">Tavily</a> search key (optional — tavily.com, free 1,000 searches/month):</div>
-    <input type="password" id="tavily-key-input" placeholder="tvly-... (optional)" autocomplete="off" style="margin-bottom:14px"/>
-    <button class="key-save" onclick="saveKey()">Save keys &amp; start planning →</button>
+    <input type="password" id="api-key-input" placeholder="AIza..." autocomplete="off"/>
+    <button class="key-save" onclick="saveKey()">Save key &amp; start planning →</button>
     <div class="key-note">Your key is stored only in your browser (localStorage).<br>Clear browser data anytime to remove it. Never sent to Cirrio servers.</div>
   </div>
 </div>
@@ -421,7 +419,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <p>Tell Cirrio where you're headed, your budget and travel style — get a personalised itinerary in seconds.</p>
   </div>
   <div class="form-card">
-    <div id="key-banner">&#9888; No API key found. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;">Click here to add your free Groq key</a> before planning a trip.</div>
+    <div id="key-banner">&#9888; No API key found. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;">Click here to add your free Gemini key</a> before planning a trip.</div>
     <div class="field-row">
       <div class="field"><label>Destination *</label><input id="f-dest" list="dest-list" placeholder="e.g. Tokyo, Japan" autocomplete="off" oninput="this.classList.remove('field-error');document.getElementById('dest-err').style.display='none'"/><datalist id="dest-list">
 <!-- Europe -->
@@ -531,7 +529,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 <div id="page-loading" class="page">
   <div class="loading-wm">Cir<em>rio</em></div>
   <div class="loading-sub">Planning your journey…</div>
-  <div class="groq-badge">⚡ Powered by Groq — free AI inference</div>
+  <div class="groq-badge">✨ Powered by Gemini — with live Google Search</div>
   <div class="trail-wrap">
     <div class="trail-line"></div>
     <div class="trail-plane">✈️</div>
@@ -560,7 +558,6 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 <script>
 /* ─── STATE ─── */
 let apiKey = 'proxy';
-let tavilyKey = '';
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
@@ -568,8 +565,8 @@ let tripData = null;
 let formSnap = {};
 
 
-/* ─── Groq model to use ─── */
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+/* ─── Model (Gemini 2.0 Flash via backend proxy) ─── */
+const AI_MODEL = 'gemini-2.0-flash';
 
 const LOADING_MSGS = [
   'Searching for current travel information…',
@@ -582,57 +579,17 @@ const LOADING_MSGS = [
   'Putting your itinerary together…'
 ];
 
-/* ─── RAG: Tavily web search to ground the AI in current facts ─── */
-async function retrieveContext(dest, origin, checkin) {
-  if (!tavilyKey) return '';          // gracefully skip if no key
-  const month = checkin
-    ? new Date(checkin).toLocaleString('en', { month: 'long', year: 'numeric' })
-    : new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
-
-  const queries = [
-    `best hotels ${dest} ${new Date().getFullYear()} neighbourhoods`,
-    `${dest} public transport pass price ${new Date().getFullYear()} visitor card`,
-    `${dest} free attractions museums parks opening hours`,
-    origin ? `${origin} to ${dest} train bus flight options ${new Date().getFullYear()}` : null
-  ].filter(Boolean);
-
-  const results = [];
-  for (const q of queries) {
-    try {
-      const r = await fetch('https://api.tavily.com/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          api_key: tavilyKey,
-          query: q,
-          search_depth: 'basic',
-          max_results: 3,
-          include_answer: true
-        })
-      });
-      const d = await r.json();
-      if (d.answer) results.push(`[${q}]: ${d.answer}`);
-      else if (d.results?.length) {
-        results.push(`[${q}]: ${d.results.slice(0,2).map(x => x.content?.slice(0,300)).join(' | ')}`);
-      }
-    } catch (_) { /* silently skip failed searches */ }
-  }
-  return results.length
-    ? `\n\nCURRENT WEB CONTEXT (retrieved ${month} — use this as ground truth over your training data):\n${results.join('\n')}\n`
-    : '';
-}
+/* ─── RAG: handled server-side via Gemini Google Search grounding ─── */
 
 /* ─── KEY MODAL ─── */
 function saveKey() {
   const v = document.getElementById('api-key-input').value.trim();
-  if (!v || !v.startsWith('gsk_')) {
-    alert('Please paste a valid Groq API key — it should start with gsk_');
+  if (!v) {
+    alert('Please paste your Gemini API key from aistudio.google.com');
     return;
   }
   apiKey = v;
-  localStorage.setItem('cirrio_groq_key', v);
-  const tv = document.getElementById('tavily-key-input').value.trim();
-  if (tv) { tavilyKey = tv; localStorage.setItem('cirrio_tavily_key', tv); }
+  localStorage.setItem('cirrio_gemini_key', v);
   document.getElementById('key-modal').style.display = 'none';
   document.getElementById('key-banner').style.display = 'none';
 }
@@ -694,7 +651,7 @@ function startLoading() {
 }
 
 /* ─── PROMPT BUILDER ─── */
-function buildPrompt(f, ragContext = '') {
+function buildPrompt(f) {
   const rawDays = f.checkin && f.checkout
     ? Math.max(1, Math.ceil((new Date(f.checkout) - new Date(f.checkin)) / 86400000))
     : 5;
@@ -772,7 +729,6 @@ function buildPrompt(f, ragContext = '') {
   return `You are Cirrio, a premium AI travel planner. Return ONLY a valid JSON object. No markdown code fences, no explanation, no text before or after the JSON.
 
 CRITICAL: You MUST generate ALL ${days} days of itinerary. Do not stop after day 1. Every day must be fully populated with activities and meals.
-${ragContext}
 TRIP DETAILS:
 Destination: ${f.dest}
 Origin: ${f.origin || 'not specified'}
@@ -968,15 +924,12 @@ async function planTrip() {
   startLoading();
 
   try {
-    /* ── Step 1: RAG — retrieve current travel context from Tavily ── */
-    const ragContext = await retrieveContext(formSnap.dest, formSnap.origin, formSnap.checkin);
-
-    /* ── Step 2: Groq API call with augmented prompt ── */
+    /* ── Gemini API call — Google Search grounding handled server-side ── */
     const res = await fetch('https://cirrio.onrender.com/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: GROQ_MODEL,
+        model: AI_MODEL,
         messages: [
           {
             role: 'system',
@@ -984,11 +937,9 @@ async function planTrip() {
           },
           {
             role: 'user',
-            content: buildPrompt(formSnap, ragContext)
+            content: buildPrompt(formSnap)
           }
-        ],
-        max_tokens: 6000,
-        temperature: 0.7
+        ]
       })
     });
 
@@ -999,7 +950,6 @@ async function planTrip() {
     }
 
     const data = await res.json();
-    /* ── Groq response format: choices[0].message.content ── */
     const raw = data?.choices?.[0]?.message?.content || '';
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('No JSON in response');
@@ -1008,11 +958,11 @@ async function planTrip() {
     renderResults();
 
   } catch (e) {
-    console.error('Groq error:', e);
-    const msg = e.message.includes('invalid_api_key')
-      ? 'Invalid API key. Please check your Groq key starts with gsk_ and try again.'
-      : e.message.includes('rate_limit')
-      ? 'Rate limit reached. Please wait a moment and try again.'
+    console.error('Gemini error:', e);
+    const msg = e.message.includes('API_KEY')
+      ? 'Invalid API key. Please check your Gemini key and try again.'
+      : e.message.includes('quota')
+      ? 'Daily quota reached. Please try again tomorrow or check aistudio.google.com.'
       : 'Could not generate your plan. Please try again.';
     alert(msg);
     showForm();
