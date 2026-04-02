@@ -1146,7 +1146,7 @@ function buildGettingThere(R, f) {
     </div>`;
 
   // FLIGHTS
-  const flightCards = (t.flights || []).map(fl => `
+  const flightCards = (Array.isArray(t.flights) ? t.flights : []).map(fl => `
     <div class="travel-option-card">
       <div class="to-icon">✈️</div>
       <div class="to-body">
@@ -1164,7 +1164,7 @@ function buildGettingThere(R, f) {
 
   // TRAINS
   const trainAvail = t.trains && t.trains.some(tr => tr.available !== false && tr.operator !== 'N/A');
-  const trainCards = trainAvail ? (t.trains || []).filter(tr => tr.available !== false && tr.operator !== 'N/A').map(tr => `
+  const trainCards = trainAvail ? (Array.isArray(t.trains) ? t.trains : []).filter(tr => tr.available !== false && tr.operator !== 'N/A').map(tr => `
     <div class="travel-option-card">
       <div class="to-icon">🚄</div>
       <div class="to-body">
@@ -1230,17 +1230,17 @@ function buildTransport(R, f) {
     </div>`;
 
   /* ── PUBLIC TRANSPORT CARD ── */
-  const passRows = (pt.visitorPass?.options || []).map(o =>
+  const passRows = (Array.isArray(pt.visitorPass?.options) ? pt.visitorPass.options : []).map(o =>
     `<tr><td>${o.duration}</td><td>${o.zones}</td><td>${f.currency}${o.price}</td></tr>`
   ).join('');
   const publicCard = (pref === 'public' || pref === 'both') ? `
     <div class="card">
       <div class="card-lbl">🚇 Public transport</div>
       <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
-        ${(pt.types || []).map(tp => `<span class="act-chip">${tp}</span>`).join('')}
+        ${(Array.isArray(pt.types) ? pt.types : []).map(tp => `<span class="act-chip">${tp}</span>`).join('')}
         ${pt.network ? `<span class="act-chip" style="background:var(--match-bg);border-color:var(--match-bd);color:var(--em-bright)">${pt.network}</span>` : ''}
       </div>
-      ${pt.keyLines?.length ? `<div style="font-size:12px;color:var(--text-m);margin-bottom:12px">Key routes: ${pt.keyLines.join(' · ')}</div>` : ''}
+      ${(Array.isArray(pt.keyLines) && pt.keyLines.length) ? `<div style="font-size:12px;color:var(--text-m);margin-bottom:12px">Key routes: ${pt.keyLines.join(' · ')}</div>` : ''}
       ${pt.visitorPass?.available && passRows ? `
         <div class="card-lbl" style="margin-bottom:8px">${pt.visitorPass.name || 'Visitor pass'}</div>
         <table class="pass-table">
