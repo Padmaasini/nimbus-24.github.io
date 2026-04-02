@@ -751,7 +751,7 @@ async function planTrip() {
     const ragContext = await retrieveContext(formSnap.dest, formSnap.origin, formSnap.checkin);
 
     /* ── Step 2: Groq API call with augmented prompt ── */
-    const res = await fetch('https://cirrio.onrender.com', {
+    const res = await fetch('https://cirrio.onrender.com/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
