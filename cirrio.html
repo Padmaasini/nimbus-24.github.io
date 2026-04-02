@@ -884,6 +884,7 @@ MANDATORY RULES:
 - If RAG context is provided above, use those facts as ground truth for prices, pass names, and hotel recommendations
 ${f.kids > 0 ? '- Ensure activities are family-appropriate with realistic pacing for children' : ''}
 ${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activity options' : ''}`;
+}
 
 /* ─── PLAN TRIP — calls Groq API ─── */
 async function planTrip() {
