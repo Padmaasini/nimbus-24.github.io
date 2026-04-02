@@ -527,11 +527,10 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
   </div>
 </div>
 
-<script src="config.js"></script>
 <script>
 /* ─── STATE ─── */
-let apiKey = (typeof GROQ_API_KEY !== 'undefined' && GROQ_API_KEY !== 'PASTE_YOUR_GROQ_KEY_HERE') ? GROQ_API_KEY : (localStorage.getItem('cirrio_groq_key') || '');
-let tavilyKey = (typeof TAVILY_KEY !== 'undefined') ? TAVILY_KEY : (localStorage.getItem('cirrio_tavily_key') || '');
+let apiKey = 'proxy';
+let tavilyKey = '';
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
@@ -638,11 +637,11 @@ function toggleKidAge() {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
-    p.style.display = 'none';
+    p.style.display = '';
   });
   const el = document.getElementById(id);
   el.classList.add('active');
-  el.style.display = (id === 'page-loading') ? 'flex' : 'block';
+  if (id === 'page-loading') el.style.display = 'flex';
 }
 function showForm() { showPage('page-form'); }
 
@@ -888,11 +887,7 @@ ${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activi
 
 /* ─── PLAN TRIP — calls Groq API ─── */
 async function planTrip() {
-  if (!apiKey) {
-    alert('No API key found. Please open config.js and add your Groq key, then refresh.');
-    return;
-  }
-  document.getElementById('key-banner').style.display='none';
+
   const dest = document.getElementById('f-dest').value.trim();
   var ok = true;
   if (!dest) { document.getElementById('f-dest').classList.add('field-error'); document.getElementById('dest-err').style.display='block'; ok=false; }
@@ -936,12 +931,9 @@ async function planTrip() {
     const ragContext = await retrieveContext(formSnap.dest, formSnap.origin, formSnap.checkin);
 
     /* ── Step 2: Groq API call with augmented prompt ── */
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch('https://cirrio.onrender.com', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: GROQ_MODEL,
         messages: [
