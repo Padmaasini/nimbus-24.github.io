@@ -398,16 +398,18 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
   <div class="key-box">
     <h2>Welcome to Cirrio</h2>
     <div class="groq-info">
-      <strong>Powered by Google Gemini — completely free to use.</strong><br>
-      Get your free Gemini API key in 2 minutes — no credit card needed:
+      <strong>Powered by Groq — completely free to use.</strong><br>
+      Groq gives you a free API key with no credit card required. Get yours in 2 minutes:
       <div class="groq-steps">
-        <div class="groq-step"><div class="groq-step-num">1</div>Go to <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> and sign in with Google</div>
-        <div class="groq-step"><div class="groq-step-num">2</div>Click <strong>Get API Key</strong> → <strong>Create API key</strong></div>
-        <div class="groq-step"><div class="groq-step-num">3</div>Copy the key and paste it below</div>
+        <div class="groq-step"><div class="groq-step-num">1</div>Go to <a href="https://console.groq.com" target="_blank">console.groq.com</a> and sign up with your email</div>
+        <div class="groq-step"><div class="groq-step-num">2</div>Click <strong>API Keys</strong> → <strong>Create API Key</strong></div>
+        <div class="groq-step"><div class="groq-step-num">3</div>Copy the key (starts with <strong>gsk_</strong>) and paste it below</div>
       </div>
     </div>
-    <input type="password" id="api-key-input" placeholder="AIza..." autocomplete="off"/>
-    <button class="key-save" onclick="saveKey()">Save key &amp; start planning →</button>
+    <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off"/>
+    <div style="font-size:12px;color:var(--text-m);margin:-8px 0 10px;line-height:1.5">For richer, more accurate results, also add a free <a href="https://tavily.com" target="_blank" style="color:#f55036;font-weight:600">Tavily</a> search key (optional — tavily.com, free 1,000 searches/month):</div>
+    <input type="password" id="tavily-key-input" placeholder="tvly-... (optional)" autocomplete="off" style="margin-bottom:14px"/>
+    <button class="key-save" onclick="saveKey()">Save keys &amp; start planning →</button>
     <div class="key-note">Your key is stored only in your browser (localStorage).<br>Clear browser data anytime to remove it. Never sent to Cirrio servers.</div>
   </div>
 </div>
@@ -419,40 +421,10 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <p>Tell Cirrio where you're headed, your budget and travel style — get a personalised itinerary in seconds.</p>
   </div>
   <div class="form-card">
-    <div id="key-banner">&#9888; No API key found. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;">Click here to add your free Gemini key</a> before planning a trip.</div>
+    <div id="key-banner">&#9888; No API key found. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;">Click here to add your free Groq key</a> before planning a trip.</div>
     <div class="field-row">
-      <div class="field"><label>Destination *</label><input id="f-dest" list="dest-list" placeholder="e.g. Tokyo, Japan" autocomplete="off" oninput="this.classList.remove('field-error');document.getElementById('dest-err').style.display='none'"/><datalist id="dest-list">
-<!-- Europe -->
-<option value="London, UK"><option value="Paris, France"><option value="Amsterdam, Netherlands"><option value="Berlin, Germany"><option value="Rome, Italy"><option value="Barcelona, Spain"><option value="Madrid, Spain"><option value="Lisbon, Portugal"><option value="Vienna, Austria"><option value="Prague, Czech Republic"><option value="Budapest, Hungary"><option value="Athens, Greece"><option value="Brussels, Belgium"><option value="Zurich, Switzerland"><option value="Geneva, Switzerland"><option value="Copenhagen, Denmark"><option value="Stockholm, Sweden"><option value="Oslo, Norway"><option value="Helsinki, Finland"><option value="Warsaw, Poland"><option value="Krakow, Poland"><option value="Dublin, Ireland"><option value="Edinburgh, UK"><option value="Manchester, UK"><option value="Nice, France"><option value="Milan, Italy"><option value="Florence, Italy"><option value="Venice, Italy"><option value="Naples, Italy"><option value="Porto, Portugal"><option value="Seville, Spain"><option value="Valencia, Spain"><option value="Reykjavik, Iceland"><option value="Dubrovnik, Croatia"><option value="Split, Croatia"><option value="Ljubljana, Slovenia"><option value="Tallinn, Estonia"><option value="Riga, Latvia"><option value="Vilnius, Lithuania"><option value="Bucharest, Romania"><option value="Sofia, Bulgaria"><option value="Belgrade, Serbia"><option value="Sarajevo, Bosnia"><option value="Skopje, North Macedonia"><option value="Tirana, Albania"><option value="Valletta, Malta"><option value="Nicosia, Cyprus">
-<!-- Asia -->
-<option value="Tokyo, Japan"><option value="Kyoto, Japan"><option value="Osaka, Japan"><option value="Hiroshima, Japan"><option value="Seoul, South Korea"><option value="Busan, South Korea"><option value="Beijing, China"><option value="Shanghai, China"><option value="Hong Kong"><option value="Macau"><option value="Taipei, Taiwan"><option value="Singapore"><option value="Bangkok, Thailand"><option value="Chiang Mai, Thailand"><option value="Phuket, Thailand"><option value="Bali, Indonesia"><option value="Jakarta, Indonesia"><option value="Yogyakarta, Indonesia"><option value="Kuala Lumpur, Malaysia"><option value="Penang, Malaysia"><option value="Manila, Philippines"><option value="Cebu, Philippines"><option value="Ho Chi Minh City, Vietnam"><option value="Hanoi, Vietnam"><option value="Hoi An, Vietnam"><option value="Phnom Penh, Cambodia"><option value="Siem Reap, Cambodia"><option value="Yangon, Myanmar"><option value="Colombo, Sri Lanka"><option value="Kathmandu, Nepal"><option value="Dhaka, Bangladesh"><option value="Islamabad, Pakistan"><option value="Karachi, Pakistan"><option value="Lahore, Pakistan">
-<!-- India -->
-<option value="Mumbai, India"><option value="Delhi, India"><option value="Bangalore, India"><option value="Chennai, India"><option value="Hyderabad, India"><option value="Kolkata, India"><option value="Pune, India"><option value="Ahmedabad, India"><option value="Jaipur, India"><option value="Goa, India"><option value="Kochi, India"><option value="Agra, India"><option value="Varanasi, India"><option value="Amritsar, India"><option value="Udaipur, India"><option value="Jodhpur, India"><option value="Mysore, India"><option value="Pondicherry, India"><option value="Coimbatore, India"><option value="Madurai, India"><option value="Tiruchirappalli, India"><option value="Visakhapatnam, India">
-<!-- Middle East -->
-<option value="Dubai, UAE"><option value="Abu Dhabi, UAE"><option value="Sharjah, UAE"><option value="Doha, Qatar"><option value="Riyadh, Saudi Arabia"><option value="Jeddah, Saudi Arabia"><option value="Kuwait City, Kuwait"><option value="Muscat, Oman"><option value="Manama, Bahrain"><option value="Amman, Jordan"><option value="Petra, Jordan"><option value="Beirut, Lebanon"><option value="Tel Aviv, Israel"><option value="Jerusalem, Israel"><option value="Istanbul, Turkey"><option value="Ankara, Turkey"><option value="Antalya, Turkey"><option value="Tbilisi, Georgia"><option value="Yerevan, Armenia"><option value="Baku, Azerbaijan">
-<!-- Africa -->
-<option value="Cairo, Egypt"><option value="Luxor, Egypt"><option value="Marrakech, Morocco"><option value="Casablanca, Morocco"><option value="Fes, Morocco"><option value="Tangier, Morocco"><option value="Tunis, Tunisia"><option value="Algiers, Algeria"><option value="Nairobi, Kenya"><option value="Mombasa, Kenya"><option value="Zanzibar, Tanzania"><option value="Dar es Salaam, Tanzania"><option value="Cape Town, South Africa"><option value="Johannesburg, South Africa"><option value="Durban, South Africa"><option value="Lagos, Nigeria"><option value="Abuja, Nigeria"><option value="Accra, Ghana"><option value="Dakar, Senegal"><option value="Addis Ababa, Ethiopia"><option value="Kigali, Rwanda"><option value="Kampala, Uganda"><option value="Lusaka, Zambia"><option value="Harare, Zimbabwe"><option value="Windhoek, Namibia"><option value="Gaborone, Botswana"><option value="Antananarivo, Madagascar"><option value="Mauritius"><option value="Seychelles">
-<!-- Americas -->
-<option value="New York, USA"><option value="Los Angeles, USA"><option value="Chicago, USA"><option value="Miami, USA"><option value="San Francisco, USA"><option value="Las Vegas, USA"><option value="Washington DC, USA"><option value="Boston, USA"><option value="Seattle, USA"><option value="New Orleans, USA"><option value="Orlando, USA"><option value="Honolulu, USA"><option value="Toronto, Canada"><option value="Vancouver, Canada"><option value="Montreal, Canada"><option value="Calgary, Canada"><option value="Mexico City, Mexico"><option value="Cancun, Mexico"><option value="Guadalajara, Mexico"><option value="Havana, Cuba"><option value="San José, Costa Rica"><option value="Panama City, Panama"><option value="Bogotá, Colombia"><option value="Medellín, Colombia"><option value="Cartagena, Colombia"><option value="Lima, Peru"><option value="Cusco, Peru"><option value="Quito, Ecuador"><option value="Buenos Aires, Argentina"><option value="Santiago, Chile"><option value="Rio de Janeiro, Brazil"><option value="São Paulo, Brazil"><option value="Montevideo, Uruguay"><option value="Asunción, Paraguay"><option value="La Paz, Bolivia">
-<!-- Oceania -->
-<option value="Sydney, Australia"><option value="Melbourne, Australia"><option value="Brisbane, Australia"><option value="Perth, Australia"><option value="Adelaide, Australia"><option value="Auckland, New Zealand"><option value="Queenstown, New Zealand"><option value="Wellington, New Zealand"><option value="Fiji"><option value="Maldives"><option value="Bora Bora, French Polynesia">
-</datalist><div class="field-err-msg" id="dest-err">Please enter a destination</div></div>
-      <div class="field"><label>Flying from</label><input id="f-origin" list="origin-list" placeholder="e.g. Brussels" autocomplete="off"/><datalist id="origin-list">
-<!-- Europe -->
-<option value="London"><option value="Paris"><option value="Amsterdam"><option value="Frankfurt"><option value="Berlin"><option value="Rome"><option value="Madrid"><option value="Barcelona"><option value="Lisbon"><option value="Vienna"><option value="Zurich"><option value="Geneva"><option value="Copenhagen"><option value="Stockholm"><option value="Oslo"><option value="Helsinki"><option value="Warsaw"><option value="Krakow"><option value="Prague"><option value="Budapest"><option value="Athens"><option value="Brussels"><option value="Dublin"><option value="Edinburgh"><option value="Manchester"><option value="Nice"><option value="Milan"><option value="Florence"><option value="Venice"><option value="Naples"><option value="Porto"><option value="Seville"><option value="Valencia"><option value="Reykjavik"><option value="Dubrovnik"><option value="Ljubljana"><option value="Tallinn"><option value="Riga"><option value="Vilnius"><option value="Bucharest"><option value="Sofia"><option value="Belgrade"><option value="Valletta"><option value="Nicosia">
-<!-- India -->
-<option value="Mumbai"><option value="Delhi"><option value="Bangalore"><option value="Chennai"><option value="Hyderabad"><option value="Kolkata"><option value="Pune"><option value="Ahmedabad"><option value="Jaipur"><option value="Goa"><option value="Kochi"><option value="Coimbatore"><option value="Madurai"><option value="Visakhapatnam"><option value="Tiruchirappalli"><option value="Surat"><option value="Nagpur"><option value="Bhopal"><option value="Lucknow"><option value="Chandigarh">
-<!-- Asia -->
-<option value="Tokyo"><option value="Osaka"><option value="Seoul"><option value="Beijing"><option value="Shanghai"><option value="Hong Kong"><option value="Taipei"><option value="Singapore"><option value="Bangkok"><option value="Kuala Lumpur"><option value="Jakarta"><option value="Manila"><option value="Ho Chi Minh City"><option value="Hanoi"><option value="Colombo"><option value="Kathmandu"><option value="Dhaka"><option value="Karachi"><option value="Lahore"><option value="Islamabad">
-<!-- Middle East -->
-<option value="Dubai"><option value="Abu Dhabi"><option value="Doha"><option value="Riyadh"><option value="Jeddah"><option value="Kuwait City"><option value="Muscat"><option value="Manama"><option value="Amman"><option value="Beirut"><option value="Tel Aviv"><option value="Istanbul"><option value="Ankara"><option value="Tbilisi"><option value="Yerevan"><option value="Baku">
-<!-- Africa -->
-<option value="Cairo"><option value="Casablanca"><option value="Nairobi"><option value="Cape Town"><option value="Johannesburg"><option value="Lagos"><option value="Accra"><option value="Addis Ababa"><option value="Kigali"><option value="Dar es Salaam">
-<!-- Americas -->
-<option value="New York"><option value="Los Angeles"><option value="Chicago"><option value="Miami"><option value="San Francisco"><option value="Toronto"><option value="Vancouver"><option value="Montreal"><option value="Mexico City"><option value="Bogotá"><option value="Lima"><option value="Buenos Aires"><option value="São Paulo"><option value="Santiago">
-<!-- Oceania -->
-<option value="Sydney"><option value="Melbourne"><option value="Brisbane"><option value="Perth"><option value="Auckland">
-</datalist></div>
+      <div class="field"><label>Destination *</label><input id="f-dest" list="dest-list" placeholder="e.g. Tokyo, Japan" autocomplete="off" oninput="this.classList.remove('field-error');document.getElementById('dest-err').style.display='none'"/><datalist id="dest-list"><option value="Tokyo, Japan"><option value="Paris, France"><option value="London, UK"><option value="New York, USA"><option value="Rome, Italy"><option value="Barcelona, Spain"><option value="Amsterdam, Netherlands"><option value="Berlin, Germany"><option value="Prague, Czech Republic"><option value="Vienna, Austria"><option value="Lisbon, Portugal"><option value="Athens, Greece"><option value="Dubai, UAE"><option value="Singapore"><option value="Bangkok, Thailand"><option value="Bali, Indonesia"><option value="Sydney, Australia"><option value="Kyoto, Japan"><option value="Mumbai, India"><option value="Delhi, India"><option value="Goa, India"><option value="Jaipur, India"><option value="Istanbul, Turkey"><option value="Cairo, Egypt"><option value="Marrakech, Morocco"><option value="Cape Town, South Africa"><option value="Seoul, South Korea"><option value="Taipei, Taiwan"><option value="Kuala Lumpur, Malaysia"><option value="Hong Kong"><option value="Zurich, Switzerland"><option value="Copenhagen, Denmark"><option value="Stockholm, Sweden"><option value="Budapest, Hungary"><option value="Krakow, Poland"><option value="Maldives"><option value="Toronto, Canada"><option value="Mexico City, Mexico"><option value="Buenos Aires, Argentina"></datalist><div class="field-err-msg" id="dest-err">Please enter a destination</div></div>
+      <div class="field"><label>Flying from</label><input id="f-origin" list="origin-list" placeholder="e.g. Brussels" autocomplete="off"/><datalist id="origin-list"><option value="Brussels"><option value="London"><option value="Paris"><option value="Amsterdam"><option value="Frankfurt"><option value="Berlin"><option value="Rome"><option value="Madrid"><option value="Barcelona"><option value="Lisbon"><option value="Vienna"><option value="Zurich"><option value="Copenhagen"><option value="Stockholm"><option value="Oslo"><option value="Helsinki"><option value="Warsaw"><option value="Prague"><option value="Budapest"><option value="Athens"><option value="Dublin"><option value="Mumbai"><option value="Delhi"><option value="Bangalore"><option value="Chennai"><option value="Kolkata"><option value="Hyderabad"><option value="Dubai"><option value="Singapore"><option value="New York"><option value="Los Angeles"><option value="Toronto"><option value="Sydney"></datalist></div>
     </div>
     <div class="field-row">
       <div class="field"><label>Trip start date</label><input id="f-checkin" type="date"/></div>
@@ -529,7 +501,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 <div id="page-loading" class="page">
   <div class="loading-wm">Cir<em>rio</em></div>
   <div class="loading-sub">Planning your journey…</div>
-  <div class="groq-badge">✨ Powered by Gemini — with live Google Search</div>
+  <div class="groq-badge">⚡ Powered by Groq — free AI inference</div>
   <div class="trail-wrap">
     <div class="trail-line"></div>
     <div class="trail-plane">✈️</div>
@@ -558,6 +530,7 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
 <script>
 /* ─── STATE ─── */
 let apiKey = 'proxy';
+let tavilyKey = '';
 let travellerType = '';
 let transportPref = 'both'; // 'public' | 'cab' | 'both'
 let hasPet = false;
@@ -565,8 +538,8 @@ let tripData = null;
 let formSnap = {};
 
 
-/* ─── Model (Gemini 2.0 Flash via backend proxy) ─── */
-const AI_MODEL = 'gemini-2.0-flash';
+/* ─── Groq model to use ─── */
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
 const LOADING_MSGS = [
   'Searching for current travel information…',
@@ -579,17 +552,56 @@ const LOADING_MSGS = [
   'Putting your itinerary together…'
 ];
 
-/* ─── RAG: handled server-side via Gemini Google Search grounding ─── */
+/* ─── RAG: Tavily web search to ground the AI in current facts ─── */
+async function retrieveContext(dest, origin, checkin) {
+  // Tavily key is on the server          // gracefully skip if no key
+  const month = checkin
+    ? new Date(checkin).toLocaleString('en', { month: 'long', year: 'numeric' })
+    : new Date().toLocaleString('en', { month: 'long', year: 'numeric' });
+
+  const queries = [
+    `best hotels ${dest} ${new Date().getFullYear()} neighbourhoods`,
+    `${dest} public transport pass price ${new Date().getFullYear()} visitor card`,
+    `${dest} free attractions museums parks opening hours`,
+    origin ? `${origin} to ${dest} train bus flight options ${new Date().getFullYear()}` : null
+  ].filter(Boolean);
+
+  const results = [];
+  for (const q of queries) {
+    try {
+      const r = await fetch('https://cirrio.onrender.com/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: q,
+          search_depth: 'basic',
+          max_results: 3,
+          include_answer: true
+        })
+      });
+      const d = await r.json();
+      if (d.answer) results.push(`[${q}]: ${d.answer}`);
+      else if (d.results?.length) {
+        results.push(`[${q}]: ${d.results.slice(0,2).map(x => x.content?.slice(0,300)).join(' | ')}`);
+      }
+    } catch (_) { /* silently skip failed searches */ }
+  }
+  return results.length
+    ? `\n\nCURRENT WEB CONTEXT (retrieved ${month} — use this as ground truth over your training data):\n${results.join('\n')}\n`
+    : '';
+}
 
 /* ─── KEY MODAL ─── */
 function saveKey() {
   const v = document.getElementById('api-key-input').value.trim();
-  if (!v) {
-    alert('Please paste your Gemini API key from aistudio.google.com');
+  if (!v || !v.startsWith('gsk_')) {
+    alert('Please paste a valid Groq API key — it should start with gsk_');
     return;
   }
   apiKey = v;
-  localStorage.setItem('cirrio_gemini_key', v);
+  localStorage.setItem('cirrio_groq_key', v);
+  const tv = document.getElementById('tavily-key-input').value.trim();
+  if (tv) { tavilyKey = tv; localStorage.setItem('cirrio_tavily_key', tv); }
   document.getElementById('key-modal').style.display = 'none';
   document.getElementById('key-banner').style.display = 'none';
 }
@@ -600,7 +612,7 @@ function selectType(btn) {
   document.querySelectorAll('#traveller-grid .type-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   travellerType = btn.dataset.val;
-  var counts = {solo:1, couple:2};
+  var counts = {solo:1, couple:2, family:2, adults:2, pet:2, group:4, girls:3};
   var n = counts[travellerType];
   if (n !== undefined) document.getElementById('f-adults').value = n;
 }
@@ -651,226 +663,46 @@ function startLoading() {
 }
 
 /* ─── PROMPT BUILDER ─── */
-function buildPrompt(f) {
-  const rawDays = f.checkin && f.checkout
+function buildPrompt(f, ragContext) {
+  ragContext = ragContext || '';
+  var days = (f.checkin && f.checkout)
     ? Math.max(1, Math.ceil((new Date(f.checkout) - new Date(f.checkin)) / 86400000))
     : 5;
-  const days = Math.min(rawDays, 7);
-  const cuisines = f.cuisines.length ? f.cuisines.join(', ') : 'no preference';
-  const prefLabel = { public: 'public transport only', cab: 'taxi/cab only', both: 'both public transport and taxi' }[f.transportPref] || 'both';
 
-  // Build transport JSON schema based on user preference
-  const transportSchema = f.transportPref === 'cab' ? `
-  "transport": {
-    "overview": "Two sentence overview of getting around ${f.dest} by taxi/rideshare.",
-    "taxi": {
-      "averageShortTrip": 0,
-      "averageLongTrip": 0,
-      "currency": "${f.currency}",
-      "app": "Uber / Bolt / local app name",
-      "tip": "Practical taxi booking tip",
-      "safetyNote": "Any taxi safety tips specific to this destination"
-    },
-    "airportTransfer": { "approxCost": 0, "currency": "${f.currency}", "tip": "Best way from airport" }
-  }` : f.transportPref === 'public' ? `
-  "transport": {
-    "overview": "Two sentence overview of the public transport network in ${f.dest}.",
-    "publicTransport": {
-      "types": ["Metro", "Bus", "Tram etc"],
-      "network": "Name of the transport network",
-      "visitorPass": {
-        "available": true,
-        "name": "Pass name (e.g. IC Card, Oyster, OV-Chipkaart)",
-        "options": [
-          {"duration": "1 day", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
-          {"duration": "3 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
-          {"duration": "7 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"}
-        ],
-        "whereToBuy": "Airport / station / app",
-        "topUpApp": "App name for topping up or checking balance"
-      },
-      "singleTicket": { "price": 0, "currency": "${f.currency}" },
-      "keyLines": ["Most useful metro line or route 1", "Most useful route 2"],
-      "tip": "One practical public transport tip for this city",
-      "accessibility": "Note on accessibility for this network"
-    }
-  }` : `
-  "transport": {
-    "overview": "Two sentence overview of getting around ${f.dest}.",
-    "publicTransport": {
-      "types": ["Metro", "Bus"],
-      "network": "Network name",
-      "visitorPass": {
-        "available": true,
-        "name": "Pass name",
-        "options": [
-          {"duration": "1 day", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
-          {"duration": "3 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"},
-          {"duration": "7 days", "zones": "All zones", "price": 0, "currency": "${f.currency}"}
-        ],
-        "whereToBuy": "Where to buy",
-        "topUpApp": "App name"
-      },
-      "singleTicket": { "price": 0, "currency": "${f.currency}" },
-      "keyLines": ["Key route 1", "Key route 2"],
-      "tip": "Practical public transport tip"
-    },
-    "taxi": {
-      "averageShortTrip": 0,
-      "averageLongTrip": 0,
-      "currency": "${f.currency}",
-      "app": "Uber / Bolt / local app",
-      "tip": "Practical taxi tip"
-    },
-    "comparison": "One sentence on when to use public transport vs taxi in this city",
-    "savingsExample": "e.g. 3-day pass EUR18 vs 6 taxis = saves EUR30"
-  }`;
+  var girlsTip = f.travellerType === 'girls'
+    ? 'GIRLS TRIP: women-friendly hotels, spa/food/cultural activities, safety tips, pampering activity each day, womenFriendly:true on accommodation.'
+    : '';
 
-  return `You are Cirrio, a premium AI travel planner. Return ONLY a valid JSON object. No markdown code fences, no explanation, no text before or after the JSON.
-
-CRITICAL: You MUST generate ALL ${days} days of itinerary. Do not stop after day 1. Every day must be fully populated with activities and meals.
-TRIP DETAILS:
-Destination: ${f.dest}
-Origin: ${f.origin || 'not specified'}
-Dates: ${f.checkin || 'flexible'} to ${f.checkout || 'flexible'} (${days} nights)
-Budget: ${f.budget} ${f.currency} total
-Traveller type: ${f.travellerType}
-Adults: ${f.adults}${f.kids > 0 ? `, Children: ${f.kids}${f.kidsAge ? ` aged ${f.kidsAge}` : ''}` : ''}
-Cuisine preferences: ${cuisines}
-Travelling with pet: ${f.hasPet ? `Yes (${f.petType || 'pet'})` : 'No'}
-Transport preference at destination: ${prefLabel}
-
-Return this JSON structure. The itinerary array MUST contain exactly ${days} objects, one per day:
-{
-  "destination": "City, Country",
-  "tripSummary": "3 sentences about why this trip suits this traveller type",
-  "budgetBreakdown": {
-    "accommodation": 0, "activities": 0, "food": 0, "transport": 0, "misc": 0,
-    "currency": "${f.currency}"
-  },
-  "weather": {
-    "summary": "2 sentence weather overview for the travel period",
-    "avgTempDay": "26°C", "avgTempNight": "18°C", "condition": "Sunny / Mixed / Rainy etc",
-    "packingList": ["item1","item2","item3","item4","item5","item6","item7","item8","item9","item10"],
-    "tip": "One practical weather tip"
-  },
-  "accommodation": [
-    {
-      "name": "Real hotel or hostel name", "type": "Hotel / Hostel / Boutique / Apartment",
-      "pricePerNight": 0, "currency": "${f.currency}", "area": "Neighbourhood name", "stars": 3,
-      "petFriendly": false, "kidFriendly": true, "adultsOnly": false,
-      "imageKeyword": "luxury hotel room interior",
-      "highlights": ["highlight 1", "highlight 2", "highlight 3"],
-      "bookingLink": "https://www.booking.com/searchresults.html?ss=${encodeURIComponent(f.dest)}",
-      "tag": "Top pick"
-    }
-  ],
-  "itinerary": [
-    {
-      "day": 1, "date": "Day 1 – Arrival & First Impressions", "theme": "Arrival",
-      "activities": [
-        {
-          "time": "10:00", "title": "Activity name",
-          "description": "Two sentence description.", "duration": "2 hrs",
-          "cost": 0, "currency": "${f.currency}", "isFree": false,
-          "category": "Landmark", "imageKeyword": "famous landmark sightseeing",
-          "kidFriendly": true, "petFriendly": false, "tip": "Practical insider tip"
-        }
-      ],
-      "meals": [
-        {
-          "meal": "Breakfast", "suggestion": "Specific place or food type",
-          "cuisine": "Local", "area": "Neighbourhood",
-          "approxCost": 0, "currency": "${f.currency}", "kidFriendly": true, "note": "Short note"
-        }
-      ]
-    }
-  ],
-  "freeAttractions": [
-    {
-      "name": "Attraction name", "type": "Park",
-      "description": "Two sentence description.",
-      "openingHours": "Daily 9am-6pm", "area": "Neighbourhood",
-      "imageKeyword": "city park garden outdoor",
-      "kidFriendly": true, "petFriendly": true, "tip": "Best time to visit"
-    }
-  ],
-  ${transportSchema},
-  "travelOptions": {
-    "origin": "${f.origin || 'not specified'}",
-    "destination": "City, Country",
-    "summary": "2 sentences on ALL realistic ways to travel from origin to destination — consider distance, whether within Europe, and available modes",
-    "flights": [
-      {
-        "type": "Direct or Connecting",
-        "airline": "Airline name or 'Multiple airlines'",
-        "duration": "X hrs",
-        "approxPrice": 0,
-        "currency": "${f.currency}",
-        "bookingTip": "Tip on timing or booking",
-        "searchLink": "https://www.skyscanner.net/transport/flights/${encodeURIComponent(f.origin||'BRU')}/${encodeURIComponent(f.dest)}/"
-      }
-    ],
-    "trains": [
-      {
-        "operator": "Eurostar / Thalys / SNCF / DB / IRCTC / N/A",
-        "route": "e.g. Brussels Midi → Paris Gare du Nord, or N/A",
-        "duration": "X hrs or N/A",
-        "frequency": "e.g. Hourly / 3 per day / N/A",
-        "approxPrice": 0,
-        "currency": "${f.currency}",
-        "available": true,
-        "bookingTip": "Book via operator website for best price",
-        "searchLink": "https://www.omio.com",
-        "note": "Additional note e.g. scenic route, advance booking recommended"
-      }
-    ],
-    "bus": {
-      "available": false,
-      "operator": "FlixBus / Eurolines / N/A",
-      "route": "Route description or N/A",
-      "duration": "X hrs or N/A",
-      "frequency": "e.g. 2 per day or N/A",
-      "approxPrice": 0,
-      "currency": "${f.currency}",
-      "note": "Only include if bus is genuinely practical for this route",
-      "searchLink": "https://www.flixbus.com"
-    },
-    "recommended": "Train / Flight / Bus — with one sentence reason based on journey time, cost and comfort",
-    "bestBookingTime": "e.g. Book 6-8 weeks in advance for best flight prices, or 3 months for Eurostar",
-    "visaNote": "Specific visa requirement for ${f.origin || 'Belgian'} passport holders visiting ${f.dest}"
-  },
-  "insurance": {
-    "recommended": "SafetyWing or WorldNomads",
-    "reason": "Why this insurance suits this trip",
-    "estimatedCost": "approx X per day",
-    "link": "https://safetywing.com"
-  },
-  "funFact": {
-    "emoji": "single relevant emoji",
-    "headline": "Short punchy headline — max 10 words",
-    "fact": "One genuinely surprising, specific, delightful fact about ${f.dest} or the country. Not generic. Make it something the traveller will want to share. Max 2 sentences.",
-    "source": "e.g. UNESCO / Local lore / Historical record"
-  }
-}
-
-MANDATORY RULES:
-- The itinerary array MUST have EXACTLY ${days} complete day objects
-- Each day needs at least 3-4 activities and 3 meals (breakfast, lunch, dinner)
-- Use real place names in ${f.dest}
-- All prices in ${f.currency}
-- Provide exactly 3 accommodation options (budget, mid-range, luxury)
-- Include 6-8 free attractions
-- imageKeyword must be 2-4 descriptive words for a stock photo search
-- funFact.fact must be genuinely surprising and specific to ${f.dest} — not a generic travel tip. Think unusual history, bizarre record, unexpected cultural detail.
-- funFact.emoji must be thematically relevant to the fact, not just a generic globe
-- Transport section MUST match the user's preference: ${prefLabel}
-- travelOptions: if origin and destination are within mainland Europe (e.g. Brussels to Paris, Amsterdam, Cologne, London), ALWAYS include train as available:true with real operator and price. Bus is realistic for <6hr journeys. Only default to flight if distance genuinely requires it.
-- travelOptions.trains: include Eurostar, Thalys, Intercity, TGV, ICE, Renfe, or IRCTC as appropriate for the route
-- travelOptions.visaNote must be specific — not generic
-- If RAG context is provided above, use those facts as ground truth for prices, pass names, and hotel recommendations
-${f.kids > 0 ? '- Ensure activities are family-appropriate with realistic pacing for children' : ''}
-${f.hasPet ? '- Clearly flag pet-friendly status on all accommodation and activity options' : ''}`;
+  return [
+    'You are Cirrio, a travel planner. Return ONLY a single valid JSON object. No markdown. No explanation.',
+    ragContext,
+    'TRIP: Destination=' + f.dest
+      + ' | From=' + (f.origin || 'unspecified')
+      + ' | Dates=' + (f.checkin || 'flexible') + ' to ' + (f.checkout || 'flexible')
+      + ' (' + days + ' nights)'
+      + ' | Budget=' + f.budget + ' ' + f.currency
+      + ' | Who=' + f.travellerType
+      + ' | Adults=' + f.adults + (f.kids > 0 ? ' Children=' + f.kids : '')
+      + ' | Cuisine=' + (f.cuisines.length ? f.cuisines.join(',') : 'any')
+      + ' | Pet=' + (f.hasPet ? 'yes' : 'no')
+      + ' | Local transport=' + (f.transportPref || 'both'),
+    'Return JSON with these exact keys:',
+    '- destination (string)',
+    '- tripSummary (3 sentences)',
+    '- budgetBreakdown {accommodation, activities, food, transport, misc, currency}',
+    '- weather {summary, avgTempDay, avgTempNight, condition, packingList[10 items], tip}',
+    '- accommodation (array of 3: budget/mid/luxury) each: {name, type, pricePerNight, currency, area, stars, petFriendly, kidFriendly, adultsOnly, womenFriendly, imageKeyword, highlights[3], bookingLink, tag}',
+    '- itinerary (array of exactly ' + days + ' days) each day: {day, date, theme, activities[3-4 each with time/title/description/duration/cost/currency/isFree/category/imageKeyword/kidFriendly/petFriendly/tip], meals[3: breakfast/lunch/dinner each with meal/suggestion/cuisine/area/approxCost/currency/note]}',
+    '- freeAttractions (array of 6-8) each: {name, type, description, openingHours, area, imageKeyword, kidFriendly, petFriendly, tip}',
+    '- transport {overview, publicTransport{types[], network, visitorPass{available, name, options[1/3/7 day prices], whereToBuy, topUpApp}, singleTicket{price}, keyLines[], tip}, taxi{averageShortTrip, averageLongTrip, currency, app, tip}, comparison, savingsExample}',
+    '- travelOptions {origin, destination, summary, flights[2: each with type/airline/duration/approxPrice/currency/bookingTip/searchLink], trains[1-2: operator/route/duration/frequency/approxPrice/currency/available/bookingTip/searchLink/note], bus{available, operator, route, duration, approxPrice, currency, note, searchLink}, recommended, bestBookingTime, visaNote}',
+    '- insurance {recommended, reason, estimatedCost, link}',
+    '- funFact {emoji, headline, fact, source}',
+    'RULES: Exactly ' + days + ' days in itinerary. Real place names. All prices in ' + f.currency + '. imageKeyword=2-4 words. bookingLink for hotels=https://www.booking.com/searchresults.html?ss=' + encodeURIComponent(f.dest) + '. travelOptions: if within Europe use real train operators (Eurostar/Thalys/ICE/TGV/SNCF). funFact must be genuinely surprising.',
+    girlsTip,
+    f.kids > 0 ? 'Family-appropriate pacing.' : '',
+    f.hasPet ? 'Flag pet-friendly options throughout.' : ''
+  ].filter(Boolean).join('\n');
 }
 
 /* ─── PLAN TRIP — calls Groq API ─── */
@@ -893,15 +725,6 @@ async function planTrip() {
   }
   if (!ok) return;
 
-  // Warn user if trip > 7 days (we cap itinerary to 7 to stay within Groq free-tier limits)
-  const ci2 = document.getElementById('f-checkin').value, co2 = document.getElementById('f-checkout').value;
-  if (ci2 && co2) {
-    const tripLen = Math.ceil((new Date(co2) - new Date(ci2)) / 86400000);
-    if (tripLen > 7) {
-      const proceed = confirm(`Your trip is ${tripLen} days. To stay within AI limits, Cirrio will generate a detailed 7-day itinerary covering the highlights. Continue?`);
-      if (!proceed) return;
-    }
-  }
 
   const cuisines = [...document.querySelectorAll('.chip.active')].map(c => c.textContent);
   formSnap = {
@@ -924,12 +747,15 @@ async function planTrip() {
   startLoading();
 
   try {
-    /* ── Gemini API call — Google Search grounding handled server-side ── */
-    const res = await fetch('https://cirrio.onrender.com/api/chat', {
+    /* ── Step 1: RAG — retrieve current travel context from Tavily ── */
+    const ragContext = await retrieveContext(formSnap.dest, formSnap.origin, formSnap.checkin);
+
+    /* ── Step 2: Groq API call with augmented prompt ── */
+    const res = await fetch('https://cirrio.onrender.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: AI_MODEL,
+        model: GROQ_MODEL,
         messages: [
           {
             role: 'system',
@@ -937,9 +763,11 @@ async function planTrip() {
           },
           {
             role: 'user',
-            content: buildPrompt(formSnap)
+            content: buildPrompt(formSnap, ragContext)
           }
-        ]
+        ],
+        max_tokens: 8000,
+        temperature: 0.7
       })
     });
 
@@ -950,6 +778,7 @@ async function planTrip() {
     }
 
     const data = await res.json();
+    /* ── Groq response format: choices[0].message.content ── */
     const raw = data?.choices?.[0]?.message?.content || '';
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('No JSON in response');
@@ -958,11 +787,11 @@ async function planTrip() {
     renderResults();
 
   } catch (e) {
-    console.error('Gemini error:', e);
-    const msg = e.message.includes('API_KEY')
-      ? 'Invalid API key. Please check your Gemini key and try again.'
-      : e.message.includes('quota')
-      ? 'Daily quota reached. Please try again tomorrow or check aistudio.google.com.'
+    console.error('Groq error:', e);
+    const msg = e.message.includes('invalid_api_key')
+      ? 'Invalid API key. Please check your Groq key starts with gsk_ and try again.'
+      : e.message.includes('rate_limit')
+      ? 'Rate limit reached. Please wait a moment and try again.'
       : 'Could not generate your plan. Please try again.';
     alert(msg);
     showForm();
