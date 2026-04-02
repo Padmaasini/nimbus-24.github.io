@@ -392,6 +392,36 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
   font-size:12px;color:var(--embright);font-weight:500}
 .city-chip button{background:none;border:none;cursor:pointer;color:var(--sage);
   font-size:14px;line-height:1;padding:0;margin-left:2px}
+
+/* ── FORM LAYOUT ── */
+.form-card{background:#fff;border:1px solid var(--border);border-radius:16px;
+  padding:28px 28px 24px;display:flex;flex-direction:column;gap:18px;
+  box-shadow:0 2px 16px rgba(26,46,26,.06)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fl{display:flex;flex-direction:column}
+@media(max-width:560px){.fg{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label,.flabel{font-size:11px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--emerald)}
+.flabel{margin-bottom:8px}
+.field input,.field select{background:var(--cream);border:1px solid var(--border);
+  border-radius:8px;padding:10px 13px;font-size:14px;color:var(--text-d);
+  font-family:var(--sans);outline:none;transition:border-color .2s;width:100%}
+.field input:focus,.field select:focus{border-color:var(--emerald);
+  box-shadow:0 0 0 3px rgba(45,122,79,.1)}
+.field input::placeholder{color:var(--text-l)}
+.fsection{display:flex;flex-direction:column}
+.fdivider{height:1px;background:var(--border)}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+@media(max-width:560px){.who-grid{grid-template-columns:repeat(2,1fr)}}
+.mode-row{display:flex;gap:6px;margin-bottom:7px}
+.mode-btn{padding:4px 12px;border-radius:14px;border:1px solid var(--border);
+  background:var(--cream2);font-family:var(--sans);font-size:11px;
+  font-weight:600;color:var(--text-m);cursor:pointer;transition:all .15s}
+.mode-btn.active{border-color:var(--emerald);background:var(--matchbg);color:var(--emerald)}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.errmsg{font-size:11px;color:#e74c3c;display:none}
+.pet-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 </style>
 </head>
 <body>
@@ -449,94 +479,188 @@ nav{position:relative;z-index:10;display:flex;align-items:center;justify-content
     <p>Tell Cirrio where you're headed, your budget and travel style — get a personalised itinerary in seconds.</p>
   </div>
   <div class="form-card">
-    <div id="key-banner">&#9888; No API key found. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;">Click here to add your free Groq key</a> before planning a trip.</div>
-    <div class="field-row">
-      <div class="field">
-        <label>Destination *</label>
-        <div style="display:flex;gap:6px;margin-bottom:6px">
-          <button type="button" class="dest-mode-btn active" id="mode-city" onclick="setDestMode('city')">🏙 City</button>
-          <button type="button" class="dest-mode-btn" id="mode-country" onclick="setDestMode('country')">🌍 Country / Region</button>
+
+    <div id="key-banner" style="display:none;background:#fff5f3;border:1px solid rgba(245,80,54,.3);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#c0392b">
+      ⚠ No API key. <a href="#" onclick="document.getElementById('key-modal').style.display='flex';return false;" style="color:#f55036;font-weight:600">Add your free Groq key</a> to plan trips.
+    </div>
+
+    <!-- DESTINATION -->
+    <div class="fg">
+      <div class="fl">
+        <div class="field">
+          <label>Destination *</label>
+          <div class="mode-row">
+            <button type="button" class="mode-btn active" id="mode-city" onclick="setDestMode('city')">🏙 City</button>
+            <button type="button" class="mode-btn" id="mode-country" onclick="setDestMode('country')">🌍 Country / Region</button>
+          </div>
+          <input id="f-dest" list="dest-list" placeholder="e.g. Tokyo, Japan" autocomplete="off"
+            oninput="this.classList.remove('field-error');document.getElementById('dest-err').style.display='none'"/>
+          <datalist id="dest-list">
+            <option value="Tokyo, Japan"/><option value="Kyoto, Japan"/><option value="Paris, France"/>
+            <option value="London, UK"/><option value="Rome, Italy"/><option value="Barcelona, Spain"/>
+            <option value="Amsterdam, Netherlands"/><option value="Berlin, Germany"/><option value="Prague, Czech Republic"/>
+            <option value="Vienna, Austria"/><option value="Lisbon, Portugal"/><option value="Athens, Greece"/>
+            <option value="Dubai, UAE"/><option value="Singapore"/><option value="Bangkok, Thailand"/>
+            <option value="Bali, Indonesia"/><option value="Sydney, Australia"/><option value="Mumbai, India"/>
+            <option value="Delhi, India"/><option value="Goa, India"/><option value="Istanbul, Turkey"/>
+            <option value="New York, USA"/><option value="Maldives"/><option value="Seoul, South Korea"/>
+            <option value="Marrakech, Morocco"/><option value="Cape Town, South Africa"/>
+          </datalist>
+          <div id="multi-city-wrap" style="display:none;margin-top:8px">
+            <div id="city-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px"></div>
+            <input id="f-cities" placeholder="Or type a region and press Enter"
+              style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:var(--sans);background:var(--cream);outline:none"
+              onkeydown="addCity(event)"/>
+          </div>
+          <span class="errmsg" id="dest-err">Please enter a destination</span>
         </div>
-        <input id="f-dest" list="dest-list" placeholder="e.g. Tokyo, Japan" autocomplete="off"
-          oninput="this.classList.remove('field-error');document.getElementById('dest-err').style.display='none'"/>
-        <div id="multi-city-wrap" style="display:none;margin-top:8px">
-          <div style="font-size:11px;color:var(--text-m);margin-bottom:5px">Which cities to include? (optional)</div>
-          <div id="city-chips" style="display:flex;flex-wrap:wrap;gap:5px"></div>
-          <input id="f-cities" placeholder="Add a city and press Enter" style="margin-top:6px;width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:var(--sans);background:var(--cream)"
-            onkeydown="addCity(event)"/>
+      </div>
+      <div class="fl">
+        <div class="field">
+          <label>Flying from</label>
+          <input id="f-origin" list="origin-list" placeholder="e.g. Brussels" autocomplete="off"/>
+          <datalist id="origin-list">
+            <option value="Brussels"/><option value="London"/><option value="Paris"/>
+            <option value="Amsterdam"/><option value="Frankfurt"/><option value="Berlin"/>
+            <option value="Rome"/><option value="Madrid"/><option value="Barcelona"/>
+            <option value="Lisbon"/><option value="Vienna"/><option value="Zurich"/>
+            <option value="Copenhagen"/><option value="Stockholm"/><option value="Oslo"/>
+            <option value="Helsinki"/><option value="Warsaw"/><option value="Prague"/>
+            <option value="Budapest"/><option value="Athens"/><option value="Dublin"/>
+            <option value="Mumbai"/><option value="Delhi"/><option value="Bangalore"/>
+            <option value="Dubai"/><option value="Singapore"/><option value="New York"/>
+            <option value="Los Angeles"/><option value="Toronto"/><option value="Sydney"/>
+          </datalist>
         </div>
-        <span class="errmsg" id="dest-err">Please enter a destination</span>
-      </div></div>
-      <div class="field"><label>Flying from</label><input id="f-origin" list="origin-list" placeholder="e.g. Brussels" autocomplete="off"/><datalist id="origin-list"><option value="Brussels"><option value="London"><option value="Paris"><option value="Amsterdam"><option value="Frankfurt"><option value="Berlin"><option value="Rome"><option value="Madrid"><option value="Barcelona"><option value="Lisbon"><option value="Vienna"><option value="Zurich"><option value="Copenhagen"><option value="Stockholm"><option value="Oslo"><option value="Helsinki"><option value="Warsaw"><option value="Prague"><option value="Budapest"><option value="Athens"><option value="Dublin"><option value="Mumbai"><option value="Delhi"><option value="Bangalore"><option value="Chennai"><option value="Kolkata"><option value="Hyderabad"><option value="Dubai"><option value="Singapore"><option value="New York"><option value="Los Angeles"><option value="Toronto"><option value="Sydney"></datalist></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>Trip start date</label><input id="f-checkin" type="date"/></div>
-      <div class="field"><label>Trip end date</label><input id="f-checkout" type="date"/><div class="field-err-msg" id="date-err"></div></div>
-    </div>
-    <div class="field-row-3">
-      <div class="field" style="grid-column:span 2">
-        <label>Total budget *</label><input id="f-budget" type="number" placeholder="e.g. 2000"/>
       </div>
+    </div>
+
+    <!-- DATES -->
+    <div class="fg">
+      <div class="fl">
+        <div class="field">
+          <label>Trip start date</label>
+          <input type="date" id="f-checkin"/>
+          <span class="errmsg" id="date-err"></span>
+        </div>
+      </div>
+      <div class="fl">
+        <div class="field">
+          <label>Trip end date</label>
+          <input type="date" id="f-checkout"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="fg">
+      <div class="fl" style="flex:2">
+        <div class="field">
+          <label>Total budget</label>
+          <input type="number" id="f-budget" placeholder="e.g. 2000"/>
+        </div>
+      </div>
+      <div class="fl">
+        <div class="field">
+          <label>Currency</label>
+          <select id="f-currency">
+            <option>EUR</option><option>USD</option><option>GBP</option>
+            <option>AED</option><option>SGD</option><option>INR</option>
+            <option>AUD</option><option>CAD</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="fdivider"></div>
+
+    <!-- WHO'S TRAVELLING -->
+    <div class="fsection">
+      <div class="flabel">Who's travelling? *</div>
+      <div class="who-grid" id="traveller-grid">
+        <button type="button" class="type-btn" data-val="solo"   onclick="selectType(this)">🎒 Solo</button>
+        <button type="button" class="type-btn" data-val="couple" onclick="selectType(this)">💑 Couple</button>
+        <button type="button" class="type-btn" data-val="family" onclick="selectType(this)">👨‍👩‍👧 Family</button>
+        <button type="button" class="type-btn" data-val="adults" onclick="selectType(this)">🥂 Adults only</button>
+        <button type="button" class="type-btn" data-val="group"  onclick="selectType(this)">👥 Group</button>
+        <button type="button" class="type-btn" data-val="girls"  onclick="selectType(this)">👯 Girls trip</button>
+        <button type="button" class="type-btn" data-val="pet"    onclick="selectType(this)">🐾 With a pet</button>
+      </div>
+    </div>
+
+    <!-- ADULTS / CHILDREN -->
+    <div class="fg">
+      <div class="fl">
+        <div class="field">
+          <label>Adults</label>
+          <input type="number" id="f-adults" min="1" max="20" placeholder="e.g. 2"/>
+        </div>
+      </div>
+      <div class="fl">
+        <div class="field">
+          <label>Children</label>
+          <input type="number" id="f-kids" min="0" max="10" placeholder="0" onchange="toggleKidAge()"/>
+        </div>
+      </div>
+    </div>
+    <div class="field" id="kids-age-row" style="display:none">
+      <label>Children's ages</label>
+      <input id="f-kids-age" placeholder="e.g. 4, 7, 11"/>
+    </div>
+
+    <!-- HOSTEL PREFERENCE (shown for solo/group/girls) -->
+    <div id="hostel-row" style="display:none">
       <div class="field">
-        <label>Currency</label>
-        <select id="f-currency">
-          <option>EUR</option><option>USD</option><option>GBP</option>
-          <option>AED</option><option>SGD</option><option>INR</option>
-          <option>AUD</option><option>CAD</option>
-        </select>
+        <label>Accommodation style</label>
+        <div class="who-grid" id="hostel-grid">
+          <button type="button" class="type-btn active" data-val="any" onclick="selectHostel(this)">🏠 Any</button>
+          <button type="button" class="type-btn" data-val="hostel" onclick="selectHostel(this)">🛏 Hostels OK</button>
+          <button type="button" class="type-btn" data-val="private" onclick="selectHostel(this)">🔒 Private rooms only</button>
+        </div>
       </div>
     </div>
-    <div class="divider"></div>
-    <div>
-      <div class="sec-label">Who's travelling? *</div>
-      <div class="type-grid" id="traveller-grid">
-        <button class="type-btn" data-val="family" onclick="selectType(this)">👨‍👩‍👧 Family with kids</button>
-        <button class="type-btn" data-val="solo"   onclick="selectType(this)">🎒 Solo traveller</button>
-        <button class="type-btn" data-val="couple" onclick="selectType(this)">💑 Couple</button>
-        <button class="type-btn" data-val="adults" onclick="selectType(this)">🥂 Adults only</button>
-        <button class="type-btn" data-val="pet"    onclick="selectType(this)">🐾 With a pet</button>
-        <button class="type-btn" data-val="group"  onclick="selectType(this)">👥 Group of friends</button>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>Adults</label><input id="f-adults" type="number" min="1" max="20" placeholder="e.g. 2"/></div>
-      <div class="field"><label>Children</label><input id="f-kids" type="number" min="0" max="10" placeholder="0" onchange="toggleKidAge()"/></div>
-    </div>
-    <div class="field" id="kids-age-row">
-      <label>Children's ages (optional)</label><input id="f-kids-age" placeholder="e.g. 4, 7, 11"/>
-    </div>
+
+    <!-- PET -->
     <div class="pet-row">
-      <button class="pet-toggle" id="pet-toggle" onclick="togglePet()">🐾 Travelling with a pet</button>
-      <input id="pet-type-input" placeholder="e.g. small dog"/>
+      <button type="button" class="pet-toggle" id="pet-toggle" onclick="togglePet()">🐾 Travelling with a pet</button>
+      <input id="pet-type-input" placeholder="e.g. small dog" style="display:none"/>
     </div>
-    <div class="divider"></div>
-    <div>
-      <div class="sec-label">How will you get around at the destination? *</div>
-      <div class="type-grid" id="transport-pref-grid">
-        <button class="type-btn" data-val="public" onclick="selectTransportPref(this)">🚇 Public transport</button>
-        <button class="type-btn" data-val="cab"    onclick="selectTransportPref(this)">🚕 Taxi / Cab</button>
-        <button class="type-btn" data-val="both"   onclick="selectTransportPref(this)">⚖️ Compare both</button>
+
+    <div class="fdivider"></div>
+
+    <!-- TRANSPORT PREF -->
+    <div class="fsection">
+      <div class="flabel">Getting around at the destination?</div>
+      <div class="who-grid" id="transport-pref-grid">
+        <button type="button" class="type-btn" data-val="public" onclick="selectTransportPref(this)">🚇 Public transport</button>
+        <button type="button" class="type-btn" data-val="cab"    onclick="selectTransportPref(this)">🚕 Taxi / Cab</button>
+        <button type="button" class="type-btn active" data-val="both" onclick="selectTransportPref(this)">⚖️ Compare both</button>
       </div>
     </div>
-    <div class="divider"></div>
-    <div>
-      <div class="sec-label">Food preferences (optional)</div>
-      <div class="cuisine-wrap">
-        <button class="chip" onclick="toggleChip(this)">Local cuisine</button>
-        <button class="chip" onclick="toggleChip(this)">Indian</button>
-        <button class="chip" onclick="toggleChip(this)">Italian</button>
-        <button class="chip" onclick="toggleChip(this)">Japanese</button>
-        <button class="chip" onclick="toggleChip(this)">Chinese</button>
-        <button class="chip" onclick="toggleChip(this)">Mexican</button>
-        <button class="chip" onclick="toggleChip(this)">Mediterranean</button>
-        <button class="chip" onclick="toggleChip(this)">Thai</button>
-        <button class="chip" onclick="toggleChip(this)">French</button>
-        <button class="chip" onclick="toggleChip(this)">Vegan / Vegetarian</button>
-        <button class="chip" onclick="toggleChip(this)">Halal</button>
+
+    <div class="fdivider"></div>
+
+    <!-- FOOD -->
+    <div class="fsection">
+      <div class="flabel">Food preferences <span style="font-weight:400;color:var(--text-l)">(optional)</span></div>
+      <div class="chip-wrap">
+        <button type="button" class="chip" onclick="toggleChip(this)">Local cuisine</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Indian</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Italian</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Japanese</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Chinese</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Mexican</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Mediterranean</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Thai</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">French</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Vegan / Vegetarian</button>
+        <button type="button" class="chip" onclick="toggleChip(this)">Halal</button>
       </div>
     </div>
-    <div class="error-box" id="err-box">⚠ Please enter a destination and select a traveller type.</div>
-    <button class="submit-btn" onclick="planTrip()">✈️ &nbsp;Plan my trip with Cirrio</button>
+
+    <div id="err-box" class="error-box" style="display:none">⚠ Please enter a destination and select who's travelling.</div>
+    <button type="button" class="submit-btn" onclick="planTrip()">✈️ &nbsp;Plan my trip with Cirrio</button>
+
   </div>
 </div>
 
@@ -661,6 +785,9 @@ function selectType(btn) {
   var counts = {solo:1, couple:2, family:2, adults:2, pet:2, group:4, girls:3};
   var n = counts[travellerType];
   if (n !== undefined) document.getElementById('f-adults').value = n;
+  // Show hostel option for solo, group, girls
+  var showHostel = ['solo','group','girls'].indexOf(travellerType) > -1;
+  document.getElementById('hostel-row').style.display = showHostel ? 'block' : 'none';
 }
 function toggleChip(btn) { btn.classList.toggle('active'); }
 function togglePet() {
@@ -715,6 +842,9 @@ function buildPrompt(f, ragContext) {
     ? Math.max(1, Math.ceil((new Date(f.checkout) - new Date(f.checkin)) / 86400000))
     : 5;
 
+  var hostelTip = (f.hostelPref === 'hostel')
+    ? 'ACCOMMODATION: Include hostels and budget dorms alongside hotels. Highlight well-rated hostels with social atmosphere, private rooms in hostels, and hostel bars/events.'
+    : (f.hostelPref === 'private' ? 'ACCOMMODATION: Private rooms only — no shared dorms.' : '');
   var girlsTip = f.travellerType === 'girls'
     ? 'GIRLS TRIP: women-friendly hotels, spa/food/cultural activities, safety tips, pampering activity each day, womenFriendly:true on accommodation.'
     : '';
@@ -747,12 +877,13 @@ function buildPrompt(f, ragContext) {
     'RULES: Exactly ' + days + ' days in itinerary. Real place names. IMPORTANT: The destination field must be respected exactly — if the user says Scotland, generate an itinerary FOR SCOTLAND (Edinburgh, Glasgow, Highlands etc), NOT for London or England. If the user says a region, country or area, focus on that specific region. All prices in ' + f.currency + '. imageKeyword=2-4 words. bookingLink for hotels=https://www.booking.com/searchresults.html?ss=' + encodeURIComponent(f.dest) + '. travelOptions: if within Europe use real train operators (Eurostar/Thalys/ICE/TGV/SNCF). funFact must be genuinely surprising.',
     'TRANSPORT: Always include the regional transport authority (e.g. Paris=Île-de-France Mobilités/RATP, London=Transport for London/TfL, Amsterdam=GVB/NS, Berlin=BVG/VBB, Madrid=EMT/Consorcio Transportes, Rome=ATAC/Roma Mobilità, Tokyo=Tokyo Metro/Toei, New York=MTA, Singapore=SMRT/SBS Transit, Mumbai=BEST/Mumbai Metro, Dubai=RTA). Set this as regionalAuthority. The visitorPass name must be the official pass name (e.g. Paris=Navigo Easy or Navigo Découverte, London=Oyster card, Amsterdam=OV-chipkaart, Berlin=Berlin WelcomeCard, Tokyo=Suica or Pasmo, Singapore=EZ-Link). The whereToBuy must be specific (airport machine, station ticket office, convenience store etc). The topUpApp must be the real app name.',
     'TRAVEL TIMES: Use accurate journey times — Brussels to London by Eurostar is 2hrs, Brussels to Paris is 1h22m, London to Paris is 2h15m, London to Amsterdam is 3h52m, Paris to Amsterdam is 3h18m. Never overestimate — always use real published timetable times.',
-    'TRANSPORT: Always name the actual regional transport authority and network (e.g. Paris=Ile-de-France Mobilites/Navigo pass, London=Transport for London/Oyster card, Amsterdam=GVB/OV-chipkaart, Berlin=BVG/Berlin ABC zones, Tokyo=Tokyo Metro/Suica card, New York=MTA/MetroCard, Sydney=Transport for NSW/Opal card, Singapore=LTA/EZ-Link, Dubai=RTA/Nol card, Mumbai=MMRDA/Mumbai Metro). Always include the regional network name in the network field, the pass name in visitorPass.name, and the top-up app in topUpApp. Include which zones or areas the pass covers — e.g. Navigo covers all Ile-de-France including airports and Versailles.',
+    'TRANSPORT: Always name the actual regional transport authority and provide full details even for regions — e.g. Scotland uses Scotrail (trains), First Bus/Lothian Buses (Edinburgh), McGill\'s (Glasgow), Stagecoach (Highlands). Scotland has no metro but has the Glasgow Subway. Edinburgh has trams. The Highland rover pass covers ScotRail trains across the Highlands. Always include regional/rural transport options for non-city destinations. and network (e.g. Paris=Ile-de-France Mobilites/Navigo pass, London=Transport for London/Oyster card, Amsterdam=GVB/OV-chipkaart, Berlin=BVG/Berlin ABC zones, Tokyo=Tokyo Metro/Suica card, New York=MTA/MetroCard, Sydney=Transport for NSW/Opal card, Singapore=LTA/EZ-Link, Dubai=RTA/Nol card, Mumbai=MMRDA/Mumbai Metro). Always include the regional network name in the network field, the pass name in visitorPass.name, and the top-up app in topUpApp. Include which zones or areas the pass covers — e.g. Navigo covers all Ile-de-France including airports and Versailles.',
     'FREE ATTRACTIONS: Always mention special free-entry rules — e.g. first Sunday of month free, free after 5pm, free for EU citizens, free for under-18s, etc. Include these in the tip field.',
     (destMode === 'country' && selectedCities.length > 0) ? 'This is a multi-city trip through ' + f.dest + '. Distribute the ' + days + ' days across these cities: ' + selectedCities.join(', ') + '. Each day should specify which city the traveller is in.' : '',
     girlsTip,
     f.kids > 0 ? 'Family-appropriate pacing.' : '',
-    f.hasPet ? 'Flag pet-friendly options throughout.' : ''
+    f.hasPet ? 'Flag pet-friendly options throughout.' : '',
+    hostelTip
   ].filter(Boolean).join('\n');
 }
 
@@ -1514,6 +1645,13 @@ function populateRegions(country) {
       chipsWrap.appendChild(btn);
     });
   }
+}
+
+var hostelPref = 'any';
+function selectHostel(btn) {
+  document.querySelectorAll('#hostel-grid .type-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  hostelPref = btn.dataset.val;
 }
 </script>
 </body>
