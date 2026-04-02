@@ -738,14 +738,15 @@ function buildPrompt(f, ragContext) {
     '- budgetBreakdown {accommodation, activities, food, transport, misc, currency}',
     '- weather {summary, avgTempDay, avgTempNight, condition, packingList[10 items], tip}',
     '- accommodation (array of 3: budget/mid/luxury) each: {name, type, pricePerNight, currency, area, stars, petFriendly, kidFriendly, adultsOnly, womenFriendly, imageKeyword, highlights[3], bookingLink, tag}',
-    '- itinerary (array of exactly ' + days + ' days) each day: {day, date, theme, activities[3-4 each with time/title/description/duration/cost/currency/isFree/category/imageKeyword/kidFriendly/petFriendly/tip], meals[3: breakfast/lunch/dinner each with meal/suggestion/cuisine/area/approxCost/currency/note]}',
+    '- itinerary (array of exactly ' + days + ' days) each day: {day, date, theme, activities[3-4 each with time/title/description/duration/cost/currency/isFree/category/imageKeyword/kidFriendly/petFriendly/tip], meals[3: breakfast/lunch/dinner each with meal/restaurant(real name of restaurant pub cafe or market stall)/dish(specific dish or food to order)/suggestion/cuisine/area/approxCost/currency/note]}',
     '- freeAttractions (array of 6-8) each: {name, type, description, openingHours, area, imageKeyword, kidFriendly, petFriendly, tip}',
     '- transport {overview, publicTransport{types[], network, regionalAuthority, visitorPass{available, name, options[1/3/7 day prices], whereToBuy, topUpApp, zonesCoverage}, singleTicket{price}, keyLines[], tip}, taxi{averageShortTrip, averageLongTrip, currency, app, tip}, comparison, savingsExample}',
     '- travelOptions {origin, destination, summary, flights[2: each with type/airline/duration/approxPrice/currency/bookingTip/searchLink], trains[1-2: operator/route/duration/frequency/approxPrice/currency/available/bookingTip/searchLink/note], bus{available, operator, route, duration, approxPrice, currency, note, searchLink}, recommended, bestBookingTime, visaNote}',
     '- insurance {recommended, reason, estimatedCost, link}',
     '- funFact {emoji, headline, fact, source}',
-    'RULES: Exactly ' + days + ' days in itinerary. Real place names. All prices in ' + f.currency + '. imageKeyword=2-4 words. bookingLink for hotels=https://www.booking.com/searchresults.html?ss=' + encodeURIComponent(f.dest) + '. travelOptions: if within Europe use real train operators (Eurostar/Thalys/ICE/TGV/SNCF). funFact must be genuinely surprising.',
+    'RULES: Exactly ' + days + ' days in itinerary. Real place names. IMPORTANT: The destination field must be respected exactly — if the user says Scotland, generate an itinerary FOR SCOTLAND (Edinburgh, Glasgow, Highlands etc), NOT for London or England. If the user says a region, country or area, focus on that specific region. All prices in ' + f.currency + '. imageKeyword=2-4 words. bookingLink for hotels=https://www.booking.com/searchresults.html?ss=' + encodeURIComponent(f.dest) + '. travelOptions: if within Europe use real train operators (Eurostar/Thalys/ICE/TGV/SNCF). funFact must be genuinely surprising.',
     'TRANSPORT: Always include the regional transport authority (e.g. Paris=Île-de-France Mobilités/RATP, London=Transport for London/TfL, Amsterdam=GVB/NS, Berlin=BVG/VBB, Madrid=EMT/Consorcio Transportes, Rome=ATAC/Roma Mobilità, Tokyo=Tokyo Metro/Toei, New York=MTA, Singapore=SMRT/SBS Transit, Mumbai=BEST/Mumbai Metro, Dubai=RTA). Set this as regionalAuthority. The visitorPass name must be the official pass name (e.g. Paris=Navigo Easy or Navigo Découverte, London=Oyster card, Amsterdam=OV-chipkaart, Berlin=Berlin WelcomeCard, Tokyo=Suica or Pasmo, Singapore=EZ-Link). The whereToBuy must be specific (airport machine, station ticket office, convenience store etc). The topUpApp must be the real app name.',
+    'TRAVEL TIMES: Use accurate journey times — Brussels to London by Eurostar is 2hrs, Brussels to Paris is 1h22m, London to Paris is 2h15m, London to Amsterdam is 3h52m, Paris to Amsterdam is 3h18m. Never overestimate — always use real published timetable times.',
     'TRANSPORT: Always name the actual regional transport authority and network (e.g. Paris=Ile-de-France Mobilites/Navigo pass, London=Transport for London/Oyster card, Amsterdam=GVB/OV-chipkaart, Berlin=BVG/Berlin ABC zones, Tokyo=Tokyo Metro/Suica card, New York=MTA/MetroCard, Sydney=Transport for NSW/Opal card, Singapore=LTA/EZ-Link, Dubai=RTA/Nol card, Mumbai=MMRDA/Mumbai Metro). Always include the regional network name in the network field, the pass name in visitorPass.name, and the top-up app in topUpApp. Include which zones or areas the pass covers — e.g. Navigo covers all Ile-de-France including airports and Versailles.',
     'FREE ATTRACTIONS: Always mention special free-entry rules — e.g. first Sunday of month free, free after 5pm, free for EU citizens, free for under-18s, etc. Include these in the tip field.',
     (destMode === 'country' && selectedCities.length > 0) ? 'This is a multi-city trip through ' + f.dest + '. Distribute the ' + days + ' days across these cities: ' + selectedCities.join(', ') + '. Each day should specify which city the traveller is in.' : '',
@@ -855,8 +856,11 @@ function renderResults() {
 
   // Header
   const parts = (R.destination || f.dest).split(',');
-  document.getElementById('r-dest').innerHTML =
-    `${parts[0]}<em>,</em><br>${parts.slice(1).join(',').trim()}`;
+  const city = parts[0].trim();
+  const country = parts.slice(1).join(',').trim();
+  document.getElementById('r-dest').innerHTML = country
+    ? `${city}<em>,</em> ${country}`
+    : city;
   document.getElementById('r-budget').textContent =
     `${f.currency} ${parseInt(f.budget).toLocaleString()}`;
 
@@ -1029,7 +1033,8 @@ function renderItinerary(R, f) {
       <div class="meal-row">
         <span class="meal-type">${m.meal||''}</span>
         <div>
-          <div class="meal-name">${m.suggestion||''}</div>
+          <div class="meal-name">${m.restaurant || m.place || m.suggestion || ''}</div>
+          <div style="font-size:12px;color:var(--text-m);margin-top:1px">${m.dish || m.mustTry || ''}</div>
           <div class="meal-detail">${m.cuisine||''} · ${m.area||''} · ~${f.currency}${m.approxCost||0}${m.kidFriendly ? ' · 👧 Kids' : ''}</div>
           ${m.note ? `<div class="meal-note">${m.note}</div>` : ''}
         </div>
@@ -1281,7 +1286,11 @@ function buildTransport(R, f) {
 
   /* ── PUBLIC TRANSPORT CARD ── */
   const passRows = (Array.isArray(pt.visitorPass?.options) ? pt.visitorPass.options : []).map(o =>
-    `<tr><td>${o.duration}</td><td>${o.zones}</td><td>${f.currency}${o.price}</td></tr>`
+    `<tr>
+          <td>${o.duration || o.period || o.type || o.name || '—'}</td>
+          <td>${o.zones || o.coverage || o.area || o.zonesCovered || 'All zones'}</td>
+          <td><strong>${f.currency}${o.price || o.cost || o.amount || 0}</strong></td>
+        </tr>`
   ).join('');
   const publicCard = (pref === 'public' || pref === 'both') ? `
     <div class="card">
@@ -1409,10 +1418,19 @@ function setDestMode(mode) {
   var destInput = document.getElementById('f-dest');
   if (mode === 'country') {
     wrap.style.display = 'block';
-    destInput.placeholder = 'e.g. France, Japan, Italy';
+    destInput.placeholder = 'e.g. United Kingdom, France, India';
+    destInput.oninput = function() {
+      this.classList.remove('field-error');
+      document.getElementById('dest-err').style.display = 'none';
+      populateRegions(this.value.trim());
+    };
   } else {
     wrap.style.display = 'none';
     destInput.placeholder = 'e.g. Tokyo, Japan';
+    destInput.oninput = function() {
+      this.classList.remove('field-error');
+      document.getElementById('dest-err').style.display = 'none';
+    };
     selectedCities = [];
     document.getElementById('city-chips').innerHTML = '';
   }
@@ -1434,6 +1452,68 @@ function addCity(e) {
 function removeCity(btn, city) {
   selectedCities = selectedCities.filter(function(c) { return c !== city; });
   btn.parentElement.remove();
+}
+
+var COUNTRY_REGIONS = {
+  'United Kingdom': ['England','Scotland','Wales','Northern Ireland','London','Edinburgh','Manchester','Birmingham','Liverpool','Bristol','Glasgow','Cardiff','Belfast','Yorkshire','Lake District','Cornwall'],
+  'France': ['Paris','Provence','Normandy','Brittany','Loire Valley','Alsace','Bordeaux','Lyon','French Riviera','Dordogne','Languedoc','Burgundy','Champagne','Corsica'],
+  'Italy': ['Rome','Tuscany','Venice','Milan','Amalfi Coast','Sicily','Naples','Florence','Cinque Terre','Sardinia','Piedmont','Umbria','Lake Como'],
+  'Spain': ['Barcelona','Madrid','Andalusia','Seville','Granada','Valencia','Basque Country','Galicia','Ibiza','Mallorca','Canary Islands','Toledo'],
+  'Germany': ['Berlin','Bavaria','Munich','Hamburg','Frankfurt','Cologne','Black Forest','Rhine Valley','Dresden','Heidelberg','Stuttgart','Nuremberg'],
+  'India': ['Rajasthan','Goa','Kerala','Tamil Nadu','Mumbai','Delhi','Jaipur','Udaipur','Agra','Varanasi','Himachal Pradesh','Uttarakhand','Karnataka','Andhra Pradesh','Kolkata'],
+  'Japan': ['Tokyo','Kyoto','Osaka','Hokkaido','Okinawa','Hiroshima','Nara','Nikko','Hakone','Kanazawa','Sendai','Nagoya'],
+  'USA': ['New York','California','Hawaii','Florida','Texas','New Orleans','Chicago','Las Vegas','Seattle','Boston','Washington DC','Grand Canyon','Yellowstone'],
+  'Australia': ['Sydney','Melbourne','Queensland','Western Australia','South Australia','Tasmania','Gold Coast','Byron Bay','Cairns','Uluru'],
+  'Greece': ['Athens','Santorini','Mykonos','Crete','Rhodes','Corfu','Thessaloniki','Meteora','Delphi','Zakynthos'],
+  'Thailand': ['Bangkok','Chiang Mai','Phuket','Koh Samui','Krabi','Pai','Kanchanaburi','Ayutthaya','Hua Hin'],
+  'Portugal': ['Lisbon','Porto','Algarve','Madeira','Azores','Sintra','Alentejo','Douro Valley'],
+  'Netherlands': ['Amsterdam','Rotterdam','The Hague','Utrecht','Maastricht','Haarlem','Delft','Leiden','Keukenhof'],
+  'Switzerland': ['Zurich','Geneva','Bern','Lucerne','Interlaken','Zermatt','St Moritz','Basel','Graubünden'],
+  'Austria': ['Vienna','Salzburg','Innsbruck','Graz','Hallstatt','Tyrol','Vorarlberg','Styria'],
+  'Turkey': ['Istanbul','Cappadocia','Antalya','Bodrum','Ephesus','Pamukkale','Trabzon','Ankara'],
+  'Morocco': ['Marrakech','Fes','Casablanca','Chefchaouen','Essaouira','Agadir','Sahara Desert','Atlas Mountains'],
+  'Egypt': ['Cairo','Luxor','Aswan','Alexandria','Hurghada','Sharm El Sheikh','Sinai'],
+  'South Africa': ['Cape Town','Johannesburg','Kruger Park','Garden Route','Durban','Stellenbosch','Knysna'],
+  'Canada': ['Toronto','Vancouver','Montreal','Quebec City','Banff','Whistler','Victoria','Calgary','Ottawa'],
+  'Mexico': ['Mexico City','Cancun','Oaxaca','Guadalajara','Los Cabos','Tulum','Merida','Puerto Vallarta'],
+  'Brazil': ['Rio de Janeiro','São Paulo','Salvador','Manaus','Florianópolis','Foz do Iguaçu','Recife'],
+  'UAE': ['Dubai','Abu Dhabi','Sharjah','Fujairah','Ras Al Khaimah'],
+  'Singapore': ['Singapore'],
+  'Indonesia': ['Bali','Jakarta','Yogyakarta','Lombok','Komodo','Raja Ampat','Sumatra'],
+  'Malaysia': ['Kuala Lumpur','Penang','Langkawi','Borneo','Sabah','Sarawak'],
+  'Vietnam': ['Hanoi','Ho Chi Minh City','Da Nang','Hoi An','Hue','Ha Long Bay','Sapa','Ninh Binh'],
+  'New Zealand': ['Auckland','Queenstown','Rotorua','Wellington','Christchurch','Fiordland','Bay of Islands'],
+  'Argentina': ['Buenos Aires','Patagonia','Mendoza','Bariloche','Iguazu','Salta','Cordoba'],
+};
+
+function populateRegions(country) {
+  var regions = COUNTRY_REGIONS[country] || [];
+  var chipsWrap = document.getElementById('city-chips');
+  var cityInput = document.getElementById('f-cities');
+  chipsWrap.innerHTML = '';
+  selectedCities = [];
+  if (regions.length > 0) {
+    var label = document.createElement('div');
+    label.style = 'font-size:11px;color:var(--text-m);margin-bottom:5px;width:100%';
+    label.textContent = 'Popular regions in ' + country + ' — click to add:';
+    chipsWrap.appendChild(label);
+    regions.forEach(function(r) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip';
+      btn.textContent = r;
+      btn.onclick = function() {
+        if (selectedCities.indexOf(r) > -1) {
+          selectedCities = selectedCities.filter(function(c){return c!==r;});
+          btn.classList.remove('active');
+        } else {
+          selectedCities.push(r);
+          btn.classList.add('active');
+        }
+      };
+      chipsWrap.appendChild(btn);
+    });
+  }
 }
 </script>
 </body>
